@@ -1,0 +1,18 @@
+.heading{
+    text-align: left;
+    align-items:flex-start ;
+    font-size:30px;
+    margin-left: 7%;
+    margin-bottom:7%;
+}
+
+.headingsub{
+    text-align: left;
+    font-size:20px;
+    margin-left:5%; 
+}
+
+.svdf{
+    text-align:right;
+    margin-right:2%;
+}

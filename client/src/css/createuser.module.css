@@ -1,0 +1,31 @@
+.heading{
+    float:left;
+    margin:2%;
+    padding-bottom:2%;
+}
+.form{
+    padding:40px;
+    width:30%;
+}
+
+.sdd{
+    display:block;
+    margin-bottom :30px;
+}
+
+.svdf{
+    font-size:22px ; 
+    float:left;
+    margin-bottom:10px; 
+}
+
+.button1{
+    width:70% ;
+    padding: 20px 40px;
+    border:1px solid #4645d6;
+    border-radius: 10px;
+    cursor:pointer;
+    background-color:#4645d6;
+    color:white ;
+    font-weight:bold;
+}
