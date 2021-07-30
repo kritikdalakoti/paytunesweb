@@ -40,8 +40,9 @@ exports.signin=async(req,res)=>{
         if(!email||!password){
             return res.status(400).json({error:'Please fill all required fields!'})
         }
-
+        console.log(email,password)
         let user=await User.findOne({email})
+        console.log('jj',user);
         if(!user){
             return res.status(400).json({error:'Invalid Email or Password!'})
         }

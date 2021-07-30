@@ -12,4 +12,4 @@ const userSchema = new mongoose.Schema({
     // advertiser:mongoose.Types.ObjectId
 })
 
-module.exports=mongoose.model('admin',userSchema)
+module.exports=mongoose.model('user',userSchema)

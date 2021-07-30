@@ -17,8 +17,8 @@ const options = {
     useCreateIndex: true
 }
 
-mongoose.connect(MONGOURI,options)
-mongoose.connection.on('connected',() => {
+    mongoose.connect(MONGOURI,options)
+    mongoose.connection.on('connected',() => {
     console.log("connected to database.....")
 })
 mongoose.connection.on('error',err=>{
