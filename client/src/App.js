@@ -84,7 +84,7 @@ function App() {
       exact
       />
       <Route
-      path='/dashboard/c/campaign/new'
+      path='/dashboard/c/campaign/new/:campid'
       render={()=>(<LineItem/>)}
       
       />

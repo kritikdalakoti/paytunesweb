@@ -6,7 +6,8 @@ const cors = require('cors')
 const { MONGOURI } = require('./config/keys')
 //const cron = require('node-cron')
 
-app.use(express.json())
+app.use(express.json({limit: '50mb'}))
+app.use(express.urlencoded({extended:true}));
 app.use(cors())
 
 const options = {
@@ -27,9 +28,10 @@ mongoose.connection.on('error',err=>{
 
 const userrouter=require('./routes/user_routes')
 const advertiserrouter=require('./routes/advertiser')
+const campaignrouter=require('./routes/campaign')
 app.use('/user',userrouter)
 app.use('/advertiser',advertiserrouter)
-
+app.use('/campaign',campaignrouter)
 
 
 

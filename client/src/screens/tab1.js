@@ -11,7 +11,7 @@ export function Tab1({type,settype,strategy,setStrategy,lineitem,setlineitem}) {
     // const [type, settype] = React.useState(['Audio'])
     // const [strategy, setStrategy] = React.useState(false)
     // const [lineitem, setlineitem] = useState('')
-
+console.log(type)
     const handleChange2 = (event) => {
         settype(event.target.value)
         console.log(type)
@@ -58,9 +58,7 @@ export function Tab1({type,settype,strategy,setStrategy,lineitem,setlineitem}) {
 
 
             <hr class={styles.sep} />
-            <div class={styles.svdef}>
-                <button class="button-footer2" tabIndex="0" type="submit" >Next: Set Your Budget</button>
-            </div>
+            
         </div>
     )
 }

@@ -35,8 +35,29 @@ export default function NewCampaign() {
   const [startdate, setstartdate] = useState('')
   const [enddate, setenddate] = useState('')
   const [active, setActive] = useState('')
+  const [success,setsuccess]=useState('')
+  const [error,seterror]=useState('')
 
-
+function campaignsave(){
+  fetch('http://127.0.0.1:5000/campaign/create',{  //http://127.0.0.1:5000
+  method:'POST',
+  headers:{"Content-Type":"application/json","Authorization" :"Bearer "+localStorage.getItem("jwt")},
+  body:JSON.stringify({
+    campaignName,budget,startdate,enddate,active
+  })
+}).then(res=>res.json())
+.then(data=>{
+  if(data.error){
+    seterror(data.error)
+    console.log(data.error)
+  }else{
+    setsuccess(data.message)
+    // setOpen(true)
+    history.push(`/dashboard/c/campaign/new/${data.data._id}`)
+    console.log(data)
+  }
+})
+}
 
   return (
 
@@ -48,7 +69,7 @@ export default function NewCampaign() {
 
         <form onSubmit={e => {
           e.preventDefault()
-          history.push('/dashboard/c/campaign/new')
+          campaignsave();
         }} >
           <div class={styles.headingsub}>
             <h4 >What shall we call your Campaign? *</h4></div>
@@ -109,7 +130,7 @@ export default function NewCampaign() {
 
           <div class={styles.svdf}>
             <button type="button" tabIndex="0" id class="button-footer" >Create Campaign Without Line Item</button>
-            <button type="submit" tabIndex="0" id class="button-footer2" >Next:Create Line Item</button>
+            <button type="submit" tabIndex="0"  id class="button-footer2" >Next:Create Line Item</button>
           </div>
         </form>
 

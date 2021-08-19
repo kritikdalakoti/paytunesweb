@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState,useEffect,useContext } from 'react';
 import { useHistory ,Link} from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
+import  { Modal,MenuItem,Select } from '@material-ui/core';
 import {Divider} from '@material-ui/core'
 import ListItem from '@material-ui/core/ListItem';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -16,27 +17,72 @@ import LiveHelpOutlinedIcon from '@material-ui/icons/LiveHelpOutlined';
 import PersonAddSharpIcon from '@material-ui/icons/PersonAddSharp';
 import SpeakerPhoneSharpIcon from '@material-ui/icons/SpeakerPhoneSharp'
 import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline';
+import { BudgetContext } from '../App'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme)=>({
 list: {
     width: 240,
 },
 fullList: {
     width: 'auto',
 },
-});
+paper: {
+    // position: 'relative',
+    width: 500,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: '2% 2% 2% 6%'
+}
+}));
 
 export default function TemporaryDrawer() {
     const history = useHistory()
     const classes = useStyles();
+    const { state1, dispatch1 } = useContext(BudgetContext)
+    const [advertisers,setAdvertisers]=useState([])
     const [open, setopen] = React.useState(false);
+    const [open1, setOpen1] = React.useState(false);
     const {state} = React.useContext(UserContext)
+    const [adv,setadv]=useState({name:'Adv'})
+    const [show,setShow]=useState(false);
+    const handleClose = () => {
+		setOpen1(false);
+	};
+    console.log('sss',adv)
+    const handleChange=(event)=>{
+        setadv(event.target.value)
+        dispatch1({type:"ADVERTISER",payload:event.target.value})
+        setOpen1(false)
+      }
+    const handleOpen = () => {
+		setOpen1(true);
+		setShow(true);
+	};
+
+    useEffect(() => {
+        // console.log('effect')
+        fetch('http://127.0.0.1:5000/advertiser/get_advertisers', { //http://127.0.0.1:5000 
+          method: 'post'
+        }).then(res => res.json())
+          .then(data => {
+            console.log(data)
+            if (data && data.error) {
+              return console.log(data.error)
+            } else {
+              setAdvertisers(data)
+              console.log(advertisers);
+            }
+          }).catch(er => console.log(er))
+      }, [])
+
     return (
         <div >
             {/* <IconButton style={{color:"red"}} onClick={()=>setopen(true)} /> */}
             
             <div onClick={()=>setopen(true)}>  <i className='material-icons' style={{fontSize:'60px',cursor:'pointer',color:"grey", paddingLeft:"70%"}}><ViewHeadlineIcon/></i></div>
             <Tooltip title="Advertisers" placement="right"><div onClick={()=>history.push('/advertisers')}>  <i className='material-icons' style={{fontSize:'60px',cursor:'pointer',color:"grey", paddingLeft:"70%"}}><PersonAddSharpIcon/> </i></div></Tooltip>
+            <Tooltip title={`${adv.name}`} placement="right"><div onClick={()=>handleOpen()}>  <i className='material-icons' style={{fontSize:'25px',cursor:'pointer',color:"grey", paddingLeft:"70%"}}>{adv.name[0].toLocaleUpperCase()} </i></div></Tooltip>
             <Tooltip title="Campaigns" placement="right"><div onClick={()=>history.push('/dashboard')}><i className='material-icons' style={{fontSize:'60px',cursor:'pointer',color:"grey", paddingLeft:"70%"}}><SpeakerPhoneSharpIcon/></i></div></Tooltip>
             <Tooltip title="Creatives" placement="right"><div onClick={history.push()}><i className='material-icons' style={{fontSize:'60px',cursor:'pointer',color:"grey", paddingLeft:"70%"}}><GraphicEqIcon/></i></div></Tooltip>
             <Tooltip title="Reporting" placement="right"><div onClick={()=>setopen(true)}><i className='material-icons' style={{fontSize:'60px',cursor:'pointer',color:"grey", paddingLeft:"70%"}}><AssessmentOutlinedIcon/></i></div></Tooltip>
@@ -55,6 +101,14 @@ export default function TemporaryDrawer() {
                         <ListItemIcon><i className='material-icons'></i></ListItemIcon>
                         <PersonAddSharpIcon/>
                         <ListItemText>Advertisers</ListItemText>
+                    </ListItem>
+                    <hr />
+                    <br/>
+                    <br/>
+                    <ListItem className='dashmenu__item' onClick={()=>handleOpen()}>
+                        <ListItemIcon><i className='material-icons'></i></ListItemIcon>
+                        <PersonAddSharpIcon/>
+                        <ListItemText>{adv.name}</ListItemText>
                     </ListItem>
                     <hr />
                     <br/>
@@ -104,6 +158,37 @@ export default function TemporaryDrawer() {
                     {/* </>} */}
                 </div>
             </Drawer>
+            {show ? (
+					<div  >
+						<Modal
+							open={open1}
+							onClose={handleClose}
+							aria-labelledby="simple-modal-title"
+							aria-describedby="simple-modal-description"
+                            style={{width:'800px', margin:'15% 15% 15% 25%'}}
+						>
+							<div style={{ maxHeight: '120vh' }} className={classes.paper}>
+								<h4>Choose Advertiser</h4>
+								<Select 
+                                 labelId="demo-simple-select-label"
+                                 id="demo-simple-select"
+                                 value={adv}
+                                 style={{width:'100%'}}
+                                 // label="Select Category"
+                                 onChange={handleChange}
+                                >
+                                    {advertisers.map(adv=>
+                                        <MenuItem value={adv} >{adv.name}</MenuItem>
+                                    )}
+                                    
+                                </Select>
+							</div>
+						</Modal>
+
+					</div>
+				) : (
+					<React.Fragment />
+				)}
         </div>
     );
 }

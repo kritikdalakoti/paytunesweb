@@ -132,9 +132,7 @@ export function Tab2({state}) {
 
 
             {/* <hr class={styles.sep} /> */}
-            <div class={styles.svdef}>
-                <button class="button-footer2" tabIndex="0" type="submit" >Next: Upload or Assign your Creative</button>
-            </div>
+            
         </div>
     )
 
