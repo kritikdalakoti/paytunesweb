@@ -39,7 +39,7 @@ export default function NewCampaign() {
   const [error,seterror]=useState('')
 
 function campaignsave(){
-  fetch('http://127.0.0.1:5000/campaign/create',{  //http://127.0.0.1:5000
+  fetch('/campaign/create',{  //http://127.0.0.1:5000
   method:'POST',
   headers:{"Content-Type":"application/json","Authorization" :"Bearer "+localStorage.getItem("jwt")},
   body:JSON.stringify({

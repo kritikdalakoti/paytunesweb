@@ -7,9 +7,6 @@ import { BudgetContext } from '../App'
 const styles = require('../css/lineitem.module.css')
 
 
-
-
-
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,

@@ -276,7 +276,7 @@ console.log('advertiser',state1.adv)
 
     
 
-    fetch('http://127.0.0.1:5000/campaign/createsubcampaign', {  //http://127.0.0.1:5000
+    fetch('/campaign/createsubcampaign', {  //http://127.0.0.1:5000
       method: 'POST',
       headers: {  "Authorization": "Bearer " + localStorage.getItem("jwt") },
       body:formdata
