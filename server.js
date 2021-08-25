@@ -5,9 +5,10 @@ const port = process.env.PORT || 5000
 const mongoose = require('mongoose')
 const cors = require('cors')
 const { MONGOURI } = require('./config/keys')
-const config = require('./config.json')
 const {uploadMedia, uploadAws} = require('./aws_upload/uploadsfunction')
 // const cron = require('node-cron')
+const path=require('path')
+ console.log(path.join(__dirname)) 
 //const cron = require('node-cron')
 const AWS = require('aws-sdk')
 // AWS.config.loadFromPath('/paytunes_new/server/config.json');
