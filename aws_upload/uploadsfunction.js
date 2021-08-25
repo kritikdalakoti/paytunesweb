@@ -1,84 +1,95 @@
     const AWS=require('aws-sdk')
-    AWS.config.loadFromPath('/paytunesmusicads/config.json');
+    AWS.config.loadFromPath('/paytunes_new/server/config.json');
     const { BlobServiceClient } = require("@azure/storage-blob");
     const constantObj=require('../constants')
         const AZURE_STORAGE_CONNECTION_STRING=constantObj.azureconnectionstring.cstring;//"DefaultEndpointsProtocol=https;AccountName=ptmfiles;AccountKey=Y4YuI3fVlI9lnuNlLP6u/NJkzrRsEqVRuSMlwO8LmMYg35w0G5/tbsrbG/CcdXzP0I+qh+DmmKxMnhpS0XXZdw==;EndpointSuffix=core.windows.net";
         const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
 		const containerClient = blobServiceClient.getContainerClient('image');
-// uploadAudioAws = function(data, callback) {
-//     var filetype = data.filetype;
-//     var name1 = data.name;
-//     var mimeType=data.type;
-//     var name = name1.toLowerCase();
-//     var filename = 'audio/' + name + '_' + Date.now() + '.' + filetype;
-//     var b64string = data.file;
-//     /* if (typeof Buffer.from === "function") {
-//          // Node 5.10+
-//          buf = Buffer.from(b64string, 'base64'); // Ta-da
-//      } else {
-//        */ // older Node versions
-//     buf = new Buffer(b64string, 'base64'); // Ta-da
-//     //}
-//     if (buf != undefined) {
-//         var Data = b64string; //data.file.split('base64,');
-//         var base64Data = b64string; //Data[1];
-//         var s3Bucket = new AWS.S3({ params: { Bucket: 'paytunesmusicads' } });
-//         var dataimg = { Key: filename, Body: buf, ContentEncoding: 'base64', ContentType: mimeType };
-//         s3Bucket.putObject(dataimg, function(err, data) {
-//             if (err) {
-//                 // console.log('Error uploading data: ', err);
-//                 callback("Error uploading data");
-//             } else {
-//                 //console.log('succesfully uploaded the image!');
-//                 callback(filename);
-//             }
-//         });
-//         // End of Bucket
-//     } else {
-//         callback("Error uploading data");
-//     }
-// }
+        const containerClientAudio=blobServiceClient.getContainerClient('audio');
 
-// uploadMedia = async function(data) {
-//     var filetype = data.filetype;
-//   var name1 = data.name;
-//   var name2=name1.replace(/[^a-zA-Z0-9_]/gi, "");
-//   var name = name2.toLowerCase();
-//   var filename = name + '_' + Date.now() + '.' + filetype;
-//   var b64string = data.file;
-//   //var 
-//  //if (typeof Buffer.from === "function") {
-//         // Node 5.10+
-//      //   buffer = Buffer.from(b64string, 'base64'); // Ta-da
-//    // } else {
-//   // older Node versions
-//   buffer = new Buffer(b64string, 'base64'); // Ta-da
-//  // }
-// if (buffer != undefined) {    
-//       var blobName = filename; //'quickstart' + + Date.now() + '.txt';
-//       var blockBlobClient = containerClient.getBlockBlobClient(blobName);
-//       var uploadBlobResponse = await blockBlobClient.upload(buffer, buffer.byteLength );
-//       filename='image/'+filename;
-//       callback(filename);
-//   } else {
-//       callback("Error uploading data");
-//   } 
-// }
+    const Etranscoder=new AWS.ElasticTranscoder();    
 
-exports.uploadMedia=async (data)=>{
+     exports.getAudios = async () => {
+        const s3 = new AWS.S3();
+      
+        const items = await s3
+          .listObjectsV2({
+            Bucket: "outputbuckettranscoded",
+            Prefix:'audio/'
+          })
+          .promise();
+          console.log(items)
+        // if (items.Contents) {
+        //   return items.Contents.map((content) => content.Key) 
+        // }
+        
+        throw new Error("No contents");
+      };
+
+exports.uploadMedia=async (dd,type)=>{
     
-    let blockBlobClient=containerClient.getBlockBlobClient(data.filename);
-    let uploadBlobResponse=await blockBlobClient.upload(data.encoded,data.encoded.length)
+    let blockBlobClient = (type==='image'?containerClient:containerClientAudio).getBlockBlobClient(dd.filename);
+    let uploadBlobResponse=await blockBlobClient.upload(dd.data,dd.data.byteLength)
     console.log(uploadBlobResponse)
 }
 
+
+    // [{
+    //     Key: 'transcoded/video',
+    //     PresetId: 'Preset_ID',
+    //     // "SegmentDuration":'3', //Duration in segment on which transcoding is done as we chose HLS streaming
+    //     // ThumbnailPattern: 'poster-{count}', //It is used to create snapshot of Video
+    //     }]
+
+   
+
 exports.uploadAws=async function(data){
-    let s3Bucket=new AWS.S3({params:{Bucket:'paytunesmusicads'}})
-    s3Bucket.putObject(data,(err,data)=>{
-        if(err){
-            console.log(err);
-        }else{
-            console.log('sssssss')
-        }
-    })
+    try{
+        let s3Bucket=new AWS.S3({params:{Bucket:'paytunesmusicads'}})
+        await s3Bucket.putObject(data).promise();
+    }catch(err){
+        console.log(err)
+    }
+    
+    // s3Bucket.putObject(data,(err,data)=>{
+    //     if(err){
+    //         console.log(err);
+    //     }else{
+    //         console.log('sssssss',data)
+    //     }
+    // })
 }
+
+exports.uploadtranscodedfile=async function ({key,container}){
+    // const videos= await getVideos();
+    // console.log('videos',videos)
+    // for(video in videos){
+        // console.log(typeof(videos[video]),videos[video])
+        console.log( typeof(key) ,container)
+        let key1=key.split('.');
+        let params = {
+            PipelineId: '1629397799617-jdjjh3', //PipelineId of Elastic transcoder
+            // OutputKeyPrefix: 'transcoded' + '/',
+            Input: {
+            Key: key,  //Source path of video 
+            Container: container
+            },
+            Outputs: constantObj.Presets.map(obj=>{
+                return {Key:`${key1[0]}${obj.suffix}.${key1[1]}`,PresetId:`${obj.presetid}`}
+            })
+            
+            }
+            await Etranscoder.createJob(params).promise();
+    //     Etranscoder.createJob(params,(err,data)=>{
+    //         if(err){
+    //             console.log(err)
+    //         }else{
+    //             console.log('hj',data)
+    //        }
+    //    })
+    
+    
+        
+       
+}
+

@@ -43,5 +43,19 @@ const googleCredentials = {
     "client_secret_key": "leWdLHJOoo9g6B9oLCV1lMqY"
 }
 
-var obj = { messages: messages, uploadPath: uploadPath, azureconnectionstring: azureconnectionstring, gmailSMTPCredentials: gmailSMTPCredentials, facebookCredentials: facebookCredentials, twitterCredentials: twitterCredentials, googleCredentials: googleCredentials };
+const Presets=[
+    {presetid:"1511961081949-fixp1n",suffix:"mp3_64k"},
+    {presetid:"1515665713054-yl0raf",suffix:"mp3_32k"},
+    {presetid:"1515665815957-smmpwv",suffix:"mp3_256k"},
+    {presetid:"1351620000001-300040",suffix:"mp3_128k"},
+    {presetid:"1351620000001-300010",suffix:"mp3_320k"},
+    {presetid:"1597729893820-oiit43",suffix:"ogg_256k"},
+    {presetid:"1597729987666-t2qhi0",suffix:"ogg_320k"},
+    {presetid:"1597730018059-but8ns",suffix:"ogg_64k"},
+    {presetid:"1597730034884-o7j3db",suffix:"ogg_128k"},
+    {presetid:"1599740192753-hth1bo",suffix:"ogg_122k"},
+    {presetid:"1599740235903-3r7sp3",suffix:"ogg_147k"}
+]
+
+var obj = { messages: messages, uploadPath: uploadPath, azureconnectionstring: azureconnectionstring, gmailSMTPCredentials: gmailSMTPCredentials, facebookCredentials: facebookCredentials, twitterCredentials: twitterCredentials, googleCredentials: googleCredentials,Presets };
 module.exports = obj;
