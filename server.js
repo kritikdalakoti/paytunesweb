@@ -9,7 +9,7 @@ const config = require('./config.json')
 const {uploadMedia, uploadAws} = require('./aws_upload/uploadsfunction')
 // const cron = require('node-cron')
 //const cron = require('node-cron')
-// const AWS = require('aws-sdk')
+const AWS = require('aws-sdk')
 // AWS.config.loadFromPath('/paytunes_new/server/config.json');
 const S3 = new AWS.S3();
 app.use(express.json({ limit: '50mb' }))
