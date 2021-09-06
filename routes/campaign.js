@@ -1,12 +1,13 @@
 const express = require('express')
 const controller = require('../controllers/campaign')
+const path=require('path')
 const auth = require('../auth_middleware/auth');
 const router = express.Router();
 const multer = require('multer')
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
-        callback(null, "../server/public/uploads")
+        callback(null, path.join(__dirname,'../public/uploads'))
     },
     filename: (req, file, callback) => {
         callback(null, file.originalname)

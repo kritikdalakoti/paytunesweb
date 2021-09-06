@@ -454,6 +454,7 @@ exports.createsubcampaign = async (req, res) => {
         })
         let directory = path.join(__dirname,'../public/uploads/')
         console.log(directory)
+        console.log(__dirname)
         let result3 = deletefiles(directory)
         if (result3.error) {
             return res.status(400).json({ error: result3.error.message })
