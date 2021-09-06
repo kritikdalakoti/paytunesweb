@@ -62,7 +62,7 @@ export default function TemporaryDrawer() {
 
     useEffect(() => {
         // console.log('effect')
-        fetch('http://127.0.0.1:5000/advertiser/get_advertisers', { //http://127.0.0.1:5000 
+        fetch('/advertiser/get_advertisers', { //http://127.0.0.1:5000 
           method: 'post'
         }).then(res => res.json())
           .then(data => {

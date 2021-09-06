@@ -40,7 +40,7 @@ export default function NewCampaign() {
 
 function campaignsave(flag){
   debugger
-  fetch('http://127.0.0.1:5000/campaign/create',{  //http://127.0.0.1:5000
+  fetch('/campaign/create',{  //http://127.0.0.1:5000
   method:'POST',
   headers:{"Content-Type":"application/json","Authorization" :"Bearer "+localStorage.getItem("jwt")},
   body:JSON.stringify({

@@ -274,7 +274,7 @@ const LineItem= ()=>{
     formdata.append('videotime', videotime)
     formdata.append('displaytime', displaytime)
     setloading(true)
-      axios.post('http://127.0.0.1:5000/campaign/createsubcampaign', //http://127.0.0.1:5000
+      axios.post('/campaign/createsubcampaign', //http://127.0.0.1:5000
       formdata,
       {headers: { Authorization: "Bearer " + localStorage.getItem("jwt"),  'Content-Type': 'multipart/form-data' }},
     ).then(response=>{
