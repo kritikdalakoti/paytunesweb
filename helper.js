@@ -2,7 +2,7 @@ const fs=require('fs')
 const path=require('path')
 exports.readdata = (filename) => {
     let results=[]
-    let workbook=xlsx.readFile(`../server/public/uploads/${filename}`)
+    let workbook=xlsx.readFile(path.join(__dirname,`../public/uploads/${filename}`))
     var sheet_name_list = workbook.SheetNames;
     let xl_data=xlsx.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]])
     if(!xl_data[0].Pincode){
