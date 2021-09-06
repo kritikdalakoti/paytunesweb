@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer, useContext } from 'react'
 import { Paper, Divider, Grid } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { useHistory } from 'react-router-dom'
+import { useHistory,useLocation } from 'react-router-dom'
 import styles from '../css/newcampaign.module.css'
 import { BudgetContext } from '../App'
 
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function NewCampaign() {
-
+  
   const classes = useStyles()
   const history = useHistory()
   const { state1, dispatch1 } = useContext(BudgetContext)
@@ -38,8 +38,9 @@ export default function NewCampaign() {
   const [success,setsuccess]=useState('')
   const [error,seterror]=useState('')
 
-function campaignsave(){
-  fetch('/campaign/create',{  //http://127.0.0.1:5000
+function campaignsave(flag){
+  debugger
+  fetch('http://127.0.0.1:5000/campaign/create',{  //http://127.0.0.1:5000
   method:'POST',
   headers:{"Content-Type":"application/json","Authorization" :"Bearer "+localStorage.getItem("jwt")},
   body:JSON.stringify({
@@ -47,13 +48,15 @@ function campaignsave(){
   })
 }).then(res=>res.json())
 .then(data=>{
+  debugger
   if(data.error){
     seterror(data.error)
     console.log(data.error)
   }else{
     setsuccess(data.message)
-    // setOpen(true)
-    history.push(`/dashboard/c/campaign/new/${data.data._id}`)
+    flag==="noflag"?
+    history.push(`/dashboard/c/campaign/new/${data.data._id}`):
+    history.push(`/dashboard/`)
     console.log(data)
   }
 })
@@ -69,7 +72,7 @@ function campaignsave(){
 
         <form onSubmit={e => {
           e.preventDefault()
-          campaignsave();
+          campaignsave("noflag");
         }} >
           <div class={styles.headingsub}>
             <h4 >What shall we call your Campaign? *</h4></div>
@@ -129,7 +132,7 @@ function campaignsave(){
           </div>
 
           <div class={styles.svdf}>
-            <button type="button" tabIndex="0" id class="button-footer" >Create Campaign Without Line Item</button>
+            <button type="button" tabIndex="0" id class="button-footer" onClick={()=>campaignsave("flag")} >Create Campaign Without Line Item</button>
             <button type="submit" tabIndex="0"  id class="button-footer2" >Next:Create Line Item</button>
           </div>
         </form>

@@ -44,18 +44,32 @@ const googleCredentials = {
 }
 
 const Presets=[
-    {presetid:"1511961081949-fixp1n",suffix:"mp3_64k"},
-    {presetid:"1515665713054-yl0raf",suffix:"mp3_32k"},
-    {presetid:"1515665815957-smmpwv",suffix:"mp3_256k"},
-    {presetid:"1351620000001-300040",suffix:"mp3_128k"},
-    {presetid:"1351620000001-300010",suffix:"mp3_320k"},
-    {presetid:"1597729893820-oiit43",suffix:"ogg_256k"},
-    {presetid:"1597729987666-t2qhi0",suffix:"ogg_320k"},
-    {presetid:"1597730018059-but8ns",suffix:"ogg_64k"},
-    {presetid:"1597730034884-o7j3db",suffix:"ogg_128k"},
-    {presetid:"1599740192753-hth1bo",suffix:"ogg_122k"},
-    {presetid:"1599740235903-3r7sp3",suffix:"ogg_147k"}
+    {presetid:"1511961081949-fixp1n",suffix:"_64k.mp3"},
+    {presetid:"1515665713054-yl0raf",suffix:"_32k.mp3"},
+    {presetid:"1515665815957-smmpwv",suffix:"_256k.mp3"},
+    {presetid:"1351620000001-300040",suffix:"_128k.mp3"},
+    {presetid:"1351620000001-300010",suffix:"_320k.mp3"},
+    {presetid:"1597729893820-oiit43",suffix:"_256k.ogg"},
+    {presetid:"1597729987666-t2qhi0",suffix:"_320k.ogg"},
+    {presetid:"1597730018059-but8ns",suffix:"_64k.ogg"},
+    {presetid:"1597730034884-o7j3db",suffix:"_128k.ogg"},
+    {presetid:"1599740192753-hth1bo",suffix:"_122k.ogg"},
+    {presetid:"1599740235903-3r7sp3",suffix:"_147k.ogg"}
 ]
 
-var obj = { messages: messages, uploadPath: uploadPath, azureconnectionstring: azureconnectionstring, gmailSMTPCredentials: gmailSMTPCredentials, facebookCredentials: facebookCredentials, twitterCredentials: twitterCredentials, googleCredentials: googleCredentials,Presets };
+const AudioMediaFiles=[
+    {Bitrate:"64k",Codec:"audio/3gpp"},
+    {Bitrate:"32k",Codec:"audio/3gpp"},
+    {Bitrate:"256k",Codec:"audio/3gpp"},
+    {Bitrate:"128k",Codec:"audio/3gpp"},
+    {Bitrate:"320k",Codec:"audio/3gpp"},
+    {Bitrate:"256k",Codec:"audio/ogg"},
+    {Bitrate:"320k",Codec:"audio/ogg"},
+    {Bitrate:"64k",Codec:"audio/ogg"},
+    {Bitrate:"128k",Codec:"audio/ogg"},
+    {Bitrate:"122k",Codec:"audio/ogg"},
+    {Bitrate:"147k",Codec:"audio/ogg"},
+]
+
+var obj = { messages: messages, uploadPath: uploadPath, azureconnectionstring: azureconnectionstring, gmailSMTPCredentials: gmailSMTPCredentials, facebookCredentials: facebookCredentials, twitterCredentials: twitterCredentials, googleCredentials: googleCredentials,Presets,AudioMediaFiles };
 module.exports = obj;

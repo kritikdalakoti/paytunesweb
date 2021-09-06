@@ -83,9 +83,10 @@ const SubcampaignMasterSchema=new mongoose.Schema({
     Duration:{type:String},
     maxARPU:{type:Number},
     minARPU:{type:Number},
-    TargetImpressions:{type:String},
+    TargetImpressions:{type:Number},
     strategy:{type:String},
     advertiserid:{type:mongoose.Types.ObjectId},//added
+    trackurl:{type:String},
     createdOn:{type:Date}
 })
 

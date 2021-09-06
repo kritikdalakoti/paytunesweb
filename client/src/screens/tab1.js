@@ -13,9 +13,10 @@ export function Tab1({type,settype,strategy,setStrategy,lineitem,setlineitem}) {
     // const [lineitem, setlineitem] = useState('')
 console.log(type)
     const handleChange2 = (event) => {
+        dispatch1({type:'TYPE',payload:event.target.value})
         settype(event.target.value)
         console.log(type)
-        dispatch1({type:'TYPE',payload:event.target.value})
+        
     }
 
     return (
@@ -42,7 +43,7 @@ console.log(type)
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={state1.Type}
+                        value={type}
                         multiple
                         label="Select Type"
                         style={{ width: '30%', float: 'left', margin: '1% 0% 5% 5%' }}

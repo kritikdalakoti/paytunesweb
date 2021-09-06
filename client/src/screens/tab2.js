@@ -78,14 +78,14 @@ export function Tab2({state}) {
                     <Divider orientation="vertical" flexItem style={{ margin: '0px 40px' }} />
                     <div className={styles.vftuc} >
                         <p class={styles.srtey} >Set Sub-Campaign budget *</p>
-                        <input type="number" max="200" step="0.1" placeholder="in $" class={styles.inp} required onChange={(e) => {
+                        <input type="number"  step="0.1" placeholder="in $" class={styles.inp} required onChange={(e) => {
                             typ === "Audio" ? SetAudioltbudget(e.target.value) : (typ === "Video" ? SetVideoltbudget(e.target.value) : SetDisplayltbudget(e.target.value))
                         }
                         }
                             value={typ === "Audio" ? AudioLtbudget : typ === "Video" ? VideoLtbudget : DisplayLtbudget}
                         />
                         <p class={styles.srtey} >Set Your Impression Limit *</p>
-                        <input type="number" max="200" step="10" placeholder="Set Impression Limit" required class={styles.inp} onChange={(e) => {
+                        <input type="number" step="10" placeholder="Set Impression Limit" required class={styles.inp} onChange={(e) => {
                             typ === "Audio" ? setAudioimpressionlimit(e.target.value) : (typ === "Video" ? setVideoimpressionlimit(e.target.value) : setDisplayimpressionlimit(e.target.value))
                         }
                         }

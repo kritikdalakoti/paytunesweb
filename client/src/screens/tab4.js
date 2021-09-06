@@ -297,15 +297,7 @@ export function Tab4({ state }) {
                                     )}
 
                                 </Select>
-                                {/* <select  className={styles.hjkk} style={{padding:'10px',width:'300%'}} onChange={(e)=>{
-        setage(e.target.value) 
-        } 
-         } value={age} >
-            <option value disabled >Select Age</option>
-            {ages.map((reg)=>
-            <option>{reg}</option>
-            )}
-        </select> */}
+                                
                             </div>
                             <div className={styles.vftuc1} style={{ marginLeft: '10%' }} >
                                 <p className={styles.srtey} style={{ textAlign: 'left' }} >Gender</p>
@@ -326,11 +318,7 @@ export function Tab4({ state }) {
                                     <MenuItem value="Female">Female</MenuItem>
 
                                 </Select>
-                                {/* <select  className={styles.hjkk} style={{padding:'10px',width:'130%'}} value={gender} onChange={(e)=>setgender(e.target.value)} >
-            <option value disabled >Select Gender</option>
-            <option value="male" >Male</option>
-            <option value="female" >Female</option>
-        </select> */}
+                            
                             </div>
                         </div>
                     </div>
