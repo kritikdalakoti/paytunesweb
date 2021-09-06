@@ -2,7 +2,7 @@ const AWS = require('aws-sdk')
 const path = require('path')
 AWS.config.loadFromPath(path.join(__dirname, '../config.json'))//('/paytunes_new/server/config.json');
 const { BlobServiceClient } = require("@azure/storage-blob");
-// const constantObj = require('../constants')
+const constantObj = require('../constants')
 const {Presets}=require('../helper')
 const AZURE_STORAGE_CONNECTION_STRING = constantObj.azureconnectionstring.cstring;//"DefaultEndpointsProtocol=https;AccountName=ptmfiles;AccountKey=Y4YuI3fVlI9lnuNlLP6u/NJkzrRsEqVRuSMlwO8LmMYg35w0G5/tbsrbG/CcdXzP0I+qh+DmmKxMnhpS0XXZdw==;EndpointSuffix=core.windows.net";
 const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
@@ -49,7 +49,7 @@ exports.uploadtranscodedfile = async function ({ key, container }) {
                 Key: key,  //Source path of video 
                 Container: container
             },
-            Outputs: constantObj.Presets.map(obj => {
+            Outputs: Presets.map(obj => {
                 transcodedkeys.push(`${key1}${obj.suffix}`)
                 return { Key: `${key1}${obj.suffix}`, PresetId: `${obj.presetid}` }
             })
