@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const CampaignMaster = require('../models/campaignmaster')
 const SubCampaignMaster = require('../models/subcampaignmaster')
-
+const path=require('path')
 const { readdata, deletefiles } = require('../helper')
 const xlsx = require('xlsx')
 const fs = require('fs')
@@ -170,7 +170,8 @@ exports.createsubcampaign = async (req, res) => {
         }
         if (req.files.AudioFileinp) {
             console.log(req.files.AudioFileinp[0])
-            let data = fs.readFileSync(`../server/public/uploads/${req.files.AudioFileinp[0].filename}`)
+            
+            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
             console.log(data)
             let filetype = req.files.AudioFileinp[0].mimetype
             filetype = filetype.toString();
@@ -208,7 +209,7 @@ exports.createsubcampaign = async (req, res) => {
         }
         if (req.files.VideoFileinp) {
 
-            let data = fs.readFileSync(`../server/public/uploads/${req.files.VideoFileinp[0].filename}`)
+            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
             let date = new Date();
             const year = date.getFullYear();
             let month;
@@ -232,7 +233,7 @@ exports.createsubcampaign = async (req, res) => {
             }
         }
         if (req.files.DisplayFileinp) {
-            let data = fs.readFileSync(`../server/public/uploads/${req.files.DisplayFileinp[0].filename}`)
+            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
             let date = new Date();
             const year = date.getFullYear();
             let month;
@@ -256,7 +257,7 @@ exports.createsubcampaign = async (req, res) => {
         }
 
         if (req.files.AudioFileBanner) {
-            let data = fs.readFileSync(`../server/public/uploads/${req.files.AudioFileBanner[0].filename}`)
+            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
             let date = new Date();
             const year = date.getFullYear();
             let month;
@@ -280,7 +281,7 @@ exports.createsubcampaign = async (req, res) => {
         }
 
         if (req.files.VideoFileBanner) {
-            let data = fs.readFileSync(`../server/public/uploads/${req.files.VideoFileBanner[0].filename}`)
+            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
             let date = new Date();
             const year = date.getFullYear();
             let month;
@@ -304,7 +305,7 @@ exports.createsubcampaign = async (req, res) => {
         }
 
         if (req.files.DisplayFileBanner) {
-            let data = fs.readFileSync(`../server/public/uploads/${req.files.DisplayFileBanner[0].filename}`)
+            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
             let date = new Date();
             const year = date.getFullYear();
             let month;
