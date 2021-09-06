@@ -2,12 +2,11 @@ const mongoose = require('mongoose');
 const CampaignMaster = require('../models/campaignmaster')
 const SubCampaignMaster = require('../models/subcampaignmaster')
 const path=require('path')
-const { readdata, deletefiles } = require('../helper')
+const { readdata, deletefiles,AudioMediaFiles } = require('../helper')
 const xlsx = require('xlsx')
 const fs = require('fs')
 const { uploadAws, uploadMedia, uploadtranscodedfile, uploadAzure } = require('../aws_upload/uploadsfunction');
-const { AudioMediaFiles } = require('../constants')
-
+// const { AudioMediaFiles } = require('../constants')
 
 
 
@@ -453,7 +452,7 @@ exports.createsubcampaign = async (req, res) => {
             }
         })
         let directory = path.join(__dirname,'../public/uploads/')
-        console.log(directory)
+    
         console.log(__dirname)
         let result3 = deletefiles(directory)
         if (result3.error) {

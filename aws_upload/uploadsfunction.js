@@ -2,7 +2,8 @@ const AWS = require('aws-sdk')
 const path = require('path')
 AWS.config.loadFromPath(path.join(__dirname, '../config.json'))//('/paytunes_new/server/config.json');
 const { BlobServiceClient } = require("@azure/storage-blob");
-const constantObj = require('../constants')
+// const constantObj = require('../constants')
+const {Presets}=require('../helper')
 const AZURE_STORAGE_CONNECTION_STRING = constantObj.azureconnectionstring.cstring;//"DefaultEndpointsProtocol=https;AccountName=ptmfiles;AccountKey=Y4YuI3fVlI9lnuNlLP6u/NJkzrRsEqVRuSMlwO8LmMYg35w0G5/tbsrbG/CcdXzP0I+qh+DmmKxMnhpS0XXZdw==;EndpointSuffix=core.windows.net";
 const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
 const containerClient = blobServiceClient.getContainerClient('image');

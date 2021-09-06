@@ -1,0 +1,14 @@
+Sub Campaigns instead of line item.name to be changed
+
+Sub campaign type in first tab of line item
+
+impression also to be added alongside budget in set your budget tab
+
+time period ---> Campaign
+
+impression click tracking url as well
+
+category type and duration in upload creatives tab.
+
+choose advertiser option in create Campaign Tab.
+pincode upload via excel
