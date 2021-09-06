@@ -1,5 +1,8 @@
 const fs=require('fs')
 const path=require('path')
+
+const xlsx = require('xlsx')
+
 exports.readdata = (filename) => {
     let results=[]
     let workbook=xlsx.readFile(path.join(__dirname,`../public/uploads/${filename}`))
