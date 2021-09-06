@@ -111,7 +111,7 @@ exports.uploadAzure=()=> {
                 reject(result2.error)
             }
             resolve('Successful!')
-        },25000)
+        },17000)
     })
 }
 
