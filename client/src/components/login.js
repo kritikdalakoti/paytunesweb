@@ -27,6 +27,7 @@ function Login(){
             })
         }).then(res=>res.json()).
         then(data=>{
+            debugger
             if(data.error){
                 console.log(data.error)
                 seterror(data.error)
@@ -41,8 +42,9 @@ function Login(){
             }
 
         }).catch(e=>{
-            console.log(e)
-            seterror(e)
+            debugger
+            console.log(e.message)
+            seterror(e.message)
             //M.toast({html:e, classes:'#ff5252 red accent-2'})
         })
     }

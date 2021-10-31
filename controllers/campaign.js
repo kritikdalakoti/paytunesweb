@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const CampaignMaster = require('../models/campaignmaster')
 const SubCampaignMaster = require('../models/subcampaignmaster')
 const path=require('path')
-const { readdata, deletefiles,AudioMediaFiles } = require('../helper')
+const { readdata, deletefiles,AudioMediaFiles , VideoMediaFiles } = require('../helper')
 const xlsx = require('xlsx')
 const fs = require('fs')
 const { uploadAws, uploadMedia, uploadtranscodedfile, uploadAzure } = require('../aws_upload/uploadsfunction');
@@ -13,16 +13,17 @@ const { uploadAws, uploadMedia, uploadtranscodedfile, uploadAzure } = require('.
 
 exports.createcampaign = async (req, res) => {
     try {
-        let { campaignName, budget, startdate, enddate, active } = req.body;
-        if (!campaignName || !budget || !startdate || !enddate || !active) {
-            return res.status(400).json({ err: "Provide all details!" });
+        let { campaignName, budget, startdate, enddate } = req.body;
+        if (!campaignName || !budget || !startdate || !enddate ) {
+            return res.status(400).json({ error: "Provide all detailsdfsfsfs!" });
         }
+        
+        console.log(1)
         const campaign = new CampaignMaster({
             title: campaignName,
             budget,
             startdate,
-            enddate,
-            launch: active == "true" ? true : false
+            enddate
         });
         await campaign.save();
         res.status(200).json({ message: 'Successfuly Created!', data: campaign });
@@ -34,7 +35,7 @@ exports.createcampaign = async (req, res) => {
 
 exports.createsubcampaign = async (req, res) => {
     try {
-        // console.log(req.body)
+        console.log(req.files)
         let {
             campaignid,
             Advertiser,
@@ -99,9 +100,9 @@ exports.createsubcampaign = async (req, res) => {
         if (!advertiserid) {
             return res.status(400).json({ error: "Please select Advertiser!" })
         }
-        if (parseInt(totalbudget) < parseInt(AudioLtbudget) ? parseInt(AudioLtbudget) : 0 + parseInt(VideoLtbudget) ? parseInt(VideoLtbudget) : 0 + parseInt(DisplayLtbudget) ? parseInt(DisplayLtbudget) : 0) {
-            return res.status(400).json({ error: "Sum of SubCampaign Budgets cannot increase than the total Budget of the campaign!" })
-        }
+
+        console.log(req.body)
+       
         Audiogender = Audiogender ? Audiogender.split(',') : ''
         Videogender = Videogender ? Videogender.split(',') : ''
         Displaygender = Displaygender ? Displaygender.split(',') : ''
@@ -197,19 +198,23 @@ exports.createsubcampaign = async (req, res) => {
             if (result.error) {
                 return res.status(400).json({ error: result.error.message })
             }
-            let result1 = await uploadtranscodedfile({ key: file, container: filetype })
+            let result1 = await uploadtranscodedfile({ key: file, container: filetype,type:"Audio" })
             if (result1.error) {
                 return res.status(400).json({ error: result1.error.message })
             }
-            await uploadAzure();
+            await uploadAzure('Audio');
             AudioMediaFiles.forEach((audio) => {
                 audio.Name = req.files.AudioFileinp[0].filename
             })
         }
         if (req.files.VideoFileinp) {
-
-            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
+            console.log('ss')
+            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.VideoFileinp[0].filename}`)
             let date = new Date();
+            let filetype = req.files.VideoFileinp[0].mimetype
+            filetype = filetype.toString();
+            console.log(filetype.split('/')[1])
+            filetype = filetype.split('/')[1];
             const year = date.getFullYear();
             let month;
             if (date.getMonth() + 1 >= 10) {
@@ -223,16 +228,24 @@ exports.createsubcampaign = async (req, res) => {
                 date1 = `0${date1}`
             }
             let finaldate = `${year}-${month}-${date1}`
-            let filename = `${finaldate}_${req.files.VideoFileinp[0].filename}`
-            let data1 = { filename, data }
-
-            let result = await uploadMedia(data1, 'video')
+            let file = `video/${finaldate}_${req.files.VideoFileinp[0].filename}`
+            // let filename = `${finaldate}_${req.files.VideoFileinp[0].filename}`
+            let data1 = { Key: file, Body: data, ContentEncoding: 'base64', ContentType: filetype }
+            let result = await uploadAws(data1)
             if (result.error) {
                 return res.status(400).json({ error: result.error.message })
             }
+            let result1 = await uploadtranscodedfile({ key: file, container: filetype , type:"Video"  })
+            if (result1.error) {
+                return res.status(400).json({ error: result1.error.message })
+            }
+            await uploadAzure('Video');
+            VideoMediaFiles.forEach((video) => {
+                video.Name = req.files.VideoFileinp[0].filename
+            })
         }
         if (req.files.DisplayFileinp) {
-            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
+            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.DisplayFileinp[0].filename}`)
             let date = new Date();
             const year = date.getFullYear();
             let month;
@@ -256,7 +269,7 @@ exports.createsubcampaign = async (req, res) => {
         }
 
         if (req.files.AudioFileBanner) {
-            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
+            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.AudioFileBanner[0].filename}`)
             let date = new Date();
             const year = date.getFullYear();
             let month;
@@ -280,7 +293,7 @@ exports.createsubcampaign = async (req, res) => {
         }
 
         if (req.files.VideoFileBanner) {
-            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
+            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.VideoFileBanner[0].filename}`)
             let date = new Date();
             const year = date.getFullYear();
             let month;
@@ -304,7 +317,7 @@ exports.createsubcampaign = async (req, res) => {
         }
 
         if (req.files.DisplayFileBanner) {
-            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
+            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.DisplayFileBanner[0].filename}`)
             let date = new Date();
             const year = date.getFullYear();
             let month;
@@ -338,7 +351,7 @@ exports.createsubcampaign = async (req, res) => {
                         adType: typ,
                         pincode: AudioPincode ? AudioPincode : AudioPincodes,
                         Gender: Audiogender,
-                        Pricing: AudioLtbudget ? parseInt(AudioLtbudget) : "",
+                        Pricing: AudioLtbudget ? parseFloat(AudioLtbudget) : "",
                         trackurl: Audiotrackurl,
                         language: AudioLanguage,
                         City: Audiocityval,
@@ -349,7 +362,7 @@ exports.createsubcampaign = async (req, res) => {
                         endtime: Audioendtime,
                         targetCategory: Audiocategory,
                         area: Audioarea,
-                        TargetImpressions: parseInt(Audioimpressionlimit),
+                        TargetImpressions:  Audioimpressionlimit?  parseInt(Audioimpressionlimit):null,
                         days: audiodays,
                         timelap: audiotime,
                         makemodel: Audiomakemodel,
@@ -377,7 +390,7 @@ exports.createsubcampaign = async (req, res) => {
                         advertiserid: mongoose.Types.ObjectId(advertiserid),
                         AdTitle: lineitem,
                         adType: typ,
-                        Pricing: VideoLtbudget ? parseInt(VideoLtbudget) : "",
+                        Pricing: VideoLtbudget ? parseFloat(VideoLtbudget) : "",
                         Gender: Videogender,
                         trackurl: Videotrackurl,
                         pincode: VideoPincode ? VideoPincode : VideoPincodes,
@@ -400,7 +413,7 @@ exports.createsubcampaign = async (req, res) => {
                         active: Videoactive === "true" ? true : false,
                         timeperiod: VideoTimeperiod,
                         frequency: VideoFrequency,
-                        Linear: [{ Title: Videocreative, type: "Video", MediaFiles: req.files.VideoFileinp ? [{ Name: req.files.VideoFileinp[0].filename }] : [{}] }],
+                        Linear: [{ Title: Videocreative, type: "Video", MediaFiles: req.files.VideoFileinp ? VideoMediaFiles : [{}] }],
                         strategy: strategy,
                         Companion: req.files.VideoFileBanner ? [{ Title: Videocreative, imageFiles: req.files.VideoFileBanner ? [{ Name: req.files.VideoFileBanner[0].filename }] : [{}] }] : [{}],
                     })
@@ -422,7 +435,7 @@ exports.createsubcampaign = async (req, res) => {
                         pincode: DisplayPincode ? DisplayPincode : DisplayPincodes,
                         Gender: Displaygender,
                         language: DisplayLanguage,
-                        Pricing: DisplayLtbudget ? parseInt(DisplayLtbudget) : "",
+                        Pricing: DisplayLtbudget ? parseFloat(DisplayLtbudget) : "",
                         trackurl: Displaytrackurl,
                         City: Displaycityval,
                         State: DisplayRegion,

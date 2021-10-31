@@ -21,10 +21,22 @@ console.log(type)
 
     return (
         <div>
+            
+            <div style={{display:'flex',flexDirection:'row'}}>
+            <p style={{marginRight:'20px'}}> Campaign/Lineitem :      </p>
+            <p>   /  {state1.campaign}/{state1.lineitem}</p>
+            </div>
             <div class={styles.headingsub}>
                 <h3>What shall we call your Sub-Campaign? *</h3>
             </div>
-            <input className="input" value={lineitem} placeholder="e.g. Targetting Strategy - Geography" size="30" required onChange={(e) => setlineitem(e.target.value)} />
+            <input className="input" value={lineitem} placeholder="e.g. Targetting Strategy - Geography" size="30" required onChange={(e) => 
+            {
+                setlineitem(e.target.value)
+                dispatch1({type:'LINEITEM',payload:e.target.value})
+            }
+                
+            } 
+                />
 
 
             <div class={styles.svdfe1} > Select your branding strategy. </div>
@@ -58,7 +70,7 @@ console.log(type)
             </div>
 
 
-            <hr class={styles.sep} />
+            {/* <hr class={styles.sep} /> */}
             
         </div>
     )

@@ -13,8 +13,8 @@ const useStyles = makeStyles((theme) => ({
         margin: '1%'
         //   backgroundColor: grey,
     },
-    col:{
-        ".MuiListItem-root.Mui-selected:hover":{backgroundColor:'green'}
+    col: {
+        ".MuiListItem-root.Mui-selected:hover": { backgroundColor: 'green' }
     },
     root1: {
         width: '100%',
@@ -23,8 +23,9 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: theme.shape.borderRadius,
         backgroundColor: theme.palette.background.paper,
         color: theme.palette.text.secondary,
-        padding: '3%',
-        marginBottom: '2%',
+        padding: '0%',
+        marginBottom: '1%',
+        marginLeft: '2%',
         //   margin:'3%',
         '& svg': {
             margin: theme.spacing(1.5),
@@ -58,7 +59,7 @@ export function Tab4({ state }) {
         videotime, setvideotime, displaytime, setdisplaytime
     } = state
     const { state1, dispatch1 } = useContext(BudgetContext)
-    
+
     const setdata = (reg, type) => {
         let res = []
         let resp = []
@@ -72,11 +73,14 @@ export function Tab4({ state }) {
         console.log('aud', AudioCity, 'vid', VideoCity, 'dis', DisplayCity)
     }
 
-    
+
     const classes = useStyles()
     return (
         <div>
-
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <p style={{ marginRight: '20px' }}> Campaign/Lineitem :</p>
+                <p>   /  {state1.campaign}/{state1.lineitem}</p>
+            </div>
             {state1.Type.map((typ) =>
                 <Grid container className={classes.root1} >
                     <div  >
@@ -98,28 +102,56 @@ export function Tab4({ state }) {
                                 typ === "Audio" ? setAudiotimeperiod(e.target.value) : (typ === "Video" ? setVideotimeperiod(e.target.value) : setDisplaytimeperiod(e.target.value))
                             }}
                                 value={typ === "Audio" ? AudioTimeperiod : typ === "Video" ? VideoTimeperiod : DisplayTimeperiod} >
-                                <option>Minute</option>
-                                <option>Hour</option>
-                                <option>Day</option>
-                                <option>Week</option>
-                                <option>30 day</option>
+                                <option value="campaignDuration" >Campaign Duration</option>
+                                
+                                <option value="Day" >Day</option>
+                                <option value="Week" >Week</option>
+                                <option value="30Day" >30 day</option>
                             </select>
                         </div>
-                        <div className={styles.vftuc_sub} >
-                            <p className={styles.srtey} style={{ textAlign: 'left' }} >Do you want your Sub-Campaign active now? </p>
-                            <div class="radio-toolbar1" onChange={e => {
-                                typ === "Audio" ? setAudioActive(e.target.value) : (typ === "Video" ? setVideoActive(e.target.value) : setDisplayActive(e.target.value))
-                            }}
-                                value={typ === "Audio" ? Audioactive : typ === "Video" ? Videoactive : Displayactive}  >
+                        <div className={styles.vftuc1} style={{ marginLeft: '10%' }} >
+                            <p className={styles.srtey} style={{ textAlign: 'left' }} >Age </p>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                // value={age}
+                                multiple
+                                className={styles.hjkk}
+                                style={{ padding: '10px', width: '200px' }}
+                                onChange={e => {
+                                    typ === "Audio" ? setAudioage(e.target.value) : (typ === "Video" ? setVideoage(e.target.value) : setDisplayage(e.target.value))
+                                }}
+                                value={typ === "Audio" ? Audioage : typ === "Video" ? Videoage : Displayage}
+                            >
+                                {ages.map(reg =>
+                                    <MenuItem value={`${reg}`}>{reg}</MenuItem>
+                                )}
 
-                                <input type="radio" id={`active${typ}`} name={`Active${typ}`} value="true" checked={typ === "Audio" ? Audioactive === "true" ? true : false : (typ === "Video" ? Videoactive === "true" ? true : false : Displayactive === "true" ? true : false)} />
-                                <label for={`active${typ}`} style={{ padding: '10px 10px', width: '20%' }} >Yes</label>
+                            </Select>
 
-                                <input type="radio" id={`inActive${typ}`} name={`Active${typ}`} value="false" checked={typ === "Audio" ? Audioactive === "false" ? true : false : (typ === "Video" ? Videoactive === "false" ? true : false : Displayactive === "false" ? true : false)} />
-                                <label for={`inActive${typ}`} style={{ padding: '10px 10px', width: '20%' }} >No</label>
-
-                            </div>
                         </div>
+                        <div className={styles.vftuc1}  >
+                            <p className={styles.srtey} style={{ textAlign: 'left' }} >Gender</p>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                // value={gender}
+                                multiple
+                                className={styles.hjkk}
+                                style={{ padding: '10px', width: '200px' }}
+                                onChange={e => {
+                                    typ === "Audio" ? setAudiogender(e.target.value) : (typ === "Video" ? setVideogender(e.target.value) : setDisplaygender(e.target.value))
+                                }}
+                                value={typ === "Audio" ? Audiogender : typ === "Video" ? Videogender : Displaygender}
+                            // onChange={handleChange4}
+                            >
+                                <MenuItem value="Male">Male</MenuItem>
+                                <MenuItem value="Female">Female</MenuItem>
+
+                            </Select>
+
+                        </div>
+                        
 
                     </div>
                     {/* {console.log(check)} */}
@@ -128,7 +160,7 @@ export function Tab4({ state }) {
                         <p>Location *</p>
                     </div>
                     {/*  */}
-                    <div className={styles.row_dis}  style={{ padding: '10px' }} >
+                    <div className={styles.row_dis} style={{ padding: '10px' }} >
                         <button class="button-footer2" tabIndex="0" type="button" style={{ marginRight: '40px', marginLeft: '140px', padding: '20px 40px 20px 40px' }} onClick={() =>
                             typ === "Audio" ? setAudiocheck(1) : (typ === "Video" ? setVideocheck(1) : setDisplaycheck(1))
                         } >Pincode Upload</button>
@@ -150,8 +182,8 @@ export function Tab4({ state }) {
 
 
 
-                            <h4 style={{ margin: '95px 60px 0px 110px' }} >OR</h4>
-                            <div className={styles.vftuc_sub} >
+                            <h4 style={{ margin: '65px 60px 0px 110px' }} >OR</h4>
+                            <div className={styles.vftuc_sub} style={{ marginTop: '3px' }} >
                                 <p class={styles.srtey} >Upload Pincode File</p>
                                 <input type="file" id={`${typ}iu`} hidden accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                     onChange={e =>
@@ -160,14 +192,12 @@ export function Tab4({ state }) {
                                 />
                                 <label for={`${typ}iu`} className={styles.fileinp}  >{typ === "Audio" ? (AudioPincodeFile ? AudioPincodeFile.name : `Select File`) : (typ === "Video" ? (VideoPincodeFile ? VideoPincodeFile.name : `Select File`) : DisplayPincodeFile ? DisplayPincodeFile.name : `Select File`)}</label>
                             </div>
-                            <div  >
 
-                            </div>
                         </div>
                         : (typ === "Audio" ? Audiocheck === 2 ? true : false : typ === "Video" ? Videocheck === 2 ? true : false : Displaycheck === 2 ? true : false) ?
                             <div  >
                                 <div className={styles.row_dis} >
-                                    <div className={styles.vftuc1} style={{ marginRight: '10%' }} >
+                                    <div className={styles.vftuc1} style={{ marginRight: '5%' }} >
                                         <p className={styles.srtey} style={{ textAlign: 'left' }} >Region </p>
                                         <Select
                                             labelId="demo-simple-select-label"
@@ -175,8 +205,8 @@ export function Tab4({ state }) {
                                             // value={Region}
                                             multiple
                                             className={classes.col}
-                                            
-                                            style={{ padding: '10px', width: '400px' }}
+
+                                            style={{ padding: '10px', width: '200px' }}
                                             onChange={e => {
                                                 if (typ === "Audio") {
                                                     setAudioregion(e.target.value)
@@ -194,13 +224,13 @@ export function Tab4({ state }) {
                                             value={typ === "Audio" ? AudioRegion : typ === "Video" ? VideoRegion : DisplayRegion}
                                         >
                                             {region.map(reg =>
-                                                <MenuItem  value={`${reg}`}>{reg}</MenuItem>
+                                                <MenuItem value={`${reg}`}>{reg}</MenuItem>
                                             )}
 
                                         </Select>
 
                                     </div>
-                                    <div className={styles.vftuc1} style={{ marginLeft: '10%' }} >
+                                    <div className={styles.vftuc1}  >
                                         <p className={styles.srtey} style={{ textAlign: 'left' }} >Grand City</p>
                                         <Select
                                             labelId="demo-simple-select-label"
@@ -208,7 +238,7 @@ export function Tab4({ state }) {
                                             // value={cityval}
                                             multiple
                                             className={styles.hjkk}
-                                            style={{ padding: '10px', width: '400px' }}
+                                            style={{ padding: '10px', width: '200px' }}
                                             onChange={e => {
                                                 typ === "Audio" ? setAudioGrandcityval(e.target.value) : (typ === "Video" ? setVideoGrandcityval(e.target.value) : setDisplayGrandcityval(e.target.value))
                                             }}
@@ -222,10 +252,10 @@ export function Tab4({ state }) {
                                         </Select>
 
                                     </div>
-                                </div>
+                                    {/* </div>
 
-                                <div className={styles.row_dis} >
-                                    <div className={styles.vftuc1} style={{ marginRight: '10%' }} >
+                                <div className={styles.row_dis} > */}
+                                    <div className={styles.vftuc1} style={{ marginLeft: '5%' }} >
                                         <p className={styles.srtey} style={{ textAlign: 'left' }} >City</p>
                                         <Select
                                             labelId="demo-simple-select-label"
@@ -233,7 +263,7 @@ export function Tab4({ state }) {
                                             // value={cityval}
                                             multiple
                                             className={styles.hjkk}
-                                            style={{ padding: '10px', width: '400px' }}
+                                            style={{ padding: '10px', width: '200px' }}
                                             onChange={e => {
                                                 typ === "Audio" ? setAudiocityval(e.target.value) : (typ === "Video" ? setVideocityval(e.target.value) : setDisplaycityval(e.target.value))
                                             }}
@@ -247,15 +277,15 @@ export function Tab4({ state }) {
                                         </Select>
 
                                     </div>
-                                    <div className={styles.vftuc1} style={{ marginLeft: '10%' }} >
-                                        <p className={styles.srtey} style={{ textAlign: 'left' }} >Area </p>
+                                    <div className={styles.vftuc1} >
+                                        <p className={styles.srtey} style={{ marginLeft: '5%' }} >Area </p>
                                         <Select
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
                                             // value={Region}
                                             multiple
                                             className={styles.hjkk}
-                                            style={{ padding: '10px', width: '400px' }}
+                                            style={{ padding: '10px', width: '200px' }}
                                             onChange={e => {
                                                 typ === "Audio" ? setAudioarea(e.target.value) : (typ === "Video" ? setVideoarea(e.target.value) : setDisplayarea(e.target.value))
                                             }}
@@ -271,218 +301,168 @@ export function Tab4({ state }) {
                             :
                             <></>}
 
-                    <div style={{ marginTop: '10px' }} >
-                        <div className={styles.head} style={{ marginLeft: '-77%' }} >
-                            <p>Demographic *</p>
-                        </div>
+                    <div style={{display:'flex',flexDirection:'row'}} >
+                        <div className={styles.vftuc1} >
 
-                        <div className={styles.row_dis}  >
-
-                            <div className={styles.vftuc1} style={{ marginRight: '10%' }} >
-                                <p className={styles.srtey} style={{ textAlign: 'left' }} >Age </p>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    // value={age}
-                                    multiple
-                                    className={styles.hjkk}
-                                    style={{ padding: '10px', width: '400px' }}
-                                    onChange={e => {
-                                        typ === "Audio" ? setAudioage(e.target.value) : (typ === "Video" ? setVideoage(e.target.value) : setDisplayage(e.target.value))
-                                    }}
-                                    value={typ === "Audio" ? Audioage : typ === "Video" ? Videoage : Displayage}
-                                >
-                                    {ages.map(reg =>
-                                        <MenuItem value={`${reg}`}>{reg}</MenuItem>
-                                    )}
-
-                                </Select>
-                                
+                            <div className={styles.lis} onClick={() =>
+                                typ === "Audio" ? setAudioisadvanced(!Audioisadvanced) : (typ === "Video" ? setVideoisadvanced(!Videoisadvanced) : setDisplayisadvanced(!Displayisadvanced))}
+                            >
+                                <ArrowRightIcon style={{ cursor: 'pointer' }} />
+                                <p style={{ fontSize: '25px', fontWeight: 'bold' }} >Advanced Targetting</p>
                             </div>
-                            <div className={styles.vftuc1} style={{ marginLeft: '10%' }} >
-                                <p className={styles.srtey} style={{ textAlign: 'left' }} >Gender</p>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    // value={gender}
-                                    multiple
-                                    className={styles.hjkk}
-                                    style={{ padding: '10px', width: '400px' }}
-                                    onChange={e => {
-                                        typ === "Audio" ? setAudiogender(e.target.value) : (typ === "Video" ? setVideogender(e.target.value) : setDisplaygender(e.target.value))
-                                    }}
-                                    value={typ === "Audio" ? Audiogender : typ === "Video" ? Videogender : Displaygender}
-                                // onChange={handleChange4}
-                                >
-                                    <MenuItem value="Male">Male</MenuItem>
-                                    <MenuItem value="Female">Female</MenuItem>
+                            {(typ === "Audio" ? Audioisadvanced : typ === "Video" ? Videoisadvanced : Displayisadvanced) ?
+                                <div>
+                                    <div className={styles.head} >
+                                        <p style={{ textAlign: 'left' }} > Publisher </p>
+                                    </div>
+                                    <div className={styles.row_dis} >
+                                        <div className={styles.vftuc1} style={{ marginRight: '10%' }} >
+                                            <p className={styles.srtey} style={{ textAlign: 'left' }} >Language </p>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                // value={Language}
+                                                multiple
+                                                className={styles.hjkk}
+                                                style={{ padding: '10px', width: '400px' }}
+                                                onChange={e => {
+                                                    typ === "Audio" ? setAudioLanguage(e.target.value) : (typ === "Video" ? setVideoLanguage(e.target.value) : setDisplayLanguage(e.target.value))
+                                                }}
+                                                value={typ === "Audio" ? AudioLanguage : typ === "Video" ? VideoLanguage : DisplayLanguage}
+                                            >
+                                                {language.map(reg =>
+                                                    <MenuItem value={`${reg.language}`}>{reg.language}</MenuItem>
+                                                )}
 
-                                </Select>
-                            
-                            </div>
+                                            </Select>
+
+                                        </div>
+                                        <div className={styles.vftuc1} style={{ marginLeft: '10%' }} >
+                                            <p className={styles.srtey} style={{ textAlign: 'left' }} >Category</p>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                // value={category}
+                                                multiple
+                                                className={styles.hjkk}
+                                                style={{ padding: '10px', width: '400px' }}
+                                                onChange={e => {
+                                                    typ === "Audio" ? setAudiocategory(e.target.value) : (typ === "Video" ? setVideocategory(e.target.value) : setDisplaycategory(e.target.value))
+                                                }}
+                                                value={typ === "Audio" ? Audiocategory : typ === "Video" ? Videocategory : Displaycategory}
+                                            >
+                                                {Category_List.map(reg =>
+                                                    <MenuItem value={`${reg._id}`}>{reg._id}-{reg.name}</MenuItem>
+                                                )}
+                                            </Select>
+
+                                        </div>
+                                    </div>
+                                    <div className={styles.head} >
+                                        <p style={{ textAlign: 'left' }} > Device </p>
+                                    </div>
+                                    <div className={styles.row_dis} >
+                                        <div className={styles.vftuc1} style={{ marginRight: '10%' }} >
+                                            <p className={styles.srtey} style={{ textAlign: 'left' }} >Operating System </p>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                // value={os}
+                                                multiple
+                                                className={styles.hjkk}
+                                                style={{ padding: '10px', width: '400px' }}
+                                                onChange={e => {
+                                                    typ === "Audio" ? setAudioos(e.target.value) : (typ === "Video" ? setVideoos(e.target.value) : setDisplayos(e.target.value))
+                                                }}
+                                                value={typ === "Audio" ? Audioos : typ === "Video" ? Videoos : Displayos}
+                                            >
+                                                <MenuItem value='Android'>Android</MenuItem>
+                                                <MenuItem value='Apple IOS'>Apple IOS</MenuItem>
+
+                                            </Select>
+
+                                        </div>
+                                        <div className={styles.vftuc1} style={{ marginLeft: '10%' }} >
+                                            <p className={styles.srtey} style={{ textAlign: 'left' }} >Device Model</p>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                // value={makemodel}
+                                                multiple
+                                                className={styles.hjkk}
+                                                style={{ padding: '10px', width: '400px' }}
+                                                onChange={e => {
+                                                    typ === "Audio" ? setAudioMakemodel(e.target.value) : (typ === "Video" ? setVideoMakemodel(e.target.value) : setDisplayMakemodel(e.target.value))
+                                                }}
+                                                value={typ === "Audio" ? Audiomakemodel : typ === "Video" ? Videomakemodel : Displaymakemodel}
+                                            >
+                                                {MakeModel.map(reg =>
+                                                    <MenuItem value={`${reg._id}`}>{reg._id}</MenuItem>
+                                                )}
+                                            </Select>
+
+                                        </div>
+                                    </div>
+                                    <div className={styles.head} >
+                                        <p style={{ textAlign: 'left' }} > Day And Time </p>
+                                    </div>
+                                    <div className={styles.row_dis} >
+                                        <div className={styles.vftuc1} style={{ marginRight: '10%' }} >
+                                            <p className={styles.srtey} style={{ textAlign: 'left' }} >Day of Week </p>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                // value={os}
+                                                multiple
+                                                className={styles.hjkk}
+                                                style={{ padding: '10px', width: '400px' }}
+                                                onChange={e => {
+                                                    typ === "Audio" ? setaudiodays(e.target.value) : (typ === "Video" ? setvideodays(e.target.value) : setdisplaydays(e.target.value))
+                                                }}
+                                                value={typ === "Audio" ? audiodays : typ === "Video" ? videodays : displaydays}
+                                            >
+                                                {days.map(reg =>
+                                                    <MenuItem value={`${reg}`}>{reg}</MenuItem>
+                                                )}
+
+                                            </Select>
+
+                                        </div>
+                                        <div className={styles.vftuc1} style={{ marginLeft: '10%' }} >
+                                            <p className={styles.srtey} style={{ textAlign: 'left' }} >Time Of Day</p>
+                                            <Select
+                                                labelId="demo-simple-select-label"
+                                                id="demo-simple-select"
+                                                // value={makemodel}
+                                                multiple
+                                                className={styles.hjkk}
+                                                style={{ padding: '10px', width: '400px' }}
+                                                onChange={e => {
+                                                    typ === "Audio" ? setaudiotime(e.target.value) : (typ === "Video" ? setvideotime(e.target.value) : setdisplaytime(e.target.value))
+                                                }}
+                                                value={typ === "Audio" ? audiotime : typ === "Video" ? videotime : displaytime}
+                                            >
+                                                {time.map(reg =>
+                                                    <MenuItem value={`${reg}`}>{reg}</MenuItem>
+                                                )}
+                                            </Select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                :
+                                <></>
+                            }
                         </div>
                     </div>
-                    <div className={styles.vftuc1} >
 
-                        <div className={styles.lis} onClick={() =>
-                            typ === "Audio" ? setAudioisadvanced(!Audioisadvanced) : (typ === "Video" ? setVideoisadvanced(!Videoisadvanced) : setDisplayisadvanced(!Displayisadvanced))}
-                        >
-                            <ArrowRightIcon style={{ cursor: 'pointer' }} />
-                            <p style={{ fontSize: '25px', fontWeight: 'bold' }} >Advanced Targetting</p>
-                        </div>
-                        {(typ === "Audio" ? Audioisadvanced : typ === "Video" ? Videoisadvanced : Displayisadvanced) ?
-                            <div>
-                                <div className={styles.head} >
-                                    <p style={{ textAlign: 'left' }} > Publisher </p>
-                                </div>
-                                <div className={styles.row_dis} >
-                                    <div className={styles.vftuc1} style={{ marginRight: '10%' }} >
-                                        <p className={styles.srtey} style={{ textAlign: 'left' }} >Language </p>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            // value={Language}
-                                            multiple
-                                            className={styles.hjkk}
-                                            style={{ padding: '10px', width: '400px' }}
-                                            onChange={e => {
-                                                typ === "Audio" ? setAudioLanguage(e.target.value) : (typ === "Video" ? setVideoLanguage(e.target.value) : setDisplayLanguage(e.target.value))
-                                            }}
-                                            value={typ === "Audio" ? AudioLanguage : typ === "Video" ? VideoLanguage : DisplayLanguage}
-                                        >
-                                            {language.map(reg =>
-                                                <MenuItem value={`${reg.language}`}>{reg.language}</MenuItem>
-                                            )}
-
-                                        </Select>
-
-                                    </div>
-                                    <div className={styles.vftuc1} style={{ marginLeft: '10%' }} >
-                                        <p className={styles.srtey} style={{ textAlign: 'left' }} >Category</p>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            // value={category}
-                                            multiple
-                                            className={styles.hjkk}
-                                            style={{ padding: '10px', width: '400px' }}
-                                            onChange={e => {
-                                                typ === "Audio" ? setAudiocategory(e.target.value) : (typ === "Video" ? setVideocategory(e.target.value) : setDisplaycategory(e.target.value))
-                                            }}
-                                            value={typ === "Audio" ? Audiocategory : typ === "Video" ? Videocategory : Displaycategory}
-                                        >
-                                            {Category_List.map(reg =>
-                                                <MenuItem value={`${reg._id}`}>{reg._id}-{reg.name}</MenuItem>
-                                            )}
-                                        </Select>
-
-                                    </div>
-                                </div>
-                                <div className={styles.head} >
-                                    <p style={{ textAlign: 'left' }} > Device </p>
-                                </div>
-                                <div className={styles.row_dis} >
-                                    <div className={styles.vftuc1} style={{ marginRight: '10%' }} >
-                                        <p className={styles.srtey} style={{ textAlign: 'left' }} >Operating System </p>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            // value={os}
-                                            multiple
-                                            className={styles.hjkk}
-                                            style={{ padding: '10px', width: '400px' }}
-                                            onChange={e => {
-                                                typ === "Audio" ? setAudioos(e.target.value) : (typ === "Video" ? setVideoos(e.target.value) : setDisplayos(e.target.value))
-                                            }}
-                                            value={typ === "Audio" ? Audioos : typ === "Video" ? Videoos : Displayos}
-                                        >
-                                            <MenuItem value='Android'>Android</MenuItem>
-                                            <MenuItem value='Apple IOS'>Apple IOS</MenuItem>
-
-                                        </Select>
-
-                                    </div>
-                                    <div className={styles.vftuc1} style={{ marginLeft: '10%' }} >
-                                        <p className={styles.srtey} style={{ textAlign: 'left' }} >Device Model</p>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            // value={makemodel}
-                                            multiple
-                                            className={styles.hjkk}
-                                            style={{ padding: '10px', width: '400px' }}
-                                            onChange={e => {
-                                                typ === "Audio" ? setAudioMakemodel(e.target.value) : (typ === "Video" ? setVideoMakemodel(e.target.value) : setDisplayMakemodel(e.target.value))
-                                            }}
-                                            value={typ === "Audio" ? Audiomakemodel : typ === "Video" ? Videomakemodel : Displaymakemodel}
-                                        >
-                                            {MakeModel.map(reg =>
-                                                <MenuItem value={`${reg._id}`}>{reg._id}</MenuItem>
-                                            )}
-                                        </Select>
-
-                                    </div>
-                                </div>
-                                <div className={styles.head} >
-                                    <p style={{ textAlign: 'left' }} > Day And Time </p>
-                                </div>
-                                <div className={styles.row_dis} >
-                                    <div className={styles.vftuc1} style={{ marginRight: '10%' }} >
-                                        <p className={styles.srtey} style={{ textAlign: 'left' }} >Day of Week </p>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            // value={os}
-                                            multiple
-                                            className={styles.hjkk}
-                                            style={{ padding: '10px', width: '400px' }}
-                                            onChange={e => {
-                                                typ === "Audio" ? setaudiodays(e.target.value) : (typ === "Video" ? setvideodays(e.target.value) : setdisplaydays(e.target.value))
-                                            }}
-                                            value={typ === "Audio" ? audiodays : typ === "Video" ? videodays : displaydays}
-                                        >
-                                            {days.map(reg =>
-                                                <MenuItem value={`${reg}`}>{reg}</MenuItem>
-                                            )}
-
-                                        </Select>
-
-                                    </div>
-                                    <div className={styles.vftuc1} style={{ marginLeft: '10%' }} >
-                                        <p className={styles.srtey} style={{ textAlign: 'left' }} >Time Of Day</p>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            // value={makemodel}
-                                            multiple
-                                            className={styles.hjkk}
-                                            style={{ padding: '10px', width: '400px' }}
-                                            onChange={e => {
-                                                typ === "Audio" ? setaudiotime(e.target.value) : (typ === "Video" ? setvideotime(e.target.value) : setdisplaytime(e.target.value))
-                                            }}
-                                            value={typ === "Audio" ? audiotime : typ === "Video" ? videotime : displaytime}
-                                        >
-                                            {time.map(reg =>
-                                                <MenuItem value={`${reg}`}>{reg}</MenuItem>
-                                            )}
-                                        </Select>
-
-                                    </div>
-                                </div>
-                            </div>
-                            :
-                            <></>
-                        }
-                    </div>
 
 
                 </Grid>
             )}
 
             <hr class={styles.sep} />
-            {/* <div class={styles.svdef}>
-                <button class="button-footer2" tabIndex="0" type="submit" >Launch</button>
-            </div> */}
+            
         </div>
 
     )

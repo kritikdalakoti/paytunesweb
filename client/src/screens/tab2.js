@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: theme.shape.borderRadius,
         backgroundColor: theme.palette.background.paper,
         color: theme.palette.text.secondary,
-        padding: '3%',
-        marginBottom: '2%',
+        padding: '0%',
+        marginBottom: '1%',
         //   margin:'3%',
         '& svg': {
             margin: theme.spacing(1.5),
@@ -31,108 +31,159 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export function Tab2({state}) {
+export function Tab2({ state }) {
 
     const classes = useStyles()
-    let {AudioLtbudget,SetAudioltbudget,VideoLtbudget,SetVideoltbudget,DisplayLtbudget,SetDisplayltbudget,
-        Audioimpressionlimit,setAudioimpressionlimit,Videoimpressionlimit,setVideoimpressionlimit,Displayimpressionlimit,
-        setDisplayimpressionlimit,Audiostartdate,setAudiostartdate,Videostartdate,setVideostartdate,Displaystartdate,
-        setDisplaystartdate,Audioenddate,setAudioenddate,Videoenddate,setVideoenddate,Displayenddate,setDisplayenddate,
-        Audiostarttime,setAudiostarttime,Videostarttime,setVideostarttime,Displaystarttime,setDisplaystarttime,Audioendtime,
-        setAudioendtime,Videoendtime,setVideoendtime,Displayendtime,setDisplayendtime}=state
+    let { AudioLtbudget, SetAudioltbudget, VideoLtbudget, SetVideoltbudget, DisplayLtbudget, SetDisplayltbudget,
+        Audioimpressionlimit, setAudioimpressionlimit, Videoimpressionlimit, setVideoimpressionlimit, Displayimpressionlimit,
+        setDisplayimpressionlimit, Audiostartdate, setAudiostartdate, Videostartdate, setVideostartdate, Displaystartdate,
+        setDisplaystartdate, Audioenddate, setAudioenddate, Videoenddate, setVideoenddate, Displayenddate, setDisplayenddate,
+        Audiostarttime, setAudiostarttime, Videostarttime, setVideostarttime, Displaystarttime, setDisplaystarttime, Audioendtime,
+        setAudioendtime, Videoendtime, setVideoendtime, Displayendtime, setDisplayendtime } = state
     const { state1, dispatch1 } = useContext(BudgetContext)
-    // const [AudioLtbudget, SetAudioltbudget] = useState(0)
-    // const [VideoLtbudget, SetVideoltbudget] = useState(0)
-    // const [DisplayLtbudget, SetDisplayltbudget] = useState(0)
-    // const [Audioimpressionlimit, setAudioimpressionlimit] = useState(0)
-    // const [Videoimpressionlimit, setVideoimpressionlimit] = useState(0)
-    // const [Displayimpressionlimit, setDisplayimpressionlimit] = useState(0)
-    // const [Audiostartdate, setAudiostartdate] = useState(null)
-    // const [Videostartdate, setVideostartdate] = useState(null)
-    // const [Displaystartdate, setDisplaystartdate] = useState(null)
-    // const [Audioenddate, setAudioenddate] = useState(null)
-    // const [Videoenddate, setVideoenddate] = useState(null)
-    // const [Displayenddate, setDisplayenddate] = useState(null)
-    // const [Audiostarttime, setAudiostarttime] = useState(null)
-    // const [Videostarttime, setVideostarttime] = useState(null)
-    // const [Displaystarttime, setDisplaystarttime] = useState(null)
-    // const [Audioendtime, setAudioendtime] = useState(null)
-    // const [Videoendtime, setVideoendtime] = useState(null)
-    // const [Displayendtime, setDisplayendtime] = useState(null)
+    const [cpm, setcpm] = useState({
+        Audiocpm: 0,
+        Videocpm: 0,
+        Displaycpm: 0,
+        totalcpm: 0
+    });
+    console.log(cpm.Audiocpm, cpm.Videocpm, cpm.Displaycpm)
     return (
         <div>
-            <div class={styles.futd} >
-                <p style={{ fontSize: '20px' }}>This cannot exceed your campaign budget.
-                    There is {state1.budget} left for this campaign. </p>
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <p style={{ marginRight: '20px' }}> Campaign/Lineitem :      </p>
+                <p>   /  {state1.campaign}/{state1.lineitem}</p>
             </div>
-            <p > Your Total Budget is : </p><h2 style={{ marginBottom: '1%' }}>{state1.budget}</h2>
+            <div class={styles.futd} >
+                <p style={{ fontSize: '15px' }}>This cannot exceed your campaign budget.
+                    There is {state1.budget} left for this campaign. </p>
+                <p className={styles.srtey} style={{ marginLeft: '50px' }} >Avg Cost Per Impression</p>
+
+                <input style={{ marginLeft: '10px', paddingLeft: '20px' }} readOnly value={
+                    Math.round((((cpm.Audiocpm + cpm.Videocpm + cpm.Displaycpm) / 3) * 100)) / 100
+                }
+
+                />
+            </div>
+            <div style={{ display: "flex", flexDirection: 'row', padding: '1px' }}>
+                <p > Your Total Budget is : </p>
+                <p style={{ marginLeft: '3px', fontWeight: 'bold' }} >{state1.budget}</p>
+            </div>
+
 
             {/* Dynamic */}
             {/* {console.log('jjh', type)} */}
             {state1.Type.map((typ) =>
+                <div>
 
-                <Grid container className={classes.root1} >
                     <div className={styles.jhgft} >
                         <h2>{typ}</h2>
                     </div>
-                    <Divider orientation="vertical" flexItem style={{ margin: '0px 40px' }} />
-                    <div className={styles.vftuc} >
-                        <p class={styles.srtey} >Set Sub-Campaign budget *</p>
-                        <input type="number"  step="0.1" placeholder="in $" class={styles.inp} required onChange={(e) => {
-                            typ === "Audio" ? SetAudioltbudget(e.target.value) : (typ === "Video" ? SetVideoltbudget(e.target.value) : SetDisplayltbudget(e.target.value))
-                        }
-                        }
-                            value={typ === "Audio" ? AudioLtbudget : typ === "Video" ? VideoLtbudget : DisplayLtbudget}
-                        />
-                        <p class={styles.srtey} >Set Your Impression Limit *</p>
-                        <input type="number" step="10" placeholder="Set Impression Limit" required class={styles.inp} onChange={(e) => {
-                            typ === "Audio" ? setAudioimpressionlimit(e.target.value) : (typ === "Video" ? setVideoimpressionlimit(e.target.value) : setDisplayimpressionlimit(e.target.value))
-                        }
-                        }
-                            value={typ === "Audio" ? Audioimpressionlimit : typ === "Video" ? Videoimpressionlimit : Displayimpressionlimit}
-                        />
-                    </div>
-                    <Divider orientation="vertical" flexItem style={{ margin: '0px 40px' }} />
-                    <div className={styles.tucker}>
-                        <p class={styles.srtey} >Start Date *</p>
-                        <input type="date" placeholder="yyyy-mm-dd" class={styles.inp} required onChange={(e) => {
-                            typ === "Audio" ? setAudiostartdate(e.target.value) : (typ === "Video" ? setVideostartdate(e.target.value) : setDisplaystartdate(e.target.value))
-                        }
-                        }
-                            value={typ === "Audio" ? Audiostartdate : typ === "Video" ? Videostartdate : Displaystartdate}
-                        />
-                        <p class={styles.srtey} >Start Time </p>
-                        <input type="time" step="1" placeholder="hh:mm" class={styles.inp} onChange={(e) => {
-                            typ === "Audio" ? setAudiostarttime(e.target.value) : (typ === "Video" ? setVideostarttime(e.target.value) : setDisplaystarttime(e.target.value))
-                        }
-                        }
-                            value={typ === "Audio" ? Audiostarttime : typ === "Video" ? Videostarttime : Displaystarttime}
-                        />
-                    </div>
-                    <div style={{ display: 'block' }}>
-                        <p class={styles.srtey} >End Date *</p>
-                        <input type="date" placeholder="yyyy-mm-dd" class={styles.inp} required onChange={(e) => {
-                            typ === "Audio" ? setAudioenddate(e.target.value) : (typ === "Video" ? setVideoenddate(e.target.value) : setDisplayenddate(e.target.value))
-                        }
-                        }
-                            value={typ === "Audio" ? Audioenddate : typ === "Video" ? Videoenddate : Displayenddate}
-                        />
-                        <p class={styles.srtey} >End Time </p>
-                        <input type="time" step="1" placeholder="hh:mm" class={styles.inp} onChange={(e) => {
-                            typ === "Audio" ? setAudioendtime(e.target.value) : (typ === "Video" ? setVideoendtime(e.target.value) : setDisplayendtime(e.target.value))
-                        }
-                        }
-                            value={typ === "Audio" ? Audioendtime : typ === "Video" ? Videoendtime : Displayendtime}
-                        />
-                    </div>
-                </Grid>
+                    <Grid container className={classes.root1} >
+
+                        {/* <Divider orientation="vertical" flexItem style={{ margin: '0px 20px' }} /> */}
+                        <div className={styles.vftuc} >
+                            <p class={styles.srtey} style={{ width: '50%' }}  >Sub-Campaign budget</p>
+                            <input type="number" step="10" placeholder="in $" class={styles.inp} style={{ width: '40%' }} required onChange={(e) => {
+
+                                if (typ === "Audio") {
+                                    SetAudioltbudget(e.target.value);
+                                    let val = Math.round((e.target.value / Audioimpressionlimit) * 100)
+                                    setcpm({ Audiocpm: val / 100, Videocpm: cpm.Videocpm, Displaycpm: cpm.Displaycpm })
+                                } else if (typ === "Video") {
+                                    SetVideoltbudget(e.target.value);
+                                    let val = Math.round((e.target.value / Videoimpressionlimit) * 100)
+                                    setcpm({ Audiocpm: cpm.Audiocpm, Videocpm: val / 100, Displaycpm: cpm.Displaycpm })
+                                } else {
+                                    SetDisplayltbudget(e.target.value);
+                                    let val = Math.round((e.target.value / Displayimpressionlimit) * 100)
+                                    setcpm({ Audiocpm: cpm.Audiocpm, Videocpm: cpm.Videocpm, Displaycpm: val / 100 })
+                                }
+                                typ === "Audio" ? SetAudioltbudget(e.target.value) : (typ === "Video" ? SetVideoltbudget(e.target.value) : SetDisplayltbudget(e.target.value))
+                            }
+                            }
+                                value={typ === "Audio" ? AudioLtbudget : typ === "Video" ? VideoLtbudget : DisplayLtbudget}
+                            />
+                        </div>
+                        <div className={styles.vftuc} >
+                            <p class={styles.srtey} style={{ width: '20%' }} >Impression Limit</p>
+                            <input type="number" step="10" placeholder="Impression Limit" required class={styles.inp} style={{ width: '40%' }} onChange={(e) => {
+
+                                if (typ === "Audio") {
+                                    setAudioimpressionlimit(e.target.value);
+                                    let val = Math.round((AudioLtbudget / e.target.value) * 100)
+                                    setcpm({ Audiocpm: val / 100, Videocpm: cpm.Videocpm, Displaycpm: cpm.Displaycpm })
+                                } else if (typ === "Video") {
+                                    setVideoimpressionlimit(e.target.value);
+                                    let val = Math.round((VideoLtbudget / e.target.value) * 100)
+                                    setcpm({ Audiocpm: cpm.Audiocpm, Videocpm: val / 100, Displaycpm: cpm.Displaycpm })
+                                } else {
+                                    setDisplayimpressionlimit(e.target.value);
+                                    let val = Math.round((DisplayLtbudget / e.target.value) * 100)
+                                    setcpm({ Audiocpm: cpm.Audiocpm, Videocpm: cpm.Videocpm, Displaycpm: val / 100 })
+                                }
+                            }
+                            }
+                                value={typ === "Audio" ? Audioimpressionlimit : typ === "Video" ? Videoimpressionlimit : Displayimpressionlimit}
+                            />
+                        </div>
+                        <div className={styles.vftuc}>
+                            <p class={styles.srtey} style={{ width: '20%' }} >Start Date *</p>
+                            <input type="date" placeholder="yyyy-mm-dd" class={styles.inp} style={{ width: '60%' }} required onChange={(e) => {
+                                typ === "Audio" ? setAudiostartdate(e.target.value) : (typ === "Video" ? setVideostartdate(e.target.value) : setDisplaystartdate(e.target.value))
+                            }
+                            }
+                                value={typ === "Audio" ? Audiostartdate : typ === "Video" ? Videostartdate : Displaystartdate}
+                            />
+                        </div>
+                        <div className={styles.vftuc}>
+                            <p class={styles.srtey} style={{ width: '20%' }} >End Date *</p>
+                            <input type="date" placeholder="yyyy-mm-dd" class={styles.inp} required style={{ width: '60%' }} onChange={(e) => {
+                                typ === "Audio" ? setAudioenddate(e.target.value) : (typ === "Video" ? setVideoenddate(e.target.value) : setDisplayenddate(e.target.value))
+                            }
+                            }
+                                value={typ === "Audio" ? Audioenddate : typ === "Video" ? Videoenddate : Displayenddate}
+                            />
+                        </div>
+                        <div className={styles.vftuc}>
+                            <p class={styles.srtey} style={{ width: '20%' }} >Start Time </p>
+                            <input type="time" step="1" placeholder="hh:mm" class={styles.inp} style={{ width: '60%' }} onChange={(e) => {
+                                typ === "Audio" ? setAudiostarttime(e.target.value) : (typ === "Video" ? setVideostarttime(e.target.value) : setDisplaystarttime(e.target.value))
+                            }
+                            }
+                                value={typ === "Audio" ? Audiostarttime : typ === "Video" ? Videostarttime : Displaystarttime}
+                            />
+                        </div>
+
+                        <div className={styles.vftuc}>
+                            <p class={styles.srtey} style={{ width: '20%' }} >End Time </p>
+                            <input type="time" step="1" placeholder="hh:mm" class={styles.inp} style={{ width: '60%' }} onChange={(e) => {
+                                typ === "Audio" ? setAudioendtime(e.target.value) : (typ === "Video" ? setVideoendtime(e.target.value) : setDisplayendtime(e.target.value))
+                            }
+                            }
+                                value={typ === "Audio" ? Audioendtime : typ === "Video" ? Videoendtime : Displayendtime}
+                            />
+                        </div>
+                        <div className={styles.vftuc} >
+                            <p className={styles.srtey} style={{ width: '20%' }}>Cost / Imp</p>
+                            <input readOnly value={
+                                typ === "Audio" ? cpm.Audiocpm : (typ === "Video" ? cpm.Videocpm : cpm.Displaycpm)
+                            }
+                                className={styles.inp}
+                                style={{ width: '40%' }}
+                            />
+                        </div>
+                    </Grid>
+
+                </div>
+
 
 
             )}
 
 
             {/* <hr class={styles.sep} /> */}
-            
+
         </div>
     )
 

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Paper,CircularProgress } from '@material-ui/core'
+import { Paper, CircularProgress } from '@material-ui/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -13,7 +13,9 @@ import { Tab1 } from './tab1'
 import { Tab2 } from './tab2'
 import { Tab3 } from './tab3'
 import { Tab4 } from './tab4'
+import { Tab5 } from './tab5'
 import axios from 'axios'
+import { fields } from '../utils/state'
 
 
 const styles = require('../css/lineitem.module.css')
@@ -51,10 +53,11 @@ function a11yProps(index) {
   };
 }
 
-const LineItem= ()=>{
+const LineItem = () => {
   const history = useHistory();
   const { state1, dispatch1 } = useContext(BudgetContext)
-  const [loading,setloading]=useState(false)
+  const [loading, setloading] = useState(false)
+  
   const classes = useStyles();
   const { campid } = useParams();
   const [success, setsuccess] = useState('')
@@ -70,12 +73,12 @@ const LineItem= ()=>{
   const [Audioimpressionlimit, setAudioimpressionlimit] = useState(0)
   const [Videoimpressionlimit, setVideoimpressionlimit] = useState(0)
   const [Displayimpressionlimit, setDisplayimpressionlimit] = useState(0)
-  const [Audiostartdate, setAudiostartdate] = useState(null)
-  const [Videostartdate, setVideostartdate] = useState(null)
-  const [Displaystartdate, setDisplaystartdate] = useState(null)
-  const [Audioenddate, setAudioenddate] = useState(null)
-  const [Videoenddate, setVideoenddate] = useState(null)
-  const [Displayenddate, setDisplayenddate] = useState(null)
+  const [Audiostartdate, setAudiostartdate] = useState(state1.startdate)
+  const [Videostartdate, setVideostartdate] = useState(state1.startdate)
+  const [Displaystartdate, setDisplaystartdate] = useState(state1.startdate)
+  const [Audioenddate, setAudioenddate] = useState(state1.enddate)
+  const [Videoenddate, setVideoenddate] = useState(state1.enddate)
+  const [Displayenddate, setDisplayenddate] = useState(state1.enddate)
   const [Audiostarttime, setAudiostarttime] = useState(null)
   const [Videostarttime, setVideostarttime] = useState(null)
   const [Displaystarttime, setDisplaystarttime] = useState(null)
@@ -91,12 +94,15 @@ const LineItem= ()=>{
   const [Audiotrackurl, setAudiotrackurl] = useState('')
   const [Videotrackurl, setVideotrackurl] = useState('')
   const [Displaytrackurl, setDisplaytrackurl] = useState('')
+  const [Audioimpurl, setAudioimpurl] = useState('')
+  const [Videoimpurl, setVideoimpurl] = useState('')
+  const [Displayimpurl, setDisplayimpurl] = useState('')
   const [Audiocategorytype, setAudiocategorytype] = useState('')
   const [Videocategorytype, setVideocategorytype] = useState('')
   const [Displaycategorytype, setDisplaycategorytype] = useState('')
-  const [AudioFileinp, setAudioFileinp] = useState('')
-  const [VideoFileinp, setVideoFileinp] = useState('')
-  const [DisplayFileinp, setDisplayFileinp] = useState('')
+  const [AudioFileinp, setAudioFileinp] = useState({})
+  const [VideoFileinp, setVideoFileinp] = useState({})
+  const [DisplayFileinp, setDisplayFileinp] = useState({})
   const [AudioFileBanner, setAudioFileBanner] = useState('')
   const [VideoFileBanner, setVideoFileBanner] = useState('')
   const [DisplayFileBanner, setDisplayFileBanner] = useState('')
@@ -110,9 +116,7 @@ const LineItem= ()=>{
   const [AudioTimeperiod, setAudiotimeperiod] = useState('')
   const [VideoTimeperiod, setVideotimeperiod] = useState('')
   const [DisplayTimeperiod, setDisplaytimeperiod] = useState('')
-  const [Audioactive, setAudioActive] = useState('')
-  const [Videoactive, setVideoActive] = useState('')
-  const [Displayactive, setDisplayActive] = useState('')
+  const [active, setactive] = useState('')
   const [AudioRegion, setAudioregion] = useState([])
   const [VideoRegion, setVideoregion] = useState([])
   const [DisplayRegion, setDisplayregion] = useState([])
@@ -164,10 +168,91 @@ const LineItem= ()=>{
   const [audiotime, setaudiotime] = useState([])
   const [videotime, setvideotime] = useState([])
   const [displaytime, setdisplaytime] = useState([])
-  // const [AudioisUploadRegion, setAudioisUploadregion] = useState(false)
-  // const [VideoisUploadRegion, setVideoisUploadRegion] = useState(false)
-  // const [DisplayisUploadRegion, setDisplayisUploadRegion] = useState(false)
 
+  const [AudioLtbudgetcheck, setAudioLtbudgetcheck] = useState(false)
+  const [VideoLtbudgetcheck, setVideoLtbudgetcheck] = useState(false)
+  const [DisplayLtbudgetcheck, setDisplayLtbudgetcheck] = useState(false)
+  const [Audioimpressionlimitcheck, setAudioimpressionlimitcheck] = useState(false)
+  const [Videoimpressionlimitcheck, setVideoimpressionlimitcheck] = useState(false)
+  const [Displayimpressionlimitcheck, setDisplayimpressionlimitcheck] = useState(false)
+  const [Audiostartdatecheck, setAudiostartdatecheck] = useState(false)
+  const [Videostartdatecheck, setVideostartdatecheck] = useState(false)
+  const [Displaystartdatecheck, setDisplaystartdatecheck] = useState(false)
+  const [Audioenddatecheck, setAudioenddatecheck] = useState(false)
+  const [Videoenddatecheck, setVideoenddatecheck] = useState(false)
+  const [Displayenddatecheck, setDisplayenddatecheck] = useState(false)
+  const [Audiostarttimecheck, setAudiostarttimecheck] = useState(false)
+  const [Videostarttimecheck, setVideostarttimecheck] = useState(false)
+  const [Displaystarttimecheck, setDisplaystarttimecheck] = useState(false)
+  const [Audioendtimecheck, setAudioendtimecheck] = useState(false)
+  const [Videoendtimecheck, setVideoendtimecheck] = useState(false)
+  const [Displayendtimecheck, setDisplayendtimecheck] = useState(false)
+  const [Audiocreativecheck, setAudiocreativecheck] = useState(false)
+  const [Videocreativecheck, setVideocreativecheck] = useState(false)
+  const [Displaycreativecheck, setDisplaycreativecheck] = useState(false)
+  const [Audiosizecheck, setAudiosizecheck] = useState(false)
+  const [Videosizecheck, setVideosizecheck] = useState(false)
+  const [Displaysizecheck, setDisplaysizecheck] = useState(false)
+  const [Audiotrackurlcheck, setAudiotrackurlcheck] = useState(false)
+  const [Videotrackurlcheck, setVideotrackurlcheck] = useState(false)
+  const [Displaytrackurlcheck, setDisplaytrackurlcheck] = useState(false)
+  const [AudioFrequencycheck, setAudioFrequencycheck] = useState(false)
+  const [VideoFrequencycheck, setVideoFrequencycheck] = useState(false)
+  const [DisplayFrequencycheck, setDisplayFrequencycheck] = useState(false)
+  const [AudioTimeperiodcheck, setAudioTimeperiodcheck] = useState(false)
+  const [VideoTimeperiodcheck, setVideoTimeperiodcheck] = useState(false)
+  const [DisplayTimeperiodcheck, setDisplayTimeperiodcheck] = useState(false)
+  const [AudioRegioncheck, setAudioRegioncheck] = useState(false)
+  const [VideoRegioncheck, setVideoRegioncheck] = useState(false)
+  const [DisplayRegioncheck, setDisplayRegioncheck] = useState(false)
+  const [Audioagecheck, setAudioagecheck] = useState(false)
+  const [Videoagecheck, setVideoagecheck] = useState(false)
+  const [Displayagecheck, setDisplayagecheck] = useState(false)
+  const [Audiocityvalcheck, setAudiocityvalcheck] = useState(false)
+  const [Videocityvalcheck, setVideocityvalcheck] = useState(false)
+  const [Displaycityvalcheck, setDisplaycityvalcheck] = useState(false)
+  const [Audiogendercheck, setAudiogendercheck] = useState(false)
+  const [Videogendercheck, setVideogendercheck] = useState(false)
+  const [Displaygendercheck, setDisplaygendercheck] = useState(false)
+  const [AudioLanguagecheck, setAudioLanguagecheck] = useState(false)
+  const [VideoLanguagecheck, setVideoLanguagecheck] = useState(false)
+  const [DisplayLanguagecheck, setDisplayLanguagecheck] = useState(false)
+  const [Audiocategorycheck, setAudiocategorycheck] = useState(false)
+  const [Videocategorycheck, setVideocategorycheck] = useState(false)
+  const [Displaycategorycheck, setDisplaycategorycheck] = useState(false)
+  const [Audiooscheck, setAudiooscheck] = useState(false)
+  const [Videooscheck, setVideooscheck] = useState(false)
+  const [Displayoscheck, setDisplayoscheck] = useState(false)
+  const [Audiomakemodelcheck, setAudiomakemodelcheck] = useState(false)
+  const [Videomakemodelcheck, setVideomakemodelcheck] = useState(false)
+  const [Displaymakemodelcheck, setDisplaymakemodelcheck] = useState(false)
+  const [Audioareacheck, setAudioareacheck] = useState(false)
+  const [Videoareacheck, setVideoareacheck] = useState(false)
+  const [Displayareacheck, setDisplayareacheck] = useState(false)
+  const [AudioPincodecheck, setAudioPincodecheck] = useState(false)
+  const [VideoPincodecheck, setVideoPincodecheck] = useState(false)
+  const [DisplayPincodecheck, setDisplayPincodecheck] = useState(false)
+  const [audiodayscheck, setaudiodayscheck] = useState(false)
+  const [videodayscheck, setvideodayscheck] = useState(false)
+  const [displaydayscheck, setdisplaydayscheck] = useState(false)
+  const [videotimecheck, setvideotimecheck] = useState(false)
+  const [audiotimecheck, setaudiotimecheck] = useState(false)
+  const [displaytimecheck, setdisplaytimecheck] = useState(false)
+  const [Audioimpurlcheck, setAudioimpurlcheck] = useState(false)
+  const [Videoimpurlcheck, setVideoimpurlcheck] = useState(false)
+  const [Displayimpurlcheck, setDisplayimpurlcheck] = useState(false)
+  const [AudioGrandCityvalcheck, setAudioGrandCityvalcheck] = useState(false)
+  const [VideoGrandCityvalcheck, setVideoGrandCityvalcheck] = useState(false)
+  const [DisplayGrandCityvalcheck, setDisplayGrandCityvalcheck] = useState(false)
+  const [Audiostrategycheck, setAudiostrategycheck] = useState(false)
+  const [Videostrategycheck, setVideostrategycheck] = useState(false)
+  const [Displaystrategycheck, setDisplaystrategycheck] = useState(false)
+  const [Audiosubcampnamecheck, setAudiosubcampnamecheck] = useState(false)
+  const [Videosubcampnamecheck, setVideosubcampnamecheck] = useState(false)
+  const [Displaysubcampnamecheck, setDisplaysubcampnamecheck] = useState(false)
+  console.log(type)
+  let fie=fields(type);
+  const [map1,setmap1]=useState(new Map(fie))
 
   const handleChange = (event, newValue) => {
     console.log('sd', newValue)
@@ -175,8 +260,9 @@ const LineItem= ()=>{
   };
   console.log(state1.adv._id)
   console.log('advertiser', state1.adv)
+  console.log('ddd', state1.startdate, state1.enddate)
   function submitsubcampaign() {
-    
+
     const formdata = new FormData()
 
     formdata.append('campaignid', campid)
@@ -213,6 +299,9 @@ const LineItem= ()=>{
     formdata.append('Audiotrackurl', Audiotrackurl)
     formdata.append('Videotrackurl', Videotrackurl)
     formdata.append('Displaytrackurl', Displaytrackurl)
+    formdata.append('Audioimpurl', Audiotrackurl)
+    formdata.append('Videoimpurl', Videotrackurl)
+    formdata.append('Displayimpurl', Displaytrackurl)
     formdata.append('AudioFileinp', AudioFileinp)
     formdata.append('VideoFileinp', VideoFileinp)
     formdata.append('DisplayFileinp', DisplayFileinp)
@@ -225,9 +314,7 @@ const LineItem= ()=>{
     formdata.append('AudioTimeperiod', AudioTimeperiod)
     formdata.append('VideoTimeperiod', VideoTimeperiod)
     formdata.append('DisplayTimeperiod', DisplayTimeperiod)
-    formdata.append('Audioactive', Audioactive)
-    formdata.append('Videoactive', Videoactive)
-    formdata.append('Displayactive', Displayactive)
+
     formdata.append('AudioRegion', AudioRegion)
     formdata.append('VideoRegion', VideoRegion)
     formdata.append('DisplayRegion', DisplayRegion)
@@ -274,28 +361,28 @@ const LineItem= ()=>{
     formdata.append('videotime', videotime)
     formdata.append('displaytime', displaytime)
     setloading(true)
-      axios.post('/campaign/createsubcampaign', //http://127.0.0.1:5000
+    axios.post('/campaign/createsubcampaign', //http://127.0.0.1:5000
       formdata,
-      {headers: { Authorization: "Bearer " + localStorage.getItem("jwt"),  'Content-Type': 'multipart/form-data' }},
-    ).then(response=>{
+      { headers: { Authorization: "Bearer " + localStorage.getItem("jwt"), 'Content-Type': 'multipart/form-data' } },
+    ).then(response => {
       setloading(false)
-      console.log('success',response.data)
-      history.push(`/dashboard`,{success:"Created Successfuly!"})
-    }).catch(error=>{
+      console.log('success', response.data)
+      history.push(`/dashboard`, { success: "Created Successfuly!" })
+    }).catch(error => {
       setloading(false)
       console.log(error.response.data)
       seterror(error.response.data.error)
     })
 
-    
+
   }
 
-    return (
-      loading?
+  return (
+    loading ?
       <div>
         <h3>Creating SubCampaign.... </h3>
         <h4>Wait After Successful Creation of Subcampaign You'll be redirected to Dashboard!</h4>
-        <CircularProgress/>
+        <CircularProgress />
       </div>
       :
       <Paper id="rcorners2" className='dashboard' elevation={3}>
@@ -328,20 +415,20 @@ const LineItem= ()=>{
           )}
           <AppBar position="static"  >
             <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-              <Tab label="About Your Sub-Campaign" {...a11yProps(0)} style={{ margin: '3%' }} />
-              <Tab label="Set Your Budget" {...a11yProps(1)} style={{ margin: '3%' }} />
-              <Tab label="Upload Or Assign Creative" {...a11yProps(2)} style={{ margin: '3%' }} />
-              <Tab label="Set Your Targetting" {...a11yProps(3)} style={{ margin: '3%' }} />
+              <Tab label="About Your Sub-Campaign" {...a11yProps(0)} style={{ margin: '2%' }} />
+              <Tab label="Set Your Budget" {...a11yProps(1)} style={{ margin: '2%' }} />
+              <Tab label="Upload Or Assign Creative" {...a11yProps(2)} style={{ margin: '2%' }} />
+              <Tab label="Set Your Targetting" {...a11yProps(3)} style={{ margin: '2%' }} />
+              <Tab label="LAUNCH" {...a11yProps(4)} style={{ margin: '2%' }} />
             </Tabs>
           </AppBar>
-          <form onSubmit={ (e)=>{
-          e.preventDefault()
-          // e.stopPropagation()
-          submitsubcampaign()
-          
+          <form onSubmit={(e) => {
+            e.preventDefault()
+            submitsubcampaign()
+
           }
-            
-            
+
+
           } encType="multipart/form-data" >
             <TabPanel value={value} index={0}>
 
@@ -354,7 +441,7 @@ const LineItem= ()=>{
 
 
             <TabPanel value={value} index={1}>
-            
+
               <Tab2 state=
                 {{
                   AudioLtbudget, SetAudioltbudget, VideoLtbudget, SetVideoltbudget, DisplayLtbudget, SetDisplayltbudget,
@@ -379,7 +466,8 @@ const LineItem= ()=>{
                 setVideotrackurl, Displaytrackurl, setDisplaytrackurl, Audiocategorytype, setAudiocategorytype, Videocategorytype, setVideocategorytype,
                 Displaycategorytype, setDisplaycategorytype, AudioFileinp, setAudioFileinp, VideoFileinp, setVideoFileinp, DisplayFileinp, setDisplayFileinp,
                 AudioFileBanner, setAudioFileBanner, VideoFileBanner, setVideoFileBanner, DisplayFileBanner, setDisplayFileBanner,
-                tempAudioFileinp, settempAudioFileinp, tempVideoFileinp, settempVideoFileinp, tempDisplayFileinp, settempDisplayFileinp
+                tempAudioFileinp, settempAudioFileinp, tempVideoFileinp, settempVideoFileinp, tempDisplayFileinp, settempDisplayFileinp,
+                Audioimpurl, setAudioimpurl, Videoimpurl, setVideoimpurl, Displayimpurl, setDisplayimpurl
               }} />
               {/* </form> */}
               <div class={styles.svdef}>
@@ -395,8 +483,7 @@ const LineItem= ()=>{
               <Tab4 state={{
                 AudioFrequency, setAudioFrequency, VideoFrequency, setVideoFrequency, DisplayFrequency, setDisplayFrequency,
                 AudioTimeperiod, setAudiotimeperiod, VideoTimeperiod, setVideotimeperiod, DisplayTimeperiod, setDisplaytimeperiod,
-                Audioactive, setAudioActive, Videoactive, setVideoActive, Displayactive, setDisplayActive, AudioRegion, setAudioregion,
-                VideoRegion, setVideoregion, DisplayRegion, setDisplayregion, Audioage, setAudioage, Videoage, setVideoage,
+                AudioRegion, setAudioregion, VideoRegion, setVideoregion, DisplayRegion, setDisplayregion, Audioage, setAudioage, Videoage, setVideoage,
                 Displayage, setDisplayage, AudioCity, setAudiocity, VideoCity, setVideocity, DisplayCity, setDisplaycity,
                 Audiocityval, setAudiocityval, Videocityval, setVideocityval, Displaycityval, setDisplaycityval, Audiogender,
                 setAudiogender, Videogender, setVideogender, Displaygender, setDisplaygender, Audioisadvanced, setAudioisadvanced,
@@ -409,18 +496,94 @@ const LineItem= ()=>{
                 AudioPincode, setAudioPincode, VideoPincode, setVideoPincode, DisplayPincode, setDisplayPincode,
                 AudioPincodeFile, setAudioPincodeFile, VideoPincodeFile, setVideoPincodeFile, DisplayPincodeFile, setDisplayPincodeFile,
                 audiodays, setaudiodays, videodays, setvideodays, displaydays, setdisplaydays, audiotime, setaudiotime,
-                videotime, setvideotime, displaytime, setdisplaytime,
+                videotime, setvideotime, displaytime, setdisplaytime, Audioimpurl, setAudioimpurl, Videoimpurl, setVideoimpurl, Displayimpurl, setDisplayimpurl,
                 AudioGrandCityval, setAudioGrandcityval, VideoGrandCityval, setVideoGrandcityval, DisplayGrandCityval, setDisplayGrandcityval
               }} />
               <div class={styles.svdef}>
-                <button class="button-footer2" tabIndex="0" type="submit"  >Launch</button>
+                <div className={styles.vftuc_sub} >
+                  <p className={styles.srtey}  >Do you want your Line Item active now? </p>
+                  <div class="radio-toolbar1" onChange={e => {
+                    setactive(e.target.value)
+                  }}
+                  >
+
+                    <input type="radio" id={`activeyes`} name={`Activeyes`} value="true" checked={active === "true" ? true : false} />
+                    <label for={`activeyes`} style={{ paddingRight: '10px', width: '10%' }} >Yes</label>
+
+                    <input type="radio" id={`inActiveno`} name={`ActiveNo`} value="false" checked={active === "false" ? true : false} />
+                    <label for={`inActiveno`} style={{ paddingRight: '10px', width: '10%' }} >No</label>
+
+                  </div>
+                </div>
+                {/* <button class="button-footer2" tabIndex="0" type="submit"  >Launch</button> */}
               </div>
             </TabPanel>
 
+
           </form>
+          <TabPanel value={value} index={4}>
+
+            <Tab5 state={{
+              strategy, lineitem, AudioLtbudget, VideoLtbudget, DisplayLtbudget, Audioimpressionlimit, Videoimpressionlimit,
+              Displayimpressionlimit, Audiostartdate, Videostartdate, Displaystartdate,
+              Audioenddate, Videoenddate, Displayenddate, Audiostarttime, Videostarttime, Displaystarttime, Audioendtime,
+              Videoendtime, Displayendtime, Audiocreative, Videocreative, Displaycreative,
+              Audiosize, Videosize, Displaysize, Audiotrackurl, Videotrackurl,
+              Displaytrackurl, Audiocategorytype, Videocategorytype,
+              Displaycategorytype, AudioFileinp, VideoFileinp, DisplayFileinp,
+              AudioFileBanner, VideoFileBanner, DisplayFileBanner, tempAudioFileinp, tempVideoFileinp, tempDisplayFileinp, AudioFrequency,
+              VideoFrequency, DisplayFrequency,
+              AudioTimeperiod, VideoTimeperiod, DisplayTimeperiod,
+              AudioRegion, VideoRegion, DisplayRegion, Audioage, Videoage,
+              Displayage, AudioCity, VideoCity, DisplayCity,
+              Audiocityval, Videocityval, Displaycityval, Audiogender,
+              Videogender, Displaygender, Audioisadvanced,
+              Videoisadvanced, Displayisadvanced, AudioLanguage,
+              VideoLanguage, DisplayLanguage, Audiocategory,
+              Videocategory, Displaycategory, Audioos, Videoos,
+              Displayos, Audiomakemodel, Videomakemodel, Displaymakemodel,
+              Audioarea, Videoarea, Displayarea,
+              Audiocheck, Videocheck, Displaycheck,
+              AudioPincode, VideoPincode, DisplayPincode,
+              AudioPincodeFile, VideoPincodeFile, DisplayPincodeFile,
+              audiodays, videodays, displaydays, audiotime,
+              videotime, displaytime, Audioimpurl, Videoimpurl, Displayimpurl,
+              AudioGrandCityval, VideoGrandCityval, DisplayGrandCityval, submitsubcampaign, 
+              AudioLtbudgetcheck, setAudioLtbudgetcheck,VideoLtbudgetcheck, setVideoLtbudgetcheck,DisplayLtbudgetcheck, setDisplayLtbudgetcheck,
+              Audioimpressionlimitcheck, setAudioimpressionlimitcheck,Videoimpressionlimitcheck, setVideoimpressionlimitcheck,
+              Displayimpressionlimitcheck, setDisplayimpressionlimitcheck,Audiostartdatecheck, setAudiostartdatecheck,
+              Videostartdatecheck, setVideostartdatecheck,Displaystartdatecheck, setDisplaystartdatecheck,Audioenddatecheck, setAudioenddatecheck,
+              Videoenddatecheck, setVideoenddatecheck,Displayenddatecheck, setDisplayenddatecheck,Audiostarttimecheck, setAudiostarttimecheck,
+              Videostarttimecheck, setVideostarttimecheck,Displaystarttimecheck, setDisplaystarttimecheck,Audioendtimecheck, setAudioendtimecheck,
+              Videoendtimecheck, setVideoendtimecheck,Displayendtimecheck, setDisplayendtimecheck,Audiocreativecheck, setAudiocreativecheck,
+              Videocreativecheck, setVideocreativecheck,Displaycreativecheck, setDisplaycreativecheck,Audiosizecheck, setAudiosizecheck,
+              Videosizecheck, setVideosizecheck,Displaysizecheck, setDisplaysizecheck,Audiotrackurlcheck, setAudiotrackurlcheck,
+              Videotrackurlcheck, setVideotrackurlcheck,Displaytrackurlcheck, setDisplaytrackurlcheck,AudioFrequencycheck, setAudioFrequencycheck,
+              VideoFrequencycheck, setVideoFrequencycheck,DisplayFrequencycheck, setDisplayFrequencycheck,AudioTimeperiodcheck, setAudioTimeperiodcheck,
+              VideoTimeperiodcheck, setVideoTimeperiodcheck,DisplayTimeperiodcheck, setDisplayTimeperiodcheck,AudioRegioncheck, setAudioRegioncheck,
+              VideoRegioncheck, setVideoRegioncheck,DisplayRegioncheck, setDisplayRegioncheck,Audioagecheck, setAudioagecheck,
+              Videoagecheck, setVideoagecheck,Displayagecheck, setDisplayagecheck,Audiocityvalcheck, setAudiocityvalcheck,
+              Videocityvalcheck, setVideocityvalcheck,Displaycityvalcheck, setDisplaycityvalcheck,Audiogendercheck, setAudiogendercheck,
+              Videogendercheck, setVideogendercheck,Displaygendercheck, setDisplaygendercheck,AudioLanguagecheck, setAudioLanguagecheck,
+              VideoLanguagecheck, setVideoLanguagecheck,DisplayLanguagecheck, setDisplayLanguagecheck,Audiocategorycheck, setAudiocategorycheck,
+              Videocategorycheck, setVideocategorycheck,Displaycategorycheck, setDisplaycategorycheck,Audiooscheck, setAudiooscheck,
+              Videooscheck, setVideooscheck,Displayoscheck, setDisplayoscheck,Audiomakemodelcheck, setAudiomakemodelcheck,
+              Videomakemodelcheck, setVideomakemodelcheck,Displaymakemodelcheck, setDisplaymakemodelcheck,Audioareacheck, setAudioareacheck,
+              Videoareacheck, setVideoareacheck,Displayareacheck, setDisplayareacheck,AudioPincodecheck, setAudioPincodecheck,
+              VideoPincodecheck, setVideoPincodecheck,DisplayPincodecheck, setDisplayPincodecheck,audiodayscheck, setaudiodayscheck,
+              videodayscheck, setvideodayscheck,displaydayscheck, setdisplaydayscheck,videotimecheck, setvideotimecheck,audiotimecheck, setaudiotimecheck,
+              displaytimecheck, setdisplaytimecheck,Audioimpurlcheck, setAudioimpurlcheck,Videoimpurlcheck, setVideoimpurlcheck,
+              Displayimpurlcheck, setDisplayimpurlcheck,AudioGrandCityvalcheck, setAudioGrandCityvalcheck,VideoGrandCityvalcheck, setVideoGrandCityvalcheck,
+              DisplayGrandCityvalcheck, setDisplayGrandCityvalcheck,map1,Audiostrategycheck,setAudiostrategycheck,Videostrategycheck,setVideostrategycheck,
+              Displaystrategycheck,setDisplaystrategycheck,Audiosubcampnamecheck,setAudiosubcampnamecheck,Videosubcampnamecheck,setVideosubcampnamecheck,Displaysubcampnamecheck,setDisplaysubcampnamecheck
+            }} />
+            {/* </form> */}
+
+
+          </TabPanel>
         </div>
       </Paper>
-    )
+  )
 }
 
 export default LineItem

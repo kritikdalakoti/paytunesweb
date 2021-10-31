@@ -1,18 +1,138 @@
-.heading{
-    text-align: left;
-    align-items:flex-start ;
-    font-size:30px;
-    margin-left: 7%;
-    margin-bottom:7%;
+
+
+.campname{
+    float: left;
+    /* margin: 2%; */
+    margin-left: 10px;
+    padding-right: 80px;
+    width: 20%;
+    padding-top: 1%;
 }
 
-.headingsub{
-    text-align: left;
-    font-size:20px;
-    margin-left:5%; 
+.campgeog{
+    float: left;
+    /* margin: 2%; */
+    margin-left: 10px;
+    padding-right: 80px;
+    width: 17%;
+    padding-top: 1%;
+}
+
+.campgoal{
+    float: left;
+    /* margin: 2%; */
+    margin-left: 35px;
+    padding-right: 30px;
+    width: 20%;
+    padding-top: 1%;
+}
+
+.kpi{
+    float: left;
+    padding-right: 145px;
+    width: 12%;
+    padding-top: 1%;
 }
 
 .svdf{
-    text-align:right;
-    margin-right:2%;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.rowdis{
+    display: flex;
+    flex-direction: row;
+}
+
+.coldis{
+    display: flex;
+    flex-direction: column;
+}
+
+.coldis1{
+    display: flex;
+    flex-direction: column;
+    padding-top: 1%;
+    margin-left: 3%;
+}
+
+.dashboard{
+    width: 70vw !important;
+      margin-top: 3%;
+      margin-bottom: 1%;
+      border: 1px lightgray solid;
+      margin-left: 10%;
+      max-height: 500vh;
+      padding: 2% 0% 3% 0%;
+}
+
+.dot{
+    margin-left: 5%;
+    padding-top: 1%;
+}
+
+.divider{
+    margin: 2% 0% 1% 0%;
+    width: 70vw !important;
+}
+
+.inpkpi{
+        font-size:10pt;
+        /* padding : 5px 0 5px 5px;  */
+        border-top :hidden;
+        border-bottom-width:1px;
+        border-left-style:none;
+        border-right-style:none;
+        border-top-style:none;
+        font-weight:300;
+        padding-top: 8%;
+        padding-bottom: 1%;
+        /* justify-content:space-between; */
+        display: flex;
+        margin-left: 5%;
+}
+
+.koi{
+    margin-left: 4%;
+    padding-top: 1%;
+}
+
+.creat{
+    float: left;
+    padding-right: 120px;
+    width: 15%;
+    padding-top: 1%;
+    margin-left: 4%;
+}
+
+.check{
+    margin-top: 2%;
+}
+
+.text{
+    margin: 2% 2% 0% 1%;
+}
+
+.plan{
+    
+        float: left;
+        padding-right: 120px;
+        width: 15%;
+        padding-top: 1%;
+        margin-left: 2%;
+}
+
+.target{
+    float: left;
+    margin-left: 10%;
+    font-size: 20px;
+}
+
+.shgt{
+    float: left;
+    margin-left: -6%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 3%;
+    
 }

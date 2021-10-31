@@ -137,10 +137,11 @@ body{
       margin-top: 1%;
       border: 1px lightgray solid;
       /* float: left; */
-      margin-left: 7%;
+      margin-left: 8%;
       padding-top: 1%;
       padding-bottom: 1%;
-      max-height: 800vh;
+      max-height: 500vh;
+      /* padding: 1% 1% 2% 3%; */
       
       /* overflow: hidden; */
       
@@ -247,18 +248,16 @@ body{
 }
 
 .input{
-  font-size:40pt;
-  padding : 30px 0 30px 30px; 
+  font-size:20pt;
+  padding : 5px 0 5px 5px; 
   border-top :hidden;
   border-bottom-width:1px;
   border-left-style:none;
   border-right-style:none;
   border-top-style:none;
   font-weight:300;
-  /* justify-content:space-between; */
   display: flex;
   margin-left: 5%;
-  
 }
 
 .heading{
