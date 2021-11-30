@@ -3,7 +3,25 @@
 .campname{
     float: left;
     /* margin: 2%; */
+    margin-left: 30px;
+    padding-right: 80px;
+    width: 20%;
+    padding-top: 1%;
+}
+
+.campname1{
+    float: left;
+    /* margin: 2%; */
     margin-left: 10px;
+    padding-right: 80px;
+    width: 20%;
+    padding-top: 1%;
+}
+
+.campbudget{
+    /* float: left; */
+    /* margin: 2%; */
+    margin-left: -10%;
     padding-right: 80px;
     width: 20%;
     padding-top: 1%;
@@ -27,6 +45,15 @@
     padding-top: 1%;
 }
 
+.campgoal1{
+    float: left;
+    /* margin: 2%; */
+    margin-left: 35px;
+    padding-right: 135px;
+    width: 20%;
+    padding-top: 1%;
+}
+
 .kpi{
     float: left;
     padding-right: 145px;
@@ -34,9 +61,53 @@
     padding-top: 1%;
 }
 
+.kpi1{
+    float: left;
+    padding-right: 179px;
+    width: 12%;
+    padding-top: 1%;
+    margin-left: 5%;
+}
+
+.kpi2{
+    float: left;
+    padding-right: 145px;
+    width: 12%;
+    padding-top: 1%;
+}
+
+.kpi3{
+    float: left;
+    padding-right: 150px;
+    width: 12%;
+    padding-top: 1%;
+    margin-left: 4%;
+}
+
+.kpi4{
+    float: left;
+    padding-right: 100px;
+    width: 12%;
+    padding-top: 1%;
+    margin-left: 2%;
+}
+
+.kpi5{
+    float: left;
+    padding-right: 155px;
+    width: 12%;
+    padding-top: 1%;
+}
+
 .svdf{
     font-size: 20px;
     font-weight: 400;
+}
+
+.svdf1{
+    font-size: 20px;
+    font-weight: 400;
+    white-space: nowrap;
 }
 
 .rowdis{
@@ -56,6 +127,12 @@
     margin-left: 3%;
 }
 
+.coldis2{
+    display: flex;
+    flex-direction: column;
+    padding-top: 1%;
+}
+
 .dashboard{
     width: 70vw !important;
       margin-top: 3%;
@@ -69,6 +146,23 @@
 .dot{
     margin-left: 5%;
     padding-top: 1%;
+    padding-right: 80%;
+}
+
+.dot4{
+    margin-left: 3%;
+    padding-top: 1%;
+    padding-right: 10%;
+}
+
+.dot1{
+    padding-top: 1%;
+    padding-right: 80%;
+}
+
+.dot2{
+    padding-top: 1%;
+    padding-right: 10%;
 }
 
 .divider{
@@ -92,8 +186,24 @@
         margin-left: 5%;
 }
 
+.inpkpi2{
+    font-size:10pt;
+    /* padding : 5px 0 5px 5px;  */
+    border-top :hidden;
+    border-bottom-width:1px;
+    border-left-style:none;
+    border-right-style:none;
+    border-top-style:none;
+    font-weight:300;
+    /* padding-top: 8%;
+    padding-bottom: 1%; */
+    /* justify-content:space-between; */
+    display: flex;
+}
+
+
 .koi{
-    margin-left: 4%;
+    margin-left: 1%;
     padding-top: 1%;
 }
 
@@ -128,11 +238,36 @@
     font-size: 20px;
 }
 
+.target1{
+    margin-left: -75%;
+    font-size: 20px;
+}
+
+.target2{
+    margin-left: -74%;
+    font-size: 20px;
+}
+
 .shgt{
     float: left;
     margin-left: -6%;
     display: flex;
     flex-direction: row;
     margin-top: 3%;
-    
+}
+
+.shgt2{
+    margin-left: 10%;
+    /* margin-left: %; */
+    display: flex;
+    flex-direction: row;
+    margin-top: 2%;
+}
+
+.shgt1{
+    float: left;
+    margin-left: -10%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 3%;
 }

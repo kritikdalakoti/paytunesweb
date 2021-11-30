@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 const CampaignMaster = require('../models/campaignmaster')
 const SubCampaignMaster = require('../models/subcampaignmaster')
-const path=require('path')
-const { readdata, deletefiles,AudioMediaFiles , VideoMediaFiles } = require('../helper')
+const Insertion=require('../models/insertion')
+const Lineitem=require('../models/lineitem')
+const path = require('path')
+const { readdata, deletefiles, AudioMediaFiles, VideoMediaFiles } = require('../helper')
 const xlsx = require('xlsx')
 const fs = require('fs')
 const { uploadAws, uploadMedia, uploadtranscodedfile, uploadAzure } = require('../aws_upload/uploadsfunction');
@@ -13,23 +15,221 @@ const { uploadAws, uploadMedia, uploadtranscodedfile, uploadAzure } = require('.
 
 exports.createcampaign = async (req, res) => {
     try {
-        let { campaignName, budget, startdate, enddate } = req.body;
-        if (!campaignName || !budget || !startdate || !enddate ) {
-            return res.status(400).json({ error: "Provide all detailsdfsfsfs!" });
+        console.log(req.files)
+        // console.log(req.body.geography.pincodes.fileinp)
+        let { campaignName, active, goal, kpitype, kpigoal, audio, video, display, startdate, enddate, freq, freqtime, selregion, notselregion, selpin, blockedpin, pincodefile,
+            sellanguages, blocklanguages, maledemo, femaledemo, agedemo, parentdemo, nonparentdemo, incomedemo,landingurl
+        } = req.body;
+
+        selregion = selregion ? selregion.split(",") : [];
+        notselregion = notselregion ? notselregion.split(",") : [];
+        selpin = selpin ? selpin.split(",") : [];
+        blockedpin = blockedpin ? blockedpin.split(",") : [];
+        sellanguages = sellanguages ? sellanguages.split(",") : [];
+        blocklanguages = blocklanguages ? blocklanguages.split(",") : [];
+        agedemo = agedemo ? agedemo.split(",") : [];
+        incomedemo = incomedemo ? incomedemo.split(",") : [];
+
+        audio = audio === "true" ? true : false;
+        video = video === "true" ? true : false;
+        display = display === "true" ? true : false;
+        maledemo = maledemo === "true" ? true : false;
+        femaledemo = femaledemo === "true" ? true : false;
+        parentdemo = parentdemo === "true" ? true : false;
+        nonparentdemo = nonparentdemo === "true" ? true : false;
+        console.log('ugu', kpigoal)
+        kpigoal = kpigoal ? kpigoal : "NA";
+        freq = parseInt(freq);
+
+        let Pincodesfile = []
+        if (req.files.pincodefile) {
+            Pincodesfile = readdata(req.files.pincodefile[0].filename)
         }
-        
-        console.log(1)
+
         const campaign = new CampaignMaster({
             title: campaignName,
-            budget,
+            campstatus: active,
+            goal,
+            kpitype,
+            kpigoal,
+            audio,
+            video,
+            display,
             startdate,
-            enddate
+            enddate,
+            freq,
+            freqtime,
+            selregion,
+            notselregion,
+            selpin,
+            blockedpin,
+            pincodefile: Pincodesfile,
+            sellanguages,
+            blocklanguages,
+            maledemo,
+            femaledemo,
+            agedemo,
+            parentdemo,
+            nonparentdemo,
+            incomedemo,
+            landingurl
         });
         await campaign.save();
         res.status(200).json({ message: 'Successfuly Created!', data: campaign });
     } catch (err) {
         console.log(err);
         res.status(400).json({ error: err.message });
+    }
+}
+
+
+exports.createinsertion = async (req, res) => {
+    try {
+        let {
+            insertionname,
+            campaignid,
+            active,
+            budegttype,
+            budget,
+            description,
+            startdate,
+            enddate,
+            pacingtarget,
+            pacingsetting,
+            freq,
+            freqtime,
+            selregion, notselregion, selpin, blockedpin,
+            sellanguages, blocklanguages, maledemo, femaledemo, agedemo, parentdemo, nonparentdemo, incomedemo
+        } = req.body
+
+        if(!campaignid){
+            return res.status(400).json({error:"Campid missing"})
+        }
+
+        selregion = selregion ? selregion.split(",") : [];
+        notselregion = notselregion ? notselregion.split(",") : [];
+        selpin = selpin ? selpin.split(",") : [];
+        blockedpin = blockedpin ? blockedpin.split(",") : [];
+        sellanguages = sellanguages ? sellanguages.split(",") : [];
+        blocklanguages = blocklanguages ? blocklanguages.split(",") : [];
+        agedemo = agedemo ? agedemo.split(",") : [];
+        incomedemo = incomedemo ? incomedemo.split(",") : [];
+
+        maledemo = maledemo === "true" ? true : false;
+        femaledemo = femaledemo === "true" ? true : false;
+        parentdemo = parentdemo === "true" ? true : false;
+        nonparentdemo = nonparentdemo === "true" ? true : false;
+
+        freq = parseInt(freq);
+
+        let Pincodesfile = []
+        if (req.files.pincodefile) {
+            Pincodesfile = readdata(req.files.pincodefile[0].filename)
+        }
+
+        let insert=new Insertion({
+            insertionname,
+            campaignid:mongoose.Types.ObjectId(campaignid),
+            insertionstatus:active,
+            budegttype,
+            budget,
+            description,
+            pacingtarget,
+            pacingsetting,
+            startdate,
+            enddate,
+            freq,
+            freqtime,
+            selregion,
+            notselregion,
+            selpin,
+            blockedpin,
+            pincodefile: Pincodesfile,
+            sellanguages,
+            blocklanguages,
+            maledemo,
+            femaledemo,
+            agedemo,
+            parentdemo,
+            nonparentdemo,
+            incomedemo
+        })
+
+        await insert.save();
+        res.status(200).json({message:"Successfuly Created",data:insert})
+    } catch (err) {
+        console.log(err.message)
+        res.status(400).json({ error: err.message })
+    }
+}
+
+exports.createlineitem = async (req, res) => {
+    try {
+        let {
+            lineitemname,
+            insertionid,
+            active,
+            pacingsetting,
+            pacingtarget,
+            freq,
+            freqtime,
+            selregion, notselregion, selpin, blockedpin,
+            sellanguages, blocklanguages, maledemo, femaledemo, agedemo, parentdemo, nonparentdemo, incomedemo
+        } = req.body
+
+        if(!insertionid){
+            return res.status(400).json({error:"Insertionid missing"})
+        }
+
+        selregion = selregion ? selregion.split(",") : [];
+        notselregion = notselregion ? notselregion.split(",") : [];
+        selpin = selpin ? selpin.split(",") : [];
+        blockedpin = blockedpin ? blockedpin.split(",") : [];
+        sellanguages = sellanguages ? sellanguages.split(",") : [];
+        blocklanguages = blocklanguages ? blocklanguages.split(",") : [];
+        agedemo = agedemo ? agedemo.split(",") : [];
+        incomedemo = incomedemo ? incomedemo.split(",") : [];
+
+        maledemo = maledemo === "true" ? true : false;
+        femaledemo = femaledemo === "true" ? true : false;
+        parentdemo = parentdemo === "true" ? true : false;
+        nonparentdemo = nonparentdemo === "true" ? true : false;
+
+        freq = parseInt(freq);
+
+        let Pincodesfile = []
+        if (req.files.pincodefile) {
+            Pincodesfile = readdata(req.files.pincodefile[0].filename)
+        }
+
+        let lineitem=new Lineitem({
+            lineitemname,
+            campaignid:mongoose.Types.ObjectId(insertionid),
+            lineitemstatus:active,
+            pacingtarget,
+            pacingsetting,
+            freq,
+            freqtime,
+            selregion,
+            notselregion,
+            selpin,
+            blockedpin,
+            pincodefile: Pincodesfile,
+            sellanguages,
+            blocklanguages,
+            maledemo,
+            femaledemo,
+            agedemo,
+            parentdemo,
+            nonparentdemo,
+            incomedemo
+        })
+
+        await lineitem.save();
+        res.status(200).json({message:"Successfuly Created",data:lineitem})
+    } catch (err) {
+        console.log(err.message)
+        res.status(400).json({ error: err.message })
     }
 }
 
@@ -93,7 +293,7 @@ exports.createsubcampaign = async (req, res) => {
         console.log(type)
         type = type.split(',')
         console.log(type)
-        console.log(AudioLtbudget,VideoLtbudget,DisplayLtbudget)
+        console.log(AudioLtbudget, VideoLtbudget, DisplayLtbudget)
         if (!lineitem) {
             return res.status(400).json({ error: "Subcampaign name not provided!" })
         }
@@ -102,7 +302,7 @@ exports.createsubcampaign = async (req, res) => {
         }
 
         console.log(req.body)
-       
+
         Audiogender = Audiogender ? Audiogender.split(',') : ''
         Videogender = Videogender ? Videogender.split(',') : ''
         Displaygender = Displaygender ? Displaygender.split(',') : ''
@@ -156,22 +356,20 @@ exports.createsubcampaign = async (req, res) => {
         DisplayPincode = DisplayPincode ? DisplayPincode.split(',') : ''
 
 
-        let AudioPincodes = []
-        let VideoPincodes = []
-        let DisplayPincodes = []
-        if (req.files.AudioPincodeFile) {
-            AudioPincodes = readdata(req.files.AudioPincodeFile[0].filename)
+        let Pincodesfile = []
+        if (req.files.pincodefile) {
+            Pincodesfile = readdata(req.files.AudioPincodeFile[0].filename)
         }
-        if (req.files.VideoPincodeFile) {
-            VideoPincodes = readdata(req.files.VideoPincodeFile[0].filename)
-        }
-        if (req.files.DisplayPincodeFile) {
-            DisplayPincodes = readdata(req.files.DisplayPincodeFile[0].filename)
-        }
+        // if (req.files.VideoPincodeFile) {
+        //     VideoPincodes = readdata(req.files.VideoPincodeFile[0].filename)
+        // }
+        // if (req.files.DisplayPincodeFile) {
+        //     DisplayPincodes = readdata(req.files.DisplayPincodeFile[0].filename)
+        // }
         if (req.files.AudioFileinp) {
             console.log(req.files.AudioFileinp[0])
-            
-            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
+
+            let data = fs.readFileSync(`${path.join(__dirname, '../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
             console.log(data)
             let filetype = req.files.AudioFileinp[0].mimetype
             filetype = filetype.toString();
@@ -198,7 +396,7 @@ exports.createsubcampaign = async (req, res) => {
             if (result.error) {
                 return res.status(400).json({ error: result.error.message })
             }
-            let result1 = await uploadtranscodedfile({ key: file, container: filetype,type:"Audio" })
+            let result1 = await uploadtranscodedfile({ key: file, container: filetype, type: "Audio" })
             if (result1.error) {
                 return res.status(400).json({ error: result1.error.message })
             }
@@ -209,7 +407,7 @@ exports.createsubcampaign = async (req, res) => {
         }
         if (req.files.VideoFileinp) {
             console.log('ss')
-            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.VideoFileinp[0].filename}`)
+            let data = fs.readFileSync(`${path.join(__dirname, '../public/uploads/')}${req.files.VideoFileinp[0].filename}`)
             let date = new Date();
             let filetype = req.files.VideoFileinp[0].mimetype
             filetype = filetype.toString();
@@ -235,7 +433,7 @@ exports.createsubcampaign = async (req, res) => {
             if (result.error) {
                 return res.status(400).json({ error: result.error.message })
             }
-            let result1 = await uploadtranscodedfile({ key: file, container: filetype , type:"Video"  })
+            let result1 = await uploadtranscodedfile({ key: file, container: filetype, type: "Video" })
             if (result1.error) {
                 return res.status(400).json({ error: result1.error.message })
             }
@@ -245,7 +443,7 @@ exports.createsubcampaign = async (req, res) => {
             })
         }
         if (req.files.DisplayFileinp) {
-            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.DisplayFileinp[0].filename}`)
+            let data = fs.readFileSync(`${path.join(__dirname, '../public/uploads/')}${req.files.DisplayFileinp[0].filename}`)
             let date = new Date();
             const year = date.getFullYear();
             let month;
@@ -269,7 +467,7 @@ exports.createsubcampaign = async (req, res) => {
         }
 
         if (req.files.AudioFileBanner) {
-            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.AudioFileBanner[0].filename}`)
+            let data = fs.readFileSync(`${path.join(__dirname, '../public/uploads/')}${req.files.AudioFileBanner[0].filename}`)
             let date = new Date();
             const year = date.getFullYear();
             let month;
@@ -293,7 +491,7 @@ exports.createsubcampaign = async (req, res) => {
         }
 
         if (req.files.VideoFileBanner) {
-            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.VideoFileBanner[0].filename}`)
+            let data = fs.readFileSync(`${path.join(__dirname, '../public/uploads/')}${req.files.VideoFileBanner[0].filename}`)
             let date = new Date();
             const year = date.getFullYear();
             let month;
@@ -317,7 +515,7 @@ exports.createsubcampaign = async (req, res) => {
         }
 
         if (req.files.DisplayFileBanner) {
-            let data = fs.readFileSync(`${path.join(__dirname,'../public/uploads/')}${req.files.DisplayFileBanner[0].filename}`)
+            let data = fs.readFileSync(`${path.join(__dirname, '../public/uploads/')}${req.files.DisplayFileBanner[0].filename}`)
             let date = new Date();
             const year = date.getFullYear();
             let month;
@@ -362,7 +560,7 @@ exports.createsubcampaign = async (req, res) => {
                         endtime: Audioendtime,
                         targetCategory: Audiocategory,
                         area: Audioarea,
-                        TargetImpressions:  Audioimpressionlimit?  parseInt(Audioimpressionlimit):null,
+                        TargetImpressions: Audioimpressionlimit ? parseInt(Audioimpressionlimit) : null,
                         days: audiodays,
                         timelap: audiotime,
                         makemodel: Audiomakemodel,
@@ -464,8 +662,8 @@ exports.createsubcampaign = async (req, res) => {
                 }
             }
         })
-        let directory = path.join(__dirname,'../public/uploads/')
-    
+        let directory = path.join(__dirname, '../public/uploads/')
+
         console.log(__dirname)
         let result3 = deletefiles(directory)
         if (result3.error) {
@@ -478,3 +676,5 @@ exports.createsubcampaign = async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 }
+
+

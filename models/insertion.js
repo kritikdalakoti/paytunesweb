@@ -1,18 +1,18 @@
 const mongoose=require('mongoose')
 
-const CampaignMasterSchema=new mongoose.Schema({
-    title:String, 
-    campstatus:String,
-    goal:String,
-    kpitype:String,
-    kpigoal:String,
-    audio:Boolean,
-    video:Boolean,
-    display:Boolean,
+const InsertionSchema=new mongoose.Schema({
+    campaignid:mongoose.Types.ObjectId,
+    insertionname:String, 
+    insertionstatus:String,
+    budgettype:String,
+    budget:String,
+    budgetdescription:String,
     startdate:String,
     enddate:String,
     freq:Number,
     freqtime:String,
+    pacingsetting:String,
+    pacingtarget:String,
     selregion:Array,
     notselregion:Array,
     selpin:Array,
@@ -25,9 +25,8 @@ const CampaignMasterSchema=new mongoose.Schema({
     agedemo:Array,
     parentdemo:Boolean,
     nonparentdemo:Boolean,
-    incomedemo:Array,
-    landingurl:String
+    incomedemo:Array
 })
 
-module.exports=mongoose.model('campaignmaster',CampaignMasterSchema);
+module.exports=mongoose.model('insertion',InsertionSchema);
 

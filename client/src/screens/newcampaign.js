@@ -1,13 +1,18 @@
-import React, { useState, useEffect, useReducer, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Paper, Divider, Grid, Select, MenuItem, Modal } from '@material-ui/core'
 
 import { makeStyles } from '@material-ui/core/styles'
 import { useHistory, useLocation } from 'react-router-dom'
 import styles from '../css/newcampaign.module.css'
-import { BudgetContext } from '../App'
+import * as fun from '../api/campaign'
 import SettingsIcon from '@material-ui/icons/Settings'
 import EditIcon from '@material-ui/icons/Edit'
 import Demographic from './demographic'
+import Language from './language'
+import Geography from './geography'
+import { useSelector } from "react-redux";
+import { useDispatch } from 'react-redux'
+import mainaction from '../redux/actions/main'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,31 +38,69 @@ export default function NewCampaign() {
 
   const classes = useStyles()
   const history = useHistory()
-  const { state1, dispatch1 } = useContext(BudgetContext)
+  const dispatch = useDispatch()
   const [campaignName, setcampaignname] = useState('')
   const [active, setActive] = useState('Active')
   const [goal, setGoal] = useState('Choose goal')
   const [cond, setcond] = useState(false)
-  const [kpi, setkpi] = useState('Choose KPI')
-  const [kpigoal, setkpigoal] = useState('')
+  const [landingurl,setlandingurl]=useState("")
+  const [kpi, setkpi] = useState({type:"Choose KPI",goal:""})
   const [creativecheck, setcreativecheck] = useState({ Audio: false, Video: false, Display: false })
   const [dates, setdates] = useState({ start: '', end: '' })
   const [freq, setfreq] = useState({ freq: 0, freqtime: 'Lifetime of this Campaign' })
-  const [show, setshow] = useState(false)
-  const [open, setOpen] = React.useState(false);
-  const [gender,setgender]=useState({male:false,female:true})
-  const [age,setage]=useState([])
-  const [parent,setparent]=useState({parent:false,nonparent:false})
-  const [income,setincome]=useState([])
-  const [checks,setchecks]=useState({age:true,income:true})
+  const [show, setshow] = useState({ demo: false, lang: false, geo: false })
+  const [open, setOpen] = React.useState({ demo: false, lang: false, geo: false });
+  const geography = useSelector((state) => state.main.geography)
+  const languages = useSelector((state) => state.main.language)
+  const demography = useSelector((state) => state.main.demographic)
+  console.log(geography)
+
+  const submitCampaign=async ()=>{
+    const formdata=new FormData()
+    formdata.append('campaignname',campaignName)
+    formdata.append('active',active)
+    formdata.append('goal',goal)
+    formdata.append('kpitype',kpi.type)
+    formdata.append('kpigoal',kpi.goal)
+    formdata.append('audio',creativecheck.Audio)
+    formdata.append('video',creativecheck.Video)
+    formdata.append('display',creativecheck.Display)
+    formdata.append('startdate',dates.start)
+    formdata.append('enddate',dates.end)
+    formdata.append('freq',freq.freq)
+    formdata.append('freqtime',freq.freqtime)
+    formdata.append('selregion',geography.region.selected)
+    formdata.append('notselregion',geography.region.notselected)
+    formdata.append('selpin',geography.pincodes.selected)
+    formdata.append('blockedpin',geography.pincodes.blocked)
+    formdata.append('pincodefile',geography.pincodes.fileinp)
+    formdata.append('sellanguages',languages.selected)
+    formdata.append('blocklanguages',languages.block)
+    formdata.append('maledemo',demography.gender.male)
+    formdata.append('femaledemo',demography.gender.female)
+    formdata.append('agedemo',demography.age)
+    formdata.append('parentdemo',demography.parent.parent)
+    formdata.append('nonparentdemo',demography.parent.nonparent)
+    formdata.append('incomedemo',demography.income)
+    formdata.append('landingurl',landingurl)
+    dispatch(mainaction('DATE',{start:dates.start,end:dates.end}))
+    let url=`/campaign/create`
+    let h=await fun.createApi(formdata,url)
+    history.push(`/insertion/${h.data.data._id}`)
   
+    }
 
-
-  const handleOpen = () => {
-    setOpen(true);
-    setshow(true);
-
+  const handleOpen = (type) => {
+    type === "demo" ? setOpen({ demo: true, lang: false, geo: false }) : (type === "lang" ? setOpen({ demo: false, lang: true, geo: false }) : setOpen({ demo: false, lang: false, geo: true }));
+    type == "demo" ? setshow({ demo: true, lang: false, geo: false }) : type == "lang" ? setshow({ demo: false, lang: true, geo: false }) : setshow({ demo: false, lang: false, geo: true });
   };
+
+  const handleinputdate1=(e)=>{
+    setdates({...dates,start:e.target.value})
+  }
+  const handleinputdate2=(e)=>{
+    setdates({...dates,end:e.target.value})
+  }
 
   const handleClose = () => {
     setOpen(false);
@@ -69,7 +112,7 @@ export default function NewCampaign() {
     setGoal(e.target.value);
   }
   const handleChange4 = (e) => {
-    setkpi(e.target.value);
+    setkpi({type:e.target.value,goal:kpi.goal});
     setcond(true)
   }
   const handleChange5 = (e) => {
@@ -112,7 +155,7 @@ export default function NewCampaign() {
 
         <div className={styles.coldis} >
           <div className={styles.rowdis} >
-            <div className={styles.campgoal} >
+            <div className={styles.campgoal1} >
               <span className={styles.svdf} > Overall Campaign Goal </span>
             </div>
             <div className={styles.dot} >
@@ -134,15 +177,15 @@ export default function NewCampaign() {
           </div>
           <hr className={styles.divider} />
           <div className={styles.rowdis} >
-            <div className={styles.kpi} >
+            <div className={styles.kpi5} >
               <span className={styles.svdf} > KPI </span>
             </div>
-            <div className={styles.dot} >
+            <div className={styles.dot4} >
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={kpi}
-                label={kpi}
+                value={kpi.type}
+                label={kpi.type}
                 style={{ width: '100%' }}
                 onChange={handleChange4}
               >
@@ -156,8 +199,8 @@ export default function NewCampaign() {
             {cond ?
               <div className={styles.koi} >
                 <input placeholder="Kpi Goal in Rs" className={styles.inpkpi} type="number"
-                  value={kpigoal}
-                  onChange={(e) => setkpigoal(e.target.value)}
+                  value={kpi.goal}
+                  onChange={e => setkpi({type:kpi.type,goal:e.target.value})}
                 />
               </div>
               : <></>
@@ -207,7 +250,7 @@ export default function NewCampaign() {
                 <span style={{ float: 'left' }} >Start Date</span>
               </div>
               <div>
-                <input type="date" onChange={(e) => setdates({ start: e.target.value, end: dates.end })}
+                <input type="date" onChange={handleinputdate1}
                   value={dates.start}
                 />
               </div>
@@ -218,7 +261,7 @@ export default function NewCampaign() {
                 <span style={{ float: 'left' }} >End Date</span>
               </div>
               <div>
-                <input type="date" onChange={(e) => setdates({ start: dates.start, end: e.target.value })}
+                <input type="date" onChange={handleinputdate2}
                   value={dates.end}
                 />
               </div>
@@ -281,14 +324,14 @@ export default function NewCampaign() {
 
       <Paper className={styles.dashboard} elevation={3}>
         <div className={styles.rowdis} >
-          <div className={styles.campname} >
+          <div className={styles.campname1} >
             <span className={styles.svdf} > Demographics </span>
           </div>
           <div style={{ paddingTop: '1%' }} >
             <span style={{ color: '#9e9e9e' }} >All genders, ages, parental statuses and household incomes</span>
           </div>
           <div style={{ marginLeft: '20%' }} >
-            <EditIcon style={{ cursor: 'pointer', color: 'grey' }} onClick={handleOpen} fontSize="large" />
+            <EditIcon style={{ cursor: 'pointer', color: 'grey' }} onClick={() => handleOpen('demo')} fontSize="large" />
           </div>
 
         </div>
@@ -301,7 +344,7 @@ export default function NewCampaign() {
             <span style={{ color: '#9e9e9e' }} >All locations</span>
           </div>
           <div style={{ marginLeft: '49%' }} >
-            <EditIcon style={{ cursor: 'pointer', color: 'grey' }} fontSize="large" />
+            <EditIcon style={{ cursor: 'pointer', color: 'grey' }} onClick={() => handleOpen('Geo')} fontSize="large" />
           </div>
 
         </div>
@@ -316,29 +359,38 @@ export default function NewCampaign() {
             <span style={{ color: '#9e9e9e' }} >All languages</span>
           </div>
           <div style={{ marginLeft: '48%' }} >
-            <EditIcon style={{ cursor: 'pointer', color: 'grey' }} fontSize="large" />
+            <EditIcon style={{ cursor: 'pointer', color: 'grey' }} onClick={() => handleOpen('lang')} fontSize="large" />
           </div>
 
         </div>
 
-        <hr className={styles.divider} />
-
-        <div className={styles.rowdis} >
-          <div className={styles.campname} >
-            <span className={styles.svdf} > Brand Safety </span>
-          </div>
-          <div style={{ paddingTop: '1%' }} >
-            <span style={{ color: '#9e9e9e' }} >No Restrictions </span>
-          </div>
-          <div style={{ marginLeft: '47%' }} >
-            <EditIcon style={{ cursor: 'pointer', color: 'grey' }} fontSize="large" />
-          </div>
-
-        </div>
+        {/* <hr className={styles.divider} /> */}
 
       </Paper>
+      <div style={{ marginBottom: '7%' }} >
+        <div className={styles.target} >Additional Details</div>
+        <div className={styles.shgt1}  >
+          <div style={{ marginTop: '1%' }} >Add more details to improve your recommendations.</div>
+        </div>
 
-      {show ?
+      </div>
+      <Paper className={styles.dashboard} elevation={3}>
+        <div className={styles.rowdis} >
+          <div className={styles.campname} >
+            <span className={styles.svdf} > Landing Page Urls </span>
+          </div>
+          <div style={{ paddingTop: '1%', display: 'flex', flexDirection: 'column' }} >
+            <span ><input className={styles.inpkpi2}  
+            value={landingurl}
+            onChange={e=>setlandingurl(e.target.value)}
+            /></span>
+          </div>
+
+        </div>
+        {/* <hr className={styles.divider} /> */}
+      </Paper>
+
+      {show.demo || show.lang || show.geo ?
         <div  >
           <Modal
             open={open}
@@ -346,13 +398,17 @@ export default function NewCampaign() {
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
           >
-            <Demographic state={{gender,setgender,age,setage,parent,setparent,income,setincome,checks,setchecks}} />
+            {show.demo ? <Demographic state={{ demography, setOpen }} /> :
+              show.lang ? <Language state={{ languages,  setOpen }} /> : <Geography state={{ geography,  setOpen }} />
+            }
+
           </Modal>
         </div>
         :
         <></>
       }
 
+      <button onClick={submitCampaign} >Next</button>
 
     </div>
 

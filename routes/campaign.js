@@ -19,7 +19,22 @@ const upload = multer({ storage })
 router.post(
     '/create',
     auth,
+    upload.fields([{name:'pincodefile',maxCount:1}]),
     controller.createcampaign
+)
+
+router.post(
+    '/createinsertion',
+    auth,
+    upload.fields([{name:'pincodefile',maxCount:1}]),
+    controller.createinsertion
+)
+
+router.post(
+    '/createlineitem',
+    auth,
+    upload.fields([{name:'pincodefile',maxCount:1}]),
+    controller.createlineitem
 )
 
 router.post(

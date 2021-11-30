@@ -19755,12 +19755,6 @@ const data =/* 1 */
 const language = [
     {
         "_id": {
-            "language": ""
-        },
-        "language": ""
-    },
-    {
-        "_id": {
             "language": "Ahmedabad_Hindi"
         },
         "language": "Ahmedabad_Hindi"

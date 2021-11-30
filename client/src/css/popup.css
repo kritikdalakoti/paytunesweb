@@ -5,7 +5,7 @@
       margin-bottom: 1%;
       border: 1px lightgray solid;
       
-      max-height: 500vh;
+      height: 90vh;
       
 }
 
@@ -58,5 +58,43 @@
 
 .text{
     margin: 2% 2% 0% 1%;
+}
+.divider{
+    margin: 2% 0% 2% 0%;
+    width: 90vw !important;
+    border-color: whitesmoke ;
+}
+
+.rowdis3{
+    display: flex;
+    flex-direction: row;
+    margin-left: 5%;
+}
+
+.inp2{
+    width: 70%;
+    padding: 5px;
+    border-top: hidden;
+    border-left: hidden;
+    border-right: hidden;
+    margin-top: 5px;
+}
+.inp21{
+    width: 70%;
+    padding: 5px;
+    border-top: hidden;
+    border-left: hidden;
+    border-right: hidden;
+    margin-top: 5px;
+    margin-top: 3%;
+}
+.fileinp{
+    font-size: medium; 
+    border:1px dashed #4645d6;
+    border-radius: .5rem;
+    padding: 1%;
+    /* padding-top: 2%;
+    padding-bottom: 1%; */
+    cursor: pointer;
 }
 
