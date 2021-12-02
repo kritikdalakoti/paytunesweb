@@ -12,7 +12,7 @@ const path=require('path')
 //const cron = require('node-cron')
 const AWS = require('aws-sdk')
 // AWS.config.loadFromPath('/paytunes_new/server/config.json');
-const S3 = new AWS.S3();
+// const S3 = new AWS.S3();
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: true }));
 app.use(cors())
