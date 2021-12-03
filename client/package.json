@@ -1,7 +1,7 @@
 {
   "name": "client",
   "version": "0.1.0",
-  "proxy": "http://13.92.31.250",  
+  "proxy": "http://20.198.108.123",  
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.3",
