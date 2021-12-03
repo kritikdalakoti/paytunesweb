@@ -68,7 +68,7 @@ export default function LineItemNew() {
         formdata.append('nonparentdemo',demography.parent.nonparent)
         formdata.append('incomedemo',demography.income)
 
-        let url=`/campaign/createlineitem`
+        let url=`http://20.198.108.123:5000/campaign/createlineitem`
         let res=await fun.createApi(formdata,url)
 
     }

@@ -84,9 +84,9 @@ export default function NewCampaign() {
     formdata.append('incomedemo',demography.income)
     formdata.append('landingurl',landingurl)
     dispatch(mainaction('DATE',{start:dates.start,end:dates.end}))
-    let url=`/campaign/create`
+    let url=`http://20.198.108.123:5000/campaign/create`
     let h=await fun.createApi(formdata,url)
-    history.push(`/insertion/${h.data.data._id}`)
+    history.push(`http://20.198.108.123:5000/insertion/${h.data.data._id}`)
   
     }
 
