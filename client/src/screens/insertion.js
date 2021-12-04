@@ -99,7 +99,7 @@ export default function Insertion() {
         let url=`http://20.198.108.123:5000/campaign/createinsertion`
         let res=await fun.createApi(formdata,url)
         // console.log(res)
-        history.push(`http://20.198.108.123:5000/lineitemnew/${res.data.data._id}`)
+        history.push(`/lineitemnew/${res.data.data._id}`)
 
     }
 

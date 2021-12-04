@@ -86,7 +86,7 @@ export default function NewCampaign() {
     dispatch(mainaction('DATE',{start:dates.start,end:dates.end}))
     let url=`http://20.198.108.123:5000/campaign/create`
     let h=await fun.createApi(formdata,url)
-    history.push(`http://20.198.108.123:5000/insertion/${h.data.data._id}`)
+    history.push(`/insertion/${h.data.data._id}`)
   
     }
 
