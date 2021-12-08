@@ -366,105 +366,105 @@ exports.createlineitem = async (req, res) => {
 //         // if (req.files.DisplayPincodeFile) {
 //         //     DisplayPincodes = readdata(req.files.DisplayPincodeFile[0].filename)
 //         // }
-//         if (req.files.AudioFileinp) {
-//             console.log(req.files.AudioFileinp[0])
+        // if (req.files.AudioFileinp) {
+        //     console.log(req.files.AudioFileinp[0])
 
-//             let data = fs.readFileSync(`${path.join(__dirname, '../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
-//             console.log(data)
-//             let filetype = req.files.AudioFileinp[0].mimetype
-//             filetype = filetype.toString();
-//             console.log(filetype.split('/')[1])
-//             filetype = filetype.split('/')[1];
-//             let date = new Date();
-//             const year = date.getFullYear();
-//             let month;
-//             if (date.getMonth() + 1 >= 10) {
-//                 month = `${date.getMonth() + 1}`
-//             } else {
-//                 month = `0${date.getMonth() + 1}`
-//             }
+        //     let data = fs.readFileSync(`${path.join(__dirname, '../public/uploads/')}${req.files.AudioFileinp[0].filename}`)
+        //     console.log(data)
+        //     let filetype = req.files.AudioFileinp[0].mimetype
+        //     filetype = filetype.toString();
+        //     console.log(filetype.split('/')[1])
+        //     filetype = filetype.split('/')[1];
+        //     let date = new Date();
+        //     const year = date.getFullYear();
+        //     let month;
+        //     if (date.getMonth() + 1 >= 10) {
+        //         month = `${date.getMonth() + 1}`
+        //     } else {
+        //         month = `0${date.getMonth() + 1}`
+        //     }
 
-//             let date1 = date.getDate();
-//             if (date1 < 10) {
-//                 date1 = `0${date1}`
-//             }
-//             let finaldate = `${year}-${month}-${date1}`
-//             let file = `audio/${finaldate}_${req.files.AudioFileinp[0].filename}`
-//             let data1 = { Key: file, Body: data, ContentEncoding: 'base64', ContentType: filetype }
+        //     let date1 = date.getDate();
+        //     if (date1 < 10) {
+        //         date1 = `0${date1}`
+        //     }
+        //     let finaldate = `${year}-${month}-${date1}`
+        //     let file = `audio/${finaldate}_${req.files.AudioFileinp[0].filename}`
+        //     let data1 = { Key: file, Body: data, ContentEncoding: 'base64', ContentType: filetype }
 
-//             let result = await uploadAws(data1)
-//             if (result.error) {
-//                 return res.status(400).json({ error: result.error.message })
-//             }
-//             let result1 = await uploadtranscodedfile({ key: file, container: filetype, type: "Audio" })
-//             if (result1.error) {
-//                 return res.status(400).json({ error: result1.error.message })
-//             }
-//             await uploadAzure('Audio');
-//             AudioMediaFiles.forEach((audio) => {
-//                 audio.Name = req.files.AudioFileinp[0].filename
-//             })
-//         }
-//         if (req.files.VideoFileinp) {
-//             console.log('ss')
-//             let data = fs.readFileSync(`${path.join(__dirname, '../public/uploads/')}${req.files.VideoFileinp[0].filename}`)
-//             let date = new Date();
-//             let filetype = req.files.VideoFileinp[0].mimetype
-//             filetype = filetype.toString();
-//             console.log(filetype.split('/')[1])
-//             filetype = filetype.split('/')[1];
-//             const year = date.getFullYear();
-//             let month;
-//             if (date.getMonth() + 1 >= 10) {
-//                 month = `${date.getMonth() + 1}`
-//             } else {
-//                 month = `0${date.getMonth() + 1}`
-//             }
+        //     let result = await uploadAws(data1)
+        //     if (result.error) {
+        //         return res.status(400).json({ error: result.error.message })
+        //     }
+        //     let result1 = await uploadtranscodedfile({ key: file, container: filetype, type: "Audio" })
+        //     if (result1.error) {
+        //         return res.status(400).json({ error: result1.error.message })
+        //     }
+        //     await uploadAzure('Audio');
+        //     AudioMediaFiles.forEach((audio) => {
+        //         audio.Name = req.files.AudioFileinp[0].filename
+        //     })
+        // }
+        // if (req.files.VideoFileinp) {
+        //     console.log('ss')
+        //     let data = fs.readFileSync(`${path.join(__dirname, '../public/uploads/')}${req.files.VideoFileinp[0].filename}`)
+        //     let date = new Date();
+        //     let filetype = req.files.VideoFileinp[0].mimetype
+        //     filetype = filetype.toString();
+        //     console.log(filetype.split('/')[1])
+        //     filetype = filetype.split('/')[1];
+        //     const year = date.getFullYear();
+        //     let month;
+        //     if (date.getMonth() + 1 >= 10) {
+        //         month = `${date.getMonth() + 1}`
+        //     } else {
+        //         month = `0${date.getMonth() + 1}`
+        //     }
 
-//             let date1 = date.getDate();
-//             if (date1 < 10) {
-//                 date1 = `0${date1}`
-//             }
-//             let finaldate = `${year}-${month}-${date1}`
-//             let file = `video/${finaldate}_${req.files.VideoFileinp[0].filename}`
-//             // let filename = `${finaldate}_${req.files.VideoFileinp[0].filename}`
-//             let data1 = { Key: file, Body: data, ContentEncoding: 'base64', ContentType: filetype }
-//             let result = await uploadAws(data1)
-//             if (result.error) {
-//                 return res.status(400).json({ error: result.error.message })
-//             }
-//             let result1 = await uploadtranscodedfile({ key: file, container: filetype, type: "Video" })
-//             if (result1.error) {
-//                 return res.status(400).json({ error: result1.error.message })
-//             }
-//             await uploadAzure('Video');
-//             VideoMediaFiles.forEach((video) => {
-//                 video.Name = req.files.VideoFileinp[0].filename
-//             })
-//         }
-//         if (req.files.DisplayFileinp) {
-//             let data = fs.readFileSync(`${path.join(__dirname, '../public/uploads/')}${req.files.DisplayFileinp[0].filename}`)
-//             let date = new Date();
-//             const year = date.getFullYear();
-//             let month;
-//             if (date.getMonth() + 1 >= 10) {
-//                 month = `${date.getMonth() + 1}`
-//             } else {
-//                 month = `0${date.getMonth() + 1}`
-//             }
+        //     let date1 = date.getDate();
+        //     if (date1 < 10) {
+        //         date1 = `0${date1}`
+        //     }
+        //     let finaldate = `${year}-${month}-${date1}`
+        //     let file = `video/${finaldate}_${req.files.VideoFileinp[0].filename}`
+        //     // let filename = `${finaldate}_${req.files.VideoFileinp[0].filename}`
+        //     let data1 = { Key: file, Body: data, ContentEncoding: 'base64', ContentType: filetype }
+        //     let result = await uploadAws(data1)
+        //     if (result.error) {
+        //         return res.status(400).json({ error: result.error.message })
+        //     }
+        //     let result1 = await uploadtranscodedfile({ key: file, container: filetype, type: "Video" })
+        //     if (result1.error) {
+        //         return res.status(400).json({ error: result1.error.message })
+        //     }
+        //     await uploadAzure('Video');
+        //     VideoMediaFiles.forEach((video) => {
+        //         video.Name = req.files.VideoFileinp[0].filename
+        //     })
+        // }
+        // if (req.files.DisplayFileinp) {
+        //     let data = fs.readFileSync(`${path.join(__dirname, '../public/uploads/')}${req.files.DisplayFileinp[0].filename}`)
+        //     let date = new Date();
+        //     const year = date.getFullYear();
+        //     let month;
+        //     if (date.getMonth() + 1 >= 10) {
+        //         month = `${date.getMonth() + 1}`
+        //     } else {
+        //         month = `0${date.getMonth() + 1}`
+        //     }
 
-//             let date1 = date.getDate();
-//             if (date1 < 10) {
-//                 date1 = `0${date1}`
-//             }
-//             let finaldate = `${year}-${month}-${date1}`
-//             let filename = `${finaldate}_${req.files.DisplayFileinp[0].filename}`
-//             let data1 = { filename, data }
-//             let result = await uploadMedia(data1, 'image')
-//             if (result.error) {
-//                 return res.status(400).json({ error: result.error.message })
-//             }
-//         }
+        //     let date1 = date.getDate();
+        //     if (date1 < 10) {
+        //         date1 = `0${date1}`
+        //     }
+        //     let finaldate = `${year}-${month}-${date1}`
+        //     let filename = `${finaldate}_${req.files.DisplayFileinp[0].filename}`
+        //     let data1 = { filename, data }
+        //     let result = await uploadMedia(data1, 'image')
+        //     if (result.error) {
+        //         return res.status(400).json({ error: result.error.message })
+        //     }
+        // }
 
 //         if (req.files.AudioFileBanner) {
 //             let data = fs.readFileSync(`${path.join(__dirname, '../public/uploads/')}${req.files.AudioFileBanner[0].filename}`)

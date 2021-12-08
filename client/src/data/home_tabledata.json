@@ -1,0 +1,72 @@
+{
+    "data": [
+        {
+            "Name": "LIC SIP Banner SepOct21",
+            "id": 383047445,
+            "status": "Active",
+            "type": "Standard",
+            "format": "Image",
+            "cm360": "317544016",
+            "dv360status": "Servable",
+            "exchangestatus": "Servable (1 to 3)",
+            "companions": "",
+            "dimensions": "300 x 250",
+            "duration": "",
+            "source": "Display & Video 360",
+            "created": "2021-10-06",
+            "tagwrapping": "No",
+            "image": ""
+        },
+        {
+            "Name": "Forever 21 NYT Oct21",
+            "id": 383047373,
+            "status": "Active",
+            "type": "Video",
+            "format": "Video",
+            "cm360": "317544016",
+            "dv360status": "Servable",
+            "exchangestatus": "Servable (2 to 3)",
+            "companions": "",
+            "dimensions": "",
+            "duration": "26s",
+            "source": "Display & Video 360",
+            "created": "2021-10-28",
+            "tagwrapping": "No",
+            "image": ""
+        },
+        {
+            "Name": "Oneplus Audio Oct21",
+            "id": 385923590,
+            "status": "Active",
+            "type": "Audio",
+            "format": "Audio",
+            "cm360": "317544016",
+            "dv360status": "Servable",
+            "exchangestatus": "Servable (1 to 2)",
+            "companions": "Oneplus Banner Oct21",
+            "dimensions": "",
+            "duration": "30s",
+            "source": "Display & Video 360",
+            "created": "2021-10-19",
+            "tagwrapping": "No",
+            "image": ""
+        },
+        {
+            "Name": "Oneplus Banner Oct21",
+            "id": 385894858,
+            "status": "Active",
+            "type": "Standard",
+            "format": "Image",
+            "cm360": "317544016",
+            "dv360status": "Servable",
+            "exchangestatus": "Servable (1 to 3)",
+            "companions": "",
+            "dimensions": "1200 x 1000",
+            "duration": "",
+            "source": "Display & Video 360",
+            "created": "2021-10-19",
+            "tagwrapping": "No",
+            "image": ""
+        }
+    ]
+}

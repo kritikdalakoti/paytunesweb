@@ -1,5 +1,5 @@
 // import logo from './logo.svg';
-import './App.css';
+import './app1.css';
 import Login from './components/login'
 import React, { useEffect, useReducer } from 'react'
 import { BrowserRouter, Redirect, Route } from 'react-router-dom'
@@ -17,6 +17,11 @@ import NewCampaign from './screens/newcampaign'
 import LineItem from './screens/lineitem'
 import Insertion from './screens/insertion';
 import LineItemNew from './screens/lineitemnew';
+import Audiofile from './components/Audiofile';
+import Creative from './components/creative';
+import DetailedPage from './components/DetailedPage';
+import Html5image from './components/html5image';
+import Videofile from './components/videofile';
 export const UserContext = React.createContext()
 export const BudgetContext = React.createContext()
 export const MainContext = React.createContext()
@@ -55,7 +60,8 @@ function App() {
                 render={() => (state ? <Redirect to='/dashboard' /> : <Redirect to='/login' />)}
               />
               {state && <>
-                <Navbar />
+                
+                
                 <Route
                   path='/dashboard'
                   render={() => (<Dashboard />)}
@@ -100,8 +106,13 @@ function App() {
                 <Route
                   path='/dashboard/c/campaign/new/:campid'
                   render={() => (<LineItem />)}
-
                 />
+                <Route path="/creative" exact render={() => <Creative />} />
+                <Route path="creative/detailed/:num" exact render={() => <DetailedPage />} />
+                <Route path="/creative/home" exact render={() => <Creative />} />
+                <Route path="/creative/html5image" exact render={() => <Html5image />} />
+                <Route path="/creative/audiofile" exact render={() => <Audiofile />} />
+                <Route path="/creative/videofile" exact render={() => <Videofile />} />
               </>
               }
 

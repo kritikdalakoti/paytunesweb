@@ -9,11 +9,13 @@ import Geography from './geography'
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from 'react-router-dom'
 import * as fun from '../api/campaign'
+import '../../src/app1.css'
 
 
 export default function LineItemNew() {
 
-    const {insertionid}=useParams();
+    const history=useHistory();
+    const { insertionid } = useParams();
     const [lineitem, setlineitemname] = useState("")
     const [lineitemactive, setlineitemactive] = useState('Active')
     const geography = useSelector((state) => state.main.geography)
@@ -42,34 +44,34 @@ export default function LineItemNew() {
     }
 
     const handleChange6 = (e) => {
-        setfreq({ ...freq,freqtime:e.target.value })
+        setfreq({ ...freq, freqtime: e.target.value })
     }
 
-    const submitLineitem=async ()=>{
-        const formdata=new FormData()
-        formdata.append('lineitemname',lineitem);
-        formdata.append('insertionid',insertionid);
-        formdata.append('active',lineitemactive);
-        formdata.append('pacingtarget',pacing.target);
-        formdata.append('pacingsetting',pacing.setting);
-        formdata.append('freq',freq.freq);
-        formdata.append('freqtime',freq.freqtime);
-        formdata.append('selregion',geography.region.selected)
-        formdata.append('notselregion',geography.region.notselected)
-        formdata.append('selpin',geography.pincodes.selected)
-        formdata.append('blockedpin',geography.pincodes.blocked)
-        formdata.append('pincodefile',geography.pincodes.fileinp)
-        formdata.append('sellanguages',language.selected)
-        formdata.append('blocklanguages',language.block)
-        formdata.append('maledemo',demography.gender.male)
-        formdata.append('femaledemo',demography.gender.female)
-        formdata.append('agedemo',demography.age)
-        formdata.append('parentdemo',demography.parent.parent)
-        formdata.append('nonparentdemo',demography.parent.nonparent)
-        formdata.append('incomedemo',demography.income)
+    const submitLineitem = async () => {
+        const formdata = new FormData()
+        formdata.append('lineitemname', lineitem);
+        formdata.append('insertionid', insertionid);
+        formdata.append('active', lineitemactive);
+        formdata.append('pacingtarget', pacing.target);
+        formdata.append('pacingsetting', pacing.setting);
+        formdata.append('freq', freq.freq);
+        formdata.append('freqtime', freq.freqtime);
+        formdata.append('selregion', geography.region.selected)
+        formdata.append('notselregion', geography.region.notselected)
+        formdata.append('selpin', geography.pincodes.selected)
+        formdata.append('blockedpin', geography.pincodes.blocked)
+        formdata.append('pincodefile', geography.pincodes.fileinp)
+        formdata.append('sellanguages', language.selected)
+        formdata.append('blocklanguages', language.block)
+        formdata.append('maledemo', demography.gender.male)
+        formdata.append('femaledemo', demography.gender.female)
+        formdata.append('agedemo', demography.age)
+        formdata.append('parentdemo', demography.parent.parent)
+        formdata.append('nonparentdemo', demography.parent.nonparent)
+        formdata.append('incomedemo', demography.income)
 
-        let url=`http://20.198.108.123:5000/campaign/createlineitem`
-        let res=await fun.createApi(formdata,url)
+        let url = `http://20.198.108.123:5000/campaign/createlineitem`
+        let res = await fun.createApi(formdata, url)
 
     }
 
@@ -132,7 +134,7 @@ export default function LineItemNew() {
                     <div style={{ paddingTop: '1%' }} >
                         <span style={{ color: '#9e9e9e' }} >All genders, ages, parental statuses and household incomes</span>
                     </div>
-                    <div style={{ marginLeft: '20%' }} >
+                    <div style={{ marginLeft: '16%' }} >
                         <EditIcon style={{ cursor: 'pointer', color: 'grey' }} onClick={() => handleOpen('demo')} fontSize="large" />
                     </div>
 
@@ -179,7 +181,9 @@ export default function LineItemNew() {
             </div>
             <Paper className={styles.dashboard} elevation={3}>
                 <div  >
-                    <button style={{ padding: '20px', cursor: 'pointer', backgroundColor: 'lightgrey', fontSize: '15px', borderWidth: '3px' }} >Upload Creative</button>
+                    <button style={{ padding: '20px', cursor: 'pointer', backgroundColor: 'lightgrey', fontSize: '15px', borderWidth: '3px' }}
+                        onClick={() => history.push('/creative')}
+                    >Upload Creative</button>
                 </div>
 
             </Paper>
@@ -287,7 +291,7 @@ export default function LineItemNew() {
                 :
                 <></>
             }
-    <button onClick={submitLineitem} >Create</button>
+            <button onClick={submitLineitem} >Create</button>
         </div>
     )
 

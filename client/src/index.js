@@ -5,10 +5,20 @@ import ReactDOM from 'react-dom';
  import {Provider} from 'react-redux';
 // import reportWebVitals from './reportWebVitals';
 import store from './redux/index'
+import SnackbarCloseButton from './components/CloseButton';
+// import { BrowserRouter } from 'react-router-dom';
+
+import { SnackbarProvider } from 'notistack';
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store} >
-    <App />
+    <SnackbarProvider
+			maxSnack={4}
+			anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+			action={(key) => <SnackbarCloseButton snackbarKey={key} />}
+		>
+			<App />
+		</SnackbarProvider>
     </Provider>
     
   </React.StrictMode>,

@@ -12,7 +12,7 @@
 .campname1{
     float: left;
     /* margin: 2%; */
-    margin-left: 10px;
+    margin-left: 40px;
     padding-right: 80px;
     width: 20%;
     padding-top: 1%;
@@ -30,7 +30,7 @@
 .campgeog{
     float: left;
     /* margin: 2%; */
-    margin-left: 10px;
+    margin-left: 40px;
     padding-right: 80px;
     width: 17%;
     padding-top: 1%;
@@ -49,8 +49,8 @@
     float: left;
     /* margin: 2%; */
     margin-left: 35px;
-    padding-right: 135px;
-    width: 20%;
+    padding-right: 65px;
+    width: 150%;
     padding-top: 1%;
 }
 
@@ -86,14 +86,15 @@
 
 .kpi4{
     float: left;
-    padding-right: 100px;
+    padding-right: 160px;
     width: 12%;
     padding-top: 1%;
-    margin-left: 2%;
+    margin-left: 4%;
 }
 
 .kpi5{
     float: left;
+    margin-left: 5%;
     padding-right: 155px;
     width: 12%;
     padding-top: 1%;
@@ -209,10 +210,10 @@
 
 .creat{
     float: left;
-    padding-right: 120px;
-    width: 15%;
+    padding-right: 45px;
+    width: 20%;
     padding-top: 1%;
-    margin-left: 4%;
+    margin-left: 2%;
 }
 
 .check{
@@ -226,10 +227,10 @@
 .plan{
     
         float: left;
-        padding-right: 120px;
-        width: 15%;
+        padding-right: 60px;
+        width: 20%;
         padding-top: 1%;
-        margin-left: 2%;
+        margin-left: 4%;
 }
 
 .target{

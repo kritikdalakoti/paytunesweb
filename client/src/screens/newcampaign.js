@@ -13,6 +13,7 @@ import Geography from './geography'
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux'
 import mainaction from '../redux/actions/main'
+import '../../src/app1.css'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -330,7 +331,7 @@ export default function NewCampaign() {
           <div style={{ paddingTop: '1%' }} >
             <span style={{ color: '#9e9e9e' }} >All genders, ages, parental statuses and household incomes</span>
           </div>
-          <div style={{ marginLeft: '20%' }} >
+          <div style={{ marginLeft: '16%' }} >
             <EditIcon style={{ cursor: 'pointer', color: 'grey' }} onClick={() => handleOpen('demo')} fontSize="large" />
           </div>
 
