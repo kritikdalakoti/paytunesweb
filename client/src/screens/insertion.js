@@ -97,7 +97,7 @@ export default function Insertion() {
         formdata.append('nonparentdemo',demography.parent.nonparent)
         formdata.append('incomedemo',demography.income)
         dispatch(mainaction('DATE',{start:dates.start,end:dates.end}))
-        let url=`http://20.198.108.123:5000/campaign/createinsertion`
+        let url=`https://paytunes-new.herokuapp.com/campaign/createinsertion`
         let res=await fun.createApi(formdata,url)
         // console.log(res)
         history.push(`/lineitemnew/${res.data.data._id}`)
