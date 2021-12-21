@@ -142,7 +142,7 @@ export default function NewCampaign() {
         e.preventDefault()
         let status = checkdate()
         if (!status) {
-          setstatus({ ...status, error: "End date should be greater or difference between dates must be less than 60 days!" });
+          return setstatus({ ...status, error: "End date should be greater or difference between dates must be less than 60 days!" });
         }
         console.log('good')
         submitCampaign()
