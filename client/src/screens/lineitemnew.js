@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { useHistory, useParams } from 'react-router-dom'
 import * as fun from '../api/campaign'
 import '../../src/app1.css'
+import { Alert } from '@material-ui/lab'
 
 
 export default function LineItemNew() {
@@ -18,6 +19,7 @@ export default function LineItemNew() {
     const { insertionid } = useParams();
     const [lineitem, setlineitemname] = useState("")
     const [lineitemactive, setlineitemactive] = useState('Active')
+    const [status, setstatus] = useState({ error: "", success: "" });
     const geography = useSelector((state) => state.main.geography)
     const language = useSelector((state) => state.main.language)
     const demography = useSelector((state) => state.main.demographic)
@@ -77,13 +79,28 @@ export default function LineItemNew() {
 
     return (
         <div>
-            <Paper className={styles.dashboard} elevation={3}>
+
+        <form onSubmit={(e)=>{
+            e.preventDefault();
+            submitLineitem();
+
+        }} >
+            <div className={styles.statusdashboard} >
+          <div>
+            {status.error ? <Alert>{status.error}</Alert> : ''}
+          </div>
+          <div>
+            {status.success ? <Alert>{status.success}</Alert> : ''}
+          </div>
+        </div>
+        <Paper className={styles.dashboard} elevation={3}>
                 <div className={styles.rowdis} >
                     <div className={styles.campname} >
                         <span className={styles.svdf1} >Line Item Name</span>
                     </div>
                     <div>
                         <input placeholder="Enter name" className="input" type="text" size="30"
+                        required={true}
                             value={lineitem}
                             onChange={(e) => setlineitemname(e.target.value)}
                         />
@@ -292,6 +309,9 @@ export default function LineItemNew() {
                 <></>
             }
             <button onClick={submitLineitem} >Create</button>
+        </form>
+
+            
         </div>
     )
 
