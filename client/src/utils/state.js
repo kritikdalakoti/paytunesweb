@@ -21818,23 +21818,23 @@ const Category_List =/* 1 */
     ]
 
 const ages = [
-    {value:18,label:'18+'},
-    {value:25,label:'25+'},
-    {value:35,label:'35+'},
-    {value:45,label:'45+'},
-    {value:55,label:'55+'},
-    {value:65,label:'65'},
-    {value:70,label:'65 above'}
+    { value: 13, label: '13+' },
+    { value: 18, label: '18+' },
+    { value: 25, label: '25+' },
+    { value: 35, label: '35+' },
+    { value: 45, label: '45+' },
+    { value: 55, label: '55+' },
+    { value: 65, label: '65' },
+    { value: 70, label: '65+' }
 ]
 
-const Incomes = [
-    {value:18,label:'Top 10%'},
-    {value:25,label:'Top 11-20%'},
-    {value:35,label:'35+'},
-    {value:45,label:'45+'},
-    {value:55,label:'55+'},
-    {value:65,label:'65'},
-    {value:70,label:'65 above'}
+const phonecost = [
+    { value: 0, label: 'below 5000' },
+    { value: 5, label: '5000+' },
+    { value: 10, label: '10000+' },
+    { value: 25, label: '25000+' },
+    { value: 50, label: '50000' },
+    { value: 60, label: '50000+' }
 ]
 
 const MakeModel =/* 1 */
@@ -22080,4 +22080,4 @@ const fields = (type) => {
 
 // ]
 
-export { data, region, ages, language, Category_List, MakeModel, grandcity_data, days, time, fields }
+export { data, region, ages, language, Category_List, MakeModel, grandcity_data, days, time, fields, phonecost }

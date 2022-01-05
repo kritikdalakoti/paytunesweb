@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Paper, Divider, Grid, Select, MenuItem, Modal } from '@material-ui/core'
-
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 import { makeStyles } from '@material-ui/core/styles'
 import { useHistory, useLocation } from 'react-router-dom'
 import styles from '../css/newcampaign.module.css'
@@ -15,6 +16,7 @@ import { useDispatch } from 'react-redux'
 import mainaction from '../redux/actions/main'
 import '../../src/app1.css'
 import { Alert } from '@material-ui/lab'
+import { diskStorage } from 'multer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,18 +43,20 @@ export default function NewCampaign() {
   const classes = useStyles()
   const history = useHistory()
   const dispatch = useDispatch()
-  const [campaignName, setcampaignname] = useState('')
+  const [campaignName, setcampaignname] = useState('');
+  const [popupstatus,setpopupstatus]=useState(false);
   const [status, setstatus] = useState({ error: "", success: "" });
   const [active, setActive] = useState('Active')
-  const [goal, setGoal] = useState('Choose goal')
-  const [cond, setcond] = useState(false)
+  const [popup,setpopup]=useState(false);
+  const [warning,setwarning]=useState("");
   const [landingurl, setlandingurl] = useState("")
-  const [kpi, setkpi] = useState({ type: "Choose KPI", goal: "" })
   const [creativecheck, setcreativecheck] = useState({ Audio: false, Video: false, Display: false })
   const [dates, setdates] = useState({ start: '', end: '' })
   const [freq, setfreq] = useState({ freq: 0, freqtime: 'Lifetime of this Campaign' })
   const [show, setshow] = useState({ demo: false, lang: false, geo: false })
   const [open, setOpen] = React.useState({ demo: false, lang: false, geo: false });
+  const [show1, setshow1] = useState(false)
+  const [open1, setOpen1] = React.useState(false);
   const geography = useSelector((state) => state.main.geography)
   const languages = useSelector((state) => state.main.language)
   const demography = useSelector((state) => state.main.demographic)
@@ -62,9 +66,9 @@ export default function NewCampaign() {
     const formdata = new FormData()
     formdata.append('campaignname', campaignName)
     formdata.append('active', active)
-    formdata.append('goal', goal)
-    formdata.append('kpitype', kpi.type)
-    formdata.append('kpigoal', kpi.goal)
+    // formdata.append('goal', goal)
+    // formdata.append('kpitype', kpi.type)
+    // formdata.append('kpigoal', kpi.goal)
     formdata.append('audio', creativecheck.Audio)
     formdata.append('video', creativecheck.Video)
     formdata.append('display', creativecheck.Display)
@@ -87,7 +91,7 @@ export default function NewCampaign() {
     formdata.append('incomedemo', demography.income)
     formdata.append('landingurl', landingurl)
     dispatch(mainaction('DATE', { start: dates.start, end: dates.end }))
-    let url = `https://paytunes-new.herokuapp.com/campaign/create`
+    let url = `http://127.0.0.1:5000/campaign/create`  //https://paytunes-new.herokuapp.com
     let h = await fun.createApi(formdata, url)
     history.push(`/insertion/${h.data.data._id}`)
 
@@ -97,55 +101,85 @@ export default function NewCampaign() {
     type === "demo" ? setOpen({ demo: true, lang: false, geo: false }) : (type === "lang" ? setOpen({ demo: false, lang: true, geo: false }) : setOpen({ demo: false, lang: false, geo: true }));
     type == "demo" ? setshow({ demo: true, lang: false, geo: false }) : type == "lang" ? setshow({ demo: false, lang: true, geo: false }) : setshow({ demo: false, lang: false, geo: true });
   };
-
+  const handleOpen1 = () => {
+    setOpen1(true);
+    setpopup(true);
+  };
   const handleinputdate1 = (e) => {
     setdates({ ...dates, start: e.target.value })
   }
   const handleinputdate2 = (e) => {
     setdates({ ...dates, end: e.target.value })
+    checkdate();
   }
 
   const handleClose = () => {
     setOpen(false);
   };
+  const handleClose1 = () => {
+    setOpen1(false);
+  };
   const handleChange2 = (e) => {
     setActive(e.target.value);
   }
-  const handleChange3 = (e) => {
-    setGoal(e.target.value);
-  }
-  const handleChange4 = (e) => {
-    setkpi({ type: e.target.value, goal: kpi.goal });
-    setcond(true)
-  }
+  // const handleChange3 = (e) => {
+  //   setGoal(e.target.value);
+  // }
+  // const handleChange4 = (e) => {
+  //   setkpi({ type: e.target.value, goal: kpi.goal });
+  //   setcond(true)
+  // }
   const handleChange5 = (e) => {
     setfreq({ freq: freq.freq, freqtime: e.target.value })
   }
 
   const checkdate = () => {
     console.log(dates.start, dates.end);
-
-    if (new Date(dates.start) < new Date(dates.end)) {
-      if (((new Date(dates.end).getTime() - new Date(dates.start).getTime()) / (1000 * 3600 * 24)) < 60) {
-        console.log(((new Date(dates.end).getTime() - new Date(dates.start).getTime()) / (1000 * 3600 * 24)))
-        return true
-      }
+    console.log(new Date(dates.start) - new Date())
+    if (new Date(dates.start) < new Date()) {
+      console.log('hello')
+      return {status:false,message:"Start Date should be greater than today's date!"}
     }
-    return false
+
+    if (((new Date(dates.start).getTime() - new Date().getTime()) / (1000 * 3600 * 24)) >= 60) {
+      return {status:false,message:"Start Date is too late!",check:1}
+    }
+
+    if (new Date(dates.end) < new Date()) {
+      return {status:false,message:"End Date should be greater than today's date!"}
+    }
+
+    if (new Date(dates.start) > new Date(dates.end)) {
+      return {status:false,message:"Start Date should be less than end date!"}
+    }
+
+    if (((new Date(dates.end).getTime() - new Date(dates.start).getTime()) / (1000 * 3600 * 24)) >= 60) {
+      console.log(((new Date(dates.end).getTime() - new Date(dates.start).getTime()) / (1000 * 3600 * 24)))
+      return {status:false,message:"End Date is too late from the start date!",check:1}
+    }
+
+    return {status:true,message:"Success"}
   }
 
   return (
 
     <div>
+      
 
       <form onSubmit={(e) => {
-        e.preventDefault()
-        let status = checkdate()
-        if (!status) {
-          return setstatus({ ...status, error: "End date should be greater or difference between dates must be less than 60 days!" });
+        e.preventDefault();
+        let check = checkdate();
+        if(check.check){
+          setwarning(check.message);
+          handleOpen1();
+          return
+        }
+        
+        if (!check.status) {
+          return setstatus({ ...status, error: check.message });
         }
         console.log('good')
-        submitCampaign()
+        submitCampaign();
       }} >
 
         <div className={styles.statusdashboard} >
@@ -191,59 +225,6 @@ export default function NewCampaign() {
 
           <div className={styles.coldis} >
             <div className={styles.rowdis} >
-              <div className={styles.campgoal1} >
-                <span className={styles.svdf} > Overall Campaign Goal </span>
-              </div>
-              <div className={styles.dot} >
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={goal}
-                  label={goal}
-                  style={{ width: '100%' }}
-                  onChange={handleChange3}
-                >
-                  <MenuItem value='Choose goal'>Choose goal</MenuItem>
-                  <MenuItem value='Raise Awareness of my Brand or Product'>Raise Awareness of my Brand or Product</MenuItem>
-                  <MenuItem value='Drive online action or visits'>Drive online action or visits</MenuItem>
-                  <MenuItem value='Drive offline or instore sales'>Drive offline or instore sales</MenuItem>
-                  <MenuItem value='Drive app installs or engagements'>Drive app installs or engagements</MenuItem>
-                </Select>
-              </div>
-            </div>
-            <hr className={styles.divider} />
-            <div className={styles.rowdis} >
-              <div className={styles.kpi5} >
-                <span className={styles.svdf} > KPI </span>
-              </div>
-              <div className={styles.dot4} >
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={kpi.type}
-                  label={kpi.type}
-                  style={{ width: '100%' }}
-                  onChange={handleChange4}
-                >
-                  <MenuItem value='Choose KPI'>Choose KPI</MenuItem>
-                  <MenuItem value='CPV'>CPV</MenuItem>
-                  <MenuItem value='CPM'>CPM</MenuItem>
-                  <MenuItem value='Viewable %'>Viewable %</MenuItem>
-                  <MenuItem value='CPIAVC'>CPIAVC</MenuItem>
-                </Select>
-              </div>
-              {cond ?
-                <div className={styles.koi} >
-                  <input placeholder="Kpi Goal in Rs" className={styles.inpkpi} type="number"
-                    value={kpi.goal}
-                    onChange={e => setkpi({ type: kpi.type, goal: e.target.value })}
-                  />
-                </div>
-                : <></>
-              }
-            </div>
-            <hr className={styles.divider} />
-            <div className={styles.rowdis} >
               <div className={styles.creat} >
                 <span className={styles.svdf} > Creative type you expect to use </span>
               </div>
@@ -287,7 +268,7 @@ export default function NewCampaign() {
                 </div>
                 <div>
                   <input type="date" onChange={handleinputdate1}
-                  required={true}
+                    required={true}
                     value={dates.start}
                   />
                 </div>
@@ -299,7 +280,7 @@ export default function NewCampaign() {
                 </div>
                 <div>
                   <input type="date" onChange={handleinputdate2}
-                  required={true}
+                    required={true}
                     value={dates.end}
                   />
                 </div>
@@ -446,10 +427,37 @@ export default function NewCampaign() {
           :
           <></>
         }
+        {popup ?
+          <div  >
+            <Modal
+              open={open1}
+              onClose={handleClose1}
+              aria-labelledby="simple-modal-title"
+              aria-describedby="simple-modal-description"
+            >
+              <Paper className={styles.dashboardpop} >
+              <div style={{margin:'auto',width:'50%'}} >
+                <h3>Warning!</h3>
+                <p>{warning}</p>
+                <div style={{display:'flex',flexDirection:'row'}} >
+                  <button onClick={()=> submitCampaign() } style={{margin:'2%'}} >Ok</button>
+                  <button onClick={handleClose1 } style={{margin:'2%'}} >Cancel</button>
+                </div>
+              </div>
+              </Paper>
+              
+
+            </Modal>
+          </div>
+          :
+          <></>
+        }
+          
+          
+        
 
         <button type="submit" >Next</button>
       </form>
-
 
     </div>
 

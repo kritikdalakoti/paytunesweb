@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { Paper, Select, MenuItem, Slider } from '@material-ui/core'
 import '../css/popup.css'
-import { ages } from '../utils/state'
+import { ages ,phonecost} from '../utils/state'
 import { MainContext } from '../App'
 import { useDispatch } from 'react-redux'
 import mainaction from '../redux/actions/main'
@@ -12,7 +12,7 @@ export default function Demographic({ state }) {
     const [gender, setgender] = useState({ male: false, female: false })
     const [age, setage] = useState([18, 65])
     const [parent, setparent] = useState({ parent: false, nonparent: false })
-    const [income, setincome] = useState([18, 65])
+    const [income, setincome] = useState([5000,50000])
     const [checks, setchecks] = useState({ age: true, income: true })
     function valuetext(value) {
         return `${value}+`;
@@ -46,8 +46,8 @@ export default function Demographic({ state }) {
                 <div className="rowdis" >
                     <span className="gen" >Gender</span>
                     <span className="com" >Age</span>
-                    <span className="com" >Parental Status</span>
-                    <span className="com" >HouseHold Income</span>
+                    {/* <span className="com" >Parental Status</span> */}
+                    <span className="com" >Phone Cost</span>
                 </div>
                 <div className="rowdis" >
 
@@ -105,7 +105,7 @@ export default function Demographic({ state }) {
                         </div>
 
                     </div>
-                    <div className="coldis1" >
+                    {/* <div className="coldis1" >
                         <div className="rowdis1" >
                             <div className="check" >
                                 <input type="checkbox"
@@ -128,7 +128,7 @@ export default function Demographic({ state }) {
                                 <span style={{ whiteSpace: 'nowrap' }} >Not A Parent </span>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="coldis2" >
                         <div className="rowdis1" >
@@ -139,7 +139,7 @@ export default function Demographic({ state }) {
                                 />
                             </div>
                             <div className="text" >
-                                <span style={{ whiteSpace: 'nowrap' }} >HouseHold Income</span>
+                                <span style={{ whiteSpace: 'nowrap' }} >Phone Range</span>
                             </div>
                         </div>
                         <div  >
@@ -147,8 +147,8 @@ export default function Demographic({ state }) {
                                 getAriaLabel={() => 'Income'}
                                 orientation="vertical"
                                 getAriaValueText={valuetext}
-                                defaultValue={[18, 70]}
-                                marks={ages}
+                                defaultValue={[5000,50000]}
+                                marks={phonecost}
                                 onChange={handlechange2}
                                 value={income}
                                 color={'string'}
