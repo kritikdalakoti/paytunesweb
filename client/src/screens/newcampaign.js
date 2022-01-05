@@ -91,7 +91,7 @@ export default function NewCampaign() {
     formdata.append('incomedemo', demography.income)
     formdata.append('landingurl', landingurl)
     dispatch(mainaction('DATE', { start: dates.start, end: dates.end }))
-    let url = `http://127.0.0.1:5000/campaign/create`  //https://paytunes-new.herokuapp.com
+    let url = `https://paytunes-new.herokuapp.com/campaign/create`  //https://paytunes-new.herokuapp.com
     let h = await fun.createApi(formdata, url)
     history.push(`/insertion/${h.data.data._id}`)
 
