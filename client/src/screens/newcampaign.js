@@ -44,11 +44,11 @@ export default function NewCampaign() {
   const history = useHistory()
   const dispatch = useDispatch()
   const [campaignName, setcampaignname] = useState('');
-  const [popupstatus,setpopupstatus]=useState(false);
+  const [popupstatus, setpopupstatus] = useState(false);
   const [status, setstatus] = useState({ error: "", success: "" });
   const [active, setActive] = useState('Active')
-  const [popup,setpopup]=useState(false);
-  const [warning,setwarning]=useState("");
+  const [popup, setpopup] = useState(false);
+  const [warning, setwarning] = useState("");
   const [landingurl, setlandingurl] = useState("")
   const [creativecheck, setcreativecheck] = useState({ Audio: false, Video: false, Display: false })
   const [dates, setdates] = useState({ start: '', end: '' })
@@ -91,7 +91,7 @@ export default function NewCampaign() {
     formdata.append('incomedemo', demography.income)
     formdata.append('landingurl', landingurl)
     dispatch(mainaction('DATE', { start: dates.start, end: dates.end }))
-    let url = `http://127.0.0.1:5000/campaign/create`  //https://paytunes-new.herokuapp.com
+    let url = `https://paytunes-new.herokuapp.com/campaign/create`  //https://paytunes-new.herokuapp.com
     let h = await fun.createApi(formdata, url)
     history.push(`/insertion/${h.data.data._id}`)
 
@@ -136,45 +136,45 @@ export default function NewCampaign() {
   const checkdate = () => {
     console.log(dates.start, dates.end);
     console.log(new Date(dates.start) - new Date())
-    if (new Date(dates.start).getDate() < new Date().getDate()  ) {
+    if (new Date(dates.start).getDate() < new Date().getDate()) {
       console.log('hello')
-      return {status:false,message:"Start Date should be greater than today's date!"}
+      return { status: false, message: "Start Date should be greater than today's date!" }
     }
 
     if (((new Date(dates.start).getTime() - new Date().getTime()) / (1000 * 3600 * 24)) >= 60) {
-      return {status:false,message:"Start Date is too late!",check:1}
+      return { status: false, message: "Start Date is too late!", check: 1 }
     }
 
     if (new Date(dates.end) < new Date()) {
-      return {status:false,message:"End Date should be greater than today's date!"}
+      return { status: false, message: "End Date should be greater than today's date!" }
     }
 
     if (new Date(dates.start) > new Date(dates.end)) {
-      return {status:false,message:"Start Date should be less than end date!"}
+      return { status: false, message: "Start Date should be less than end date!" }
     }
 
     if (((new Date(dates.end).getTime() - new Date(dates.start).getTime()) / (1000 * 3600 * 24)) >= 60) {
       console.log(((new Date(dates.end).getTime() - new Date(dates.start).getTime()) / (1000 * 3600 * 24)))
-      return {status:false,message:"End Date is too late from the start date!",check:1}
+      return { status: false, message: "End Date is too late from the start date!", check: 1 }
     }
 
-    return {status:true,message:"Success"}
+    return { status: true, message: "Success" }
   }
 
   return (
 
     <div>
-      
+
 
       <form onSubmit={(e) => {
         e.preventDefault();
         let check = checkdate();
-        if(check.check){
+        if (check.check) {
           setwarning(check.message);
           handleOpen1();
           return
         }
-        
+
         if (!check.status) {
           return setstatus({ ...status, error: check.message });
         }
@@ -436,25 +436,25 @@ export default function NewCampaign() {
               aria-describedby="simple-modal-description"
             >
               <Paper className={styles.dashboardpop} >
-              <div style={{margin:'auto',width:'50%'}} >
-                <h3>Warning!</h3>
-                <p>{warning}</p>
-                <div style={{display:'flex',flexDirection:'row'}} >
-                  <button onClick={()=> submitCampaign() } style={{margin:'2%'}} >Ok</button>
-                  <button onClick={handleClose1 } style={{margin:'2%'}} >Cancel</button>
+                <div style={{ margin: 'auto', width: '50%' }} >
+                  <h3>Warning!</h3>
+                  <p>{warning}</p>
+                  <div style={{ display: 'flex', flexDirection: 'row' }} >
+                    <button onClick={() => submitCampaign()} style={{ margin: '2%' }} >Ok</button>
+                    <button onClick={handleClose1} style={{ margin: '2%' }} >Cancel</button>
+                  </div>
                 </div>
-              </div>
               </Paper>
-              
+
 
             </Modal>
           </div>
           :
           <></>
         }
-          
-          
-        
+
+
+
 
         <button type="submit" >Next</button>
       </form>

@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { Paper, Select, MenuItem, Slider } from '@material-ui/core'
 import '../css/popup.css'
+import { useSelector } from "react-redux";
 import { ages } from '../utils/state'
 import DoneIcon from '@material-ui/icons/Done'
 import BlockIcon from '@material-ui/icons/Block';
@@ -39,8 +40,14 @@ export default function Geography({ state }) {
     }
 
     useEffect(() => {
+        
         setselected({ reg: geography.region, pin: Selected.pin })
         setgeo({ pin: geography.pincodes, region: geo.region })
+        console.log(geography.pincodes.selected);
+        let selectedpins=geography.pincodes.selected?geography.pincodes.selected.split(','):[]  ;
+        let blockedpins=geography.pincodes.blocked?geography.pincodes.blocked.split(','):[]  ;
+        console.log(selectedpins)
+        setpin({blocked:blockedpins,selected:selectedpins});
     }, [geography])
 
     console.log(geography)
@@ -73,10 +80,12 @@ export default function Geography({ state }) {
     const addselectedpincodes=()=>{
         let selectedpins=geo.pin.selected?geo.pin.selected.split(','):[]  ;
         setpin({...pin,selected:selectedpins});
+        dispatch(mainaction('SelPin',{selected:pin.selected,blocked:pin.blocked}))
     }
     const addblockedpincodes=()=>{
         let blockedpins=geo.pin.blocked?geo.pin.blocked.split(','):[]  ;
         setpin({...pin,blocked:blockedpins});
+        dispatch(mainaction('SelPin',{selected:pin.selected,blocked:pin.blocked}))
     }
 
     console.log(geo.pin.fileinp?1:2)
@@ -145,7 +154,11 @@ export default function Geography({ state }) {
                             value={geo.pin.selected}
                             placeholder="Pincodes comma seperated"
                         />
-                        <button style={{marginLeft:'5px'}} onClick={()=>addselectedpincodes()} >Add</button>
+                        <button style={{marginLeft:'5px'}} onClick={()=>
+                            addselectedpincodes()
+                            } >
+                        
+                            Add</button>
                         </div>
                         
                         <div style={{ marginTop: "5%" }} >Blocked Pincodes</div>
@@ -155,7 +168,10 @@ export default function Geography({ state }) {
                             value={geo.pin.blocked}
                             placeholder="Pincodes comma seperated"
                         />
-                        <button style={{marginLeft:'5px'}} onClick={()=>addblockedpincodes()} >Add</button>
+                        <button style={{marginLeft:'5px'}} onClick={()=>
+                            addblockedpincodes()
+                            } >
+                            Add</button>
                         </div>
                         
 
