@@ -12,8 +12,8 @@ export default function Demographic({ state }) {
     const [gender, setgender] = useState({ male: false, female: false })
     const [age, setage] = useState([18, 65])
     const [parent, setparent] = useState({ parent: false, nonparent: false })
-    const [income, setincome] = useState([5000,50000])
-    const [checks, setchecks] = useState({ age: true, income: true })
+    const [income, setincome] = useState([])
+    const [checks, setchecks] = useState({ age: false, income: false })
     function valuetext(value) {
         return `${value}+`;
     }
@@ -81,7 +81,7 @@ export default function Demographic({ state }) {
                         <div className="rowdis1" >
                             <div className="check" >
                                 <input type="checkbox"
-                                    checked={checks.age}
+                                    
                                     onClick={() => setchecks({ age: !checks.age, income: checks.income })}
                                 />
                             </div>
@@ -100,7 +100,7 @@ export default function Demographic({ state }) {
                                 value={age}
                                 color={'string'}
                                 style={{ height: 300 }}
-                                disabled={checks.age ? false : true}
+                                disabled={checks.age}
                             />
                         </div>
 
@@ -134,7 +134,6 @@ export default function Demographic({ state }) {
                         <div className="rowdis1" >
                             <div className="check" >
                                 <input type="checkbox"
-                                    checked={checks.income}
                                     onClick={() => setchecks({ age: checks.age, income: !checks.income })}
                                 />
                             </div>
@@ -153,7 +152,7 @@ export default function Demographic({ state }) {
                                 value={income}
                                 color={'string'}
                                 style={{ height: 300 }}
-                                disabled={checks.income ? false : true}
+                                disabled={checks.income }
                             />
                         </div>
 

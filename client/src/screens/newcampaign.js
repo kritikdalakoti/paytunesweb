@@ -91,7 +91,7 @@ export default function NewCampaign() {
     formdata.append('incomedemo', demography.income)
     formdata.append('landingurl', landingurl)
     dispatch(mainaction('DATE', { start: dates.start, end: dates.end }))
-    let url = `https://paytunes-new.herokuapp.com/campaign/create`  //https://paytunes-new.herokuapp.com
+    let url = `http://127.0.0.1:5000/campaign/create`  //https://paytunes-new.herokuapp.com
     let h = await fun.createApi(formdata, url)
     history.push(`/insertion/${h.data.data._id}`)
 
@@ -136,7 +136,7 @@ export default function NewCampaign() {
   const checkdate = () => {
     console.log(dates.start, dates.end);
     console.log(new Date(dates.start) - new Date())
-    if (new Date(dates.start) < new Date()) {
+    if (new Date(dates.start).getDate() < new Date().getDate()  ) {
       console.log('hello')
       return {status:false,message:"Start Date should be greater than today's date!"}
     }
@@ -386,14 +386,14 @@ export default function NewCampaign() {
           {/* <hr className={styles.divider} /> */}
 
         </Paper>
-        <div style={{ marginBottom: '7%' }} >
+        {/* <div style={{ marginBottom: '7%' }} >
           <div className={styles.target} >Additional Details</div>
           <div className={styles.shgt1}  >
             <div style={{ marginTop: '1%' }} >Add more details to improve your recommendations.</div>
           </div>
 
-        </div>
-        <Paper className={styles.dashboard} elevation={3}>
+        </div> */}
+        {/* <Paper className={styles.dashboard} elevation={3}>
           <div className={styles.rowdis} >
             <div className={styles.campname} >
               <span className={styles.svdf} > Landing Page Urls </span>
@@ -407,8 +407,8 @@ export default function NewCampaign() {
             </div>
 
           </div>
-          {/* <hr className={styles.divider} /> */}
-        </Paper>
+          
+        </Paper> */}
 
         {show.demo || show.lang || show.geo ?
           <div  >

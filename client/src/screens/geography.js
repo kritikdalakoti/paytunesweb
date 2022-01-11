@@ -17,10 +17,11 @@ export default function Geography({ state }) {
     let { geography, setgeography, setOpen } = state
     console.log(geography)
     // const { statemain, dispatchmain } = useContext(MainContext)
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const [geo, setgeo] = useState({ pin: { selected: '', blocked: '', fileinp: "" }, region: '' });
-    const [results, setresults] = useState([])
+    const [results, setresults] = useState([]);
     const [Selected, setselected] = useState({ reg: { selected: [], notselected: [] }, pin: [] });
+    const [pin,setpin]=useState({selected:[],blocked:[]});
 
     const handleregionchange = (e) => {
         setgeo({ region: e.target.value, pin: geo.pin })
@@ -69,6 +70,15 @@ export default function Geography({ state }) {
         setgeo({ pin: { selected: geo.pin.selected, blocked: geo.pin.blocked, fileinp: e.target.files[0] }, region: geo.region })
     }
 
+    const addselectedpincodes=()=>{
+        let selectedpins=geo.pin.selected?geo.pin.selected.split(','):[]  ;
+        setpin({...pin,selected:selectedpins});
+    }
+    const addblockedpincodes=()=>{
+        let blockedpins=geo.pin.blocked?geo.pin.blocked.split(','):[]  ;
+        setpin({...pin,blocked:blockedpins});
+    }
+
     console.log(geo.pin.fileinp?1:2)
 
 
@@ -77,7 +87,7 @@ export default function Geography({ state }) {
             <Paper className="dashboard" elevation={3}  >
                 <hr className="divider" />
                 <div className="rowdis3" >
-                    <div className="coldis" style={{ maxHeight: '60vh', overflow: 'auto', width: '600px' }}  >
+                    <div className="coldis" style={{ maxHeight: '60vh', overflow: 'auto', width: '300px' }}  >
                         <div>Select Regions</div>
                         <input className="inp2"
                             onChange={handleregionchange}
@@ -127,19 +137,27 @@ export default function Geography({ state }) {
 
                     <div style={{ maxHeight: '60vh', borderLeft: '1px solid #000' }} ></div>
 
-                    <div className="coldis" style={{ height: '30vh', overflow: 'auto', width: '500px', marginLeft: '3%' }} >
+                    <div className="coldis" style={{ height: '30vh', overflow: 'auto', width: '300px', marginLeft: '3%' }} >
                         <div>Selected Pincodes</div>
+                        <div className="rowdis" >
                         <input className="inp2"
                             onChange={e => setgeo({ region: geo.region, pin: { selected: e.target.value, blocked: geo.pin.blocked,fileinp:geo.pin.fileinp  } })}
                             value={geo.pin.selected}
                             placeholder="Pincodes comma seperated"
                         />
+                        <button style={{marginLeft:'5px'}} onClick={()=>addselectedpincodes()} >Add</button>
+                        </div>
+                        
                         <div style={{ marginTop: "5%" }} >Blocked Pincodes</div>
+                        <div className="rowdis" >
                         <input className="inp2"
                             onChange={e => setgeo({ region: geo.region, pin: { selected: geo.pin.selected, blocked: e.target.value,fileinp:geo.pin.fileinp } })}
                             value={geo.pin.blocked}
                             placeholder="Pincodes comma seperated"
                         />
+                        <button style={{marginLeft:'5px'}} onClick={()=>addblockedpincodes()} >Add</button>
+                        </div>
+                        
 
                         <div style={{ marginTop: '5%' }} >
                             <span  >Upload Pincode File</span>
@@ -152,6 +170,30 @@ export default function Geography({ state }) {
                         </div>
 
                     </div>
+                    <div className="coldis" style={{ height: '30vh', overflow: 'auto', width: '150px', marginLeft: '3%' }} >
+
+                            <div>Selected Pincodes</div>
+                            {pin.selected.map(sel =>
+                                <div className="rowdis" >
+                                    <span style={{ paddingTop: '4%', fontSize: '15px', maxWidth: '50px' }} >{sel}</span>
+                                    {/* <CancelIcon fontSize="medium" style={{ marginLeft: '30%', cursor: 'pointer', paddingTop: '4%' }}
+                                        onClick={() => removeregion(sel)}
+                                    /> */}
+                                </div>
+                            )} 
+                        </div>
+                        <div className="coldis" style={{ height: '30vh', overflow: 'auto', width: '150px', marginLeft: '3%' }} >
+                            <div>Blocked Pincodes</div>
+                            {pin.blocked.map(sel =>
+                                <div className="rowdis" >
+                                    <span style={{ paddingTop: '4%', fontSize: '15px', maxWidth: '50px' }} >{sel}</span>
+                                    {/* <CancelIcon fontSize="medium" style={{ marginLeft: '30%', cursor: 'pointer', paddingTop: '4%' }}
+                                        onClick={() => removenotselregion(sel)}
+                                    /> */}
+                                </div>
+                            )}
+                        </div>
+                        
 
                 </div>
                 <hr className="divider" />
