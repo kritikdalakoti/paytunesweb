@@ -18,7 +18,7 @@ const upload = multer({ storage })
 
 router.post(
     '/create',
-    auth,
+     auth,
     upload.fields([{name:'pincodefile',maxCount:1}]),
     controller.createcampaign
 )
@@ -32,9 +32,37 @@ router.post(
 
 router.post(
     '/createlineitem',
-    auth,
+     auth,
     upload.fields([{name:'pincodefile',maxCount:1}]),
     controller.createlineitem
+)
+
+router.post(
+    '/lineitemslist',
+    auth,
+    upload.none(),
+    controller.getlineitems
+)
+
+router.post(
+    '/editlineitem',
+    auth,
+    // upload.none(),
+    controller.editlineitem
+)
+
+router.post(
+    '/duplicatelineitem',
+    auth,
+    upload.none(),
+    controller.duplicatelineitem
+)
+
+router.post(
+    '/getcampaignname',
+    auth,
+    upload.none(),
+    controller.getCampaignName
 )
 
 // router.post(

@@ -22,6 +22,7 @@ import Creative from './components/creative';
 import DetailedPage from './components/DetailedPage';
 import Html5image from './components/html5image';
 import Videofile from './components/videofile';
+import ListLineitem from './components/listlineitem';
 export const UserContext = React.createContext()
 export const BudgetContext = React.createContext()
 export const MainContext = React.createContext()
@@ -80,6 +81,11 @@ function App() {
                 <Route
                   path='/advertisers'
                   render={() => (<Advertiser />)}
+                  exact
+                />
+                <Route
+                  path='/listlineitem/:campid'
+                  render={() => (<ListLineitem />)}
                   exact
                 />
                 <Route

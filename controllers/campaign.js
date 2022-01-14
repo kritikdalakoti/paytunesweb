@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 const CampaignMaster = require('../models/campaignmaster')
 // const SubCampaignMaster = require('../models/subcampaignmaster')
-const Insertion=require('../models/insertion')
-const Lineitem=require('../models/lineitem')
+const Insertion = require('../models/insertion')
+const Lineitem = require('../models/lineitem')
 // const path = require('path')
-const { readdata, deletefiles, AudioMediaFiles, VideoMediaFiles } = require('../helper')
+const { readdata, deletefiles, AudioMediaFiles, VideoMediaFiles } = require('../helper');
+const lineitem = require('../models/lineitem');
 // const xlsx = require('xlsx')
 // const fs = require('fs')
 // const { uploadAws, uploadMedia, uploadtranscodedfile, uploadAzure } = require('../aws_upload/uploadsfunction');
@@ -17,8 +18,8 @@ exports.createcampaign = async (req, res) => {
     try {
         console.log(req.files)
         // console.log(req.body.geography.pincodes.fileinp)
-        let { campaignName, active, goal, kpitype, kpigoal, audio, video, display, startdate, enddate, freq, freqtime, selregion, notselregion, selpin, blockedpin, pincodefile,
-            sellanguages, blocklanguages, maledemo, femaledemo, agedemo, parentdemo, nonparentdemo, incomedemo,landingurl
+        let { campaignname, active, goal, kpitype, kpigoal, audio, video, display, startdate, enddate, freq, freqtime, selregion, notselregion, selpin, blockedpin, pincodefile,
+            sellanguages, blocklanguages, maledemo, femaledemo, agedemo, parentdemo, nonparentdemo, incomedemo, landingurl
         } = req.body;
 
         selregion = selregion ? selregion.split(",") : [];
@@ -47,7 +48,7 @@ exports.createcampaign = async (req, res) => {
         }
 
         const campaign = new CampaignMaster({
-            title: campaignName,
+            title: campaignname,
             campstatus: active,
             goal,
             kpitype,
@@ -102,8 +103,8 @@ exports.createinsertion = async (req, res) => {
             sellanguages, blocklanguages, maledemo, femaledemo, agedemo, parentdemo, nonparentdemo, incomedemo
         } = req.body
 
-        if(!campaignid){
-            return res.status(400).json({error:"Campid missing"})
+        if (!campaignid) {
+            return res.status(400).json({ error: "Campid missing" })
         }
 
         selregion = selregion ? selregion.split(",") : [];
@@ -127,10 +128,10 @@ exports.createinsertion = async (req, res) => {
             Pincodesfile = readdata(req.files.pincodefile[0].filename)
         }
 
-        let insert=new Insertion({
+        let insert = new Insertion({
             insertionname,
-            campaignid:mongoose.Types.ObjectId(campaignid),
-            insertionstatus:active,
+            campaignid: mongoose.Types.ObjectId(campaignid),
+            insertionstatus: active,
             budegttype,
             budget,
             description,
@@ -156,7 +157,7 @@ exports.createinsertion = async (req, res) => {
         })
 
         await insert.save();
-        res.status(200).json({message:"Successfuly Created",data:insert})
+        res.status(200).json({ message: "Successfuly Created", data: insert })
     } catch (err) {
         console.log(err.message)
         res.status(400).json({ error: err.message })
@@ -167,7 +168,7 @@ exports.createlineitem = async (req, res) => {
     try {
         let {
             lineitemname,
-            insertionid,
+            campaignid,
             active,
             pacingsetting,
             pacingtarget,
@@ -177,8 +178,8 @@ exports.createlineitem = async (req, res) => {
             sellanguages, blocklanguages, maledemo, femaledemo, agedemo, parentdemo, nonparentdemo, incomedemo
         } = req.body
 
-        if(!insertionid){
-            return res.status(400).json({error:"Insertionid missing"})
+        if (!campaignid) {
+            return res.status(400).json({ error: "Campaignid missing" })
         }
 
         selregion = selregion ? selregion.split(",") : [];
@@ -202,10 +203,10 @@ exports.createlineitem = async (req, res) => {
             Pincodesfile = readdata(req.files.pincodefile[0].filename)
         }
 
-        let lineitem=new Lineitem({
+        let lineitem = new Lineitem({
             lineitemname,
-            campaignid:mongoose.Types.ObjectId(insertionid),
-            lineitemstatus:active,
+            campaignid: mongoose.Types.ObjectId(campaignid),
+            lineitemstatus: active,
             pacingtarget,
             pacingsetting,
             freq,
@@ -226,10 +227,100 @@ exports.createlineitem = async (req, res) => {
         })
 
         await lineitem.save();
-        res.status(200).json({message:"Successfuly Created",data:lineitem})
+        res.status(200).json({ message: "Successfuly Created", data: lineitem })
     } catch (err) {
         console.log(err.message)
         res.status(400).json({ error: err.message })
+    }
+}
+
+exports.getlineitems = async (req, res) => {
+    try {
+        let { campid } = req.body;
+        console.log(req.body);
+        console.log(campid)
+        if (!campid) {
+            return res.status(400).json({ error: "No Campid present!" });
+        }
+        campid = mongoose.Types.ObjectId(campid);
+
+        let lineitems = await Lineitem.find({ campaignid: campid });
+        res.status(200).json(lineitems);
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(400).json({ error: err.message });
+    }
+}
+
+exports.editlineitem = async (req, res) => {
+    try {
+        let { lineitemid, dealid,lineitemname } = req.body;
+        console.log(11);
+        if (!lineitemid) {
+            return res.status(400).json({ error: "No Lineitemid present!" })
+        }
+
+        lineitemid = mongoose.Types.ObjectId(lineitemid);
+
+        let updated = await Lineitem.findOneAndUpdate({ _id: lineitemid }, { $set: { dealid,lineitemname } }, { new: true });
+
+        if (!updated)
+            return res.status(400).json({ error: "Couldn't Update!" });
+        console.log(updated)
+        res.status(200).json({ message: 'Successfuly updated!' });
+
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
+
+exports.duplicatelineitem = async (req, res) => {
+    try {
+        let { _id } = req.body;
+        _id = mongoose.Types.ObjectId(_id);
+        let lineitem = await Lineitem.findOne({ _id });
+        let newitem = {
+            campaignid: lineitem.campaignid,
+            lineitemname: lineitem.lineitemname,
+            lineitemstatus: lineitem.lineitemstatus,
+            freq: lineitem.freq,
+            freqtime: lineitem.freqtime,
+            pacingsetting: lineitem.pacingsetting,
+            pacingtarget: lineitem.pacingtarget,
+            selregion: lineitem.selregion,
+            notselregion: lineitem.notselregion,
+            selpin: lineitem.selpin,
+            blockedpin: lineitem.blockedpin,
+            pincodefile: lineitem.pincodefile,
+            sellanguages: lineitem.sellanguages,
+            blocklanguages: lineitem.blocklanguages,
+            maledemo: lineitem.maledemo,
+            femaledemo: lineitem.femaledemo,
+            agedemo: lineitem.agedemo,
+            parentdemo: lineitem.parentdemo,
+            nonparentdemo: lineitem.nonparentdemo,
+            incomedemo: lineitem.incomedemo,
+            dealid: lineitem.dealid
+        }
+        console.log(lineitem);
+        let duplicateitem = new Lineitem(newitem);
+        await duplicateitem.save();
+        res.status(200).json({ message: "Successfuly Duplicated!" });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
+
+exports.getCampaignName=async(req,res)=>{
+    try{
+        let {campid}=req.body;
+        campid=mongoose.Types.ObjectId(campid);
+        let campaign=await CampaignMaster.findOne({_id:campid});
+        console.log(campaign);
+        res.status(200).json({message:"Successfuly Fetched!",data:campaign.title?campaign.title:""});
+    }catch(err){
+        res.status(400).json({error:err.message});
     }
 }
 

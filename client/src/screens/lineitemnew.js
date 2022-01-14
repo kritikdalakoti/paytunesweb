@@ -52,7 +52,7 @@ export default function LineItemNew() {
     const submitLineitem = async () => {
         const formdata = new FormData()
         formdata.append('lineitemname', lineitem);
-        formdata.append('insertionid', insertionid);
+        formdata.append('campaignid', insertionid);
         formdata.append('active', lineitemactive);
         formdata.append('pacingtarget', pacing.target);
         formdata.append('pacingsetting', pacing.setting);
@@ -74,6 +74,8 @@ export default function LineItemNew() {
 
         let url = `https://paytunes-new.herokuapp.com/campaign/createlineitem`
         let res = await fun.createApi(formdata, url)
+        console.log(`/listlineitem/${insertionid}`)
+        history.push(`/listlineitem/${insertionid}`)
 
     }
 
@@ -308,7 +310,7 @@ export default function LineItemNew() {
                 :
                 <></>
             }
-            <button onClick={submitLineitem} >Create</button>
+            <button type="submit" >Create</button>
         </form>
 
             

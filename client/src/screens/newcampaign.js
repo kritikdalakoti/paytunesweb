@@ -93,7 +93,7 @@ export default function NewCampaign() {
     dispatch(mainaction('DATE', { start: dates.start, end: dates.end }))
     let url = `https://paytunes-new.herokuapp.com/campaign/create`  //https://paytunes-new.herokuapp.com
     let h = await fun.createApi(formdata, url)
-    history.push(`/insertion/${h.data.data._id}`)
+    history.push(`/lineitemnew/${h.data.data._id}`)
 
   }
 

@@ -1,7 +1,7 @@
 const mongoose=require('mongoose')
 
 const LineitemSchema=new mongoose.Schema({
-    insertionid:mongoose.Types.ObjectId,
+    campaignid:mongoose.Types.ObjectId,
     lineitemname:String, 
     lineitemstatus:String,
     freq:Number,
@@ -20,7 +20,8 @@ const LineitemSchema=new mongoose.Schema({
     agedemo:Array,
     parentdemo:Boolean,
     nonparentdemo:Boolean,
-    incomedemo:Array
+    incomedemo:Array,
+    dealid:String
 })
 
 module.exports=mongoose.model('lineitem',LineitemSchema);
