@@ -24,10 +24,10 @@ import {
 	AccordionSummary,
 	AccordionDetails
 } from '@mui/material';
-import React from 'react';
+import React, { useRef } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { useHistory } from 'react-router';
-import '../App.css'
+import '../App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -39,11 +39,13 @@ import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ImageIcon from '@mui/icons-material/Image';
 import ClearIcon from '@mui/icons-material/Clear';
-import LinkIcon from '@mui/icons-material/Link';
+// import LinkIcon from '@mui/icons-material/Link';
 import GraphicEqIcon from '@mui/icons-material/GraphicEq';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+// import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+// import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import { useSnackbar } from 'notistack';
+import axios from 'axios';
+// import Footer from './Footer';
 
 function a11yProps(index) {
 	return {
@@ -72,17 +74,25 @@ function TabPanel(props) {
 	);
 }
 
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+// const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 function Audiofile() {
 	const history = useHistory();
+	const audioRef = useRef();
+	const imageRef = useRef();
 	const { enqueueSnackbar } = useSnackbar();
+	const [ loading, setloading ] = React.useState(false);
+	const [ error, seterror ] = React.useState({ message: '', status: false });
 	const [ bisc1, setbisc1 ] = React.useState(true);
 	const [ value, setValue ] = React.useState(0);
 	const [ zoomvalue, setZoomValue ] = React.useState(100);
+	const [ audioDuration, setaudioDuration ] = React.useState(null);
+	const [ imageDimensions, setimageDimensions ] = React.useState(null);
 	const [ fileUpload, setfileUpload ] = React.useState(null);
 	const [ fileUpload1, setfileUpload1 ] = React.useState(null);
 	const [ name, setname ] = React.useState('');
+	const [ integrationCode, setintegrationCode ] = React.useState('');
+	const [ notes, setnotes ] = React.useState('');
 	const [ paletStatus, setpaletStatus ] = React.useState([]);
 	const [ urlList, seturlList ] = React.useState([]);
 	const [ urlSelectList, seturlSelectList ] = React.useState([]);
@@ -97,6 +107,14 @@ function Audiofile() {
 		seturlList([ ...urlList, addss ]);
 		// console.log(urlList);
 	};
+	function onImgLoad() {
+		console.log({
+			dimension: {
+				height: imageRef.current.offsetHeight,
+				width: imageRef.current.offsetWidth
+			}
+		});
+	}
 	// console.log(urlSelectList && urlList ? (urlSelectList.length === urlList.length ? true : false) : false);
 	function urlTable() {
 		// setpop1({ status: true, id: null });
@@ -124,8 +142,8 @@ function Audiofile() {
 						<TableCell style={{ opacity: '0.6' }}>Url</TableCell>
 					</TableRow>
 					{urlList.length ? (
-						urlList.map((row) => (
-							<TableRow style={{ backgroundColor: 'white' }}>
+						urlList.map((row, i) => (
+							<TableRow key={i} style={{ backgroundColor: 'white' }}>
 								<TableCell>
 									<Checkbox
 										color="primary"
@@ -135,8 +153,12 @@ function Audiofile() {
 										onChange={(e) => {
 											if (e.target.checked) {
 												console.log(urlSelectList);
-												if (urlSelectList && urlSelectList.length) {
-													seturlSelectList((prev) => prev.push(row.id));
+												if (
+													urlSelectList &&
+													typeof urlSelectList === 'object' &&
+													urlSelectList.length
+												) {
+													seturlSelectList((prev) => prev.concat([ row.id ]));
 												} else {
 													seturlSelectList([ row.id ]);
 												}
@@ -237,10 +259,23 @@ function Audiofile() {
 			}
 		}
 	};
+	const onLoadedMetadata = () => {
+		if (audioRef.current) {
+			console.log(audioRef.current.duration);
+			setaudioDuration(audioRef.current.duration);
+		}
+	};
 	const onFileChangeAudio = (e) => {
 		const filedata = e.target.files[0];
 		if (filedata) {
 			console.log(filedata);
+			// const audio = document.querySelector('audio');
+			// audio.addEventListener('durationchange', (e) => {
+			// 	console.log(e);
+			// });
+			// var tt = document.getElementById('audio_preview_audio');
+			// console.log(filedata.duration);
+			// console.log(document.getElementById('audio_preview_audio').duration);
 			var size = parseInt(filedata.size) / Math.pow(1024, 3);
 			console.log(size);
 			if (filedata.type.indexOf('audio/') > -1) {
@@ -255,11 +290,63 @@ function Audiofile() {
 			}
 		}
 	};
+	function onSubmit() {
+		var servingProps = [];
+		// if(!(urlList&&urlList.length) || !name|| !fileUpload || !fileUpload1){
+		if (!fileUpload || !fileUpload1) {
+			setValue(0);
+			setloading(false);
+			return enqueueSnackbar('Enter all the required fields', { variant: 'error' });
+		} else if (!name) {
+			setValue(1);
+			setloading(false);
+			return enqueueSnackbar('Enter all the required fields', { variant: 'error' });
+		}
+		urlList.map((x) => servingProps.push({ name: x.name, url: x.url }));
+		var formdata = new FormData();
+		formdata.append('name', name);
+		formdata.append('integration', integrationCode);
+		formdata.append('notes', notes);
+		formdata.append('type', 'Audio');
+		formdata.append('format', 'Audio');
+		formdata.append('duration', audioDuration);
+		formdata.append('AudioFile', fileUpload);
+		formdata.append('Banner', fileUpload1);
+		formdata.append('servingProp', servingProps);
+		setloading(true);
+		console.log(formdata);
+		enqueueSnackbar("Don't cancel or reload the page \n Submission in progress", {
+			variant: 'success'
+		});
+		axios
+			.post('http://localhost:5000/creative/create_creative', formdata, {
+				headers: {
+					Authorization: 'Bearer ' + localStorage.getItem('jwt'),
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+			.then((response) => {
+				setloading(false);
+				console.log(response);
+				enqueueSnackbar('Created Sucessfully!', { variant: 'success' });
+				history.push('/creative');
+			})
+			.catch((error) => {
+				setloading(false);
+				enqueueSnackbar('Something went wrong! try again', { variant: 'error' });
+				console.log(error.response.data);
+				seterror({ message: error.response.data.error, status: true });
+			});
+	}
 	return (
 		<div>
 			<Paper className="html_paper" id="html_paper">
 				<IconButton>
-					<CloseIcon onClick={() => history.push('/creative')} />
+					<CloseIcon
+						onClick={() => {
+							if (!loading) history.push('/creative');
+						}}
+					/>
 				</IconButton>
 				<div className="html_title_text">New audio creative</div>
 			</Paper>
@@ -292,7 +379,7 @@ function Audiofile() {
 					</Tabs>
 				</Box>
 				<TabPanel value={value} index={0}>
-					<div className="d-flex flex-row bd-highlight mb-3 content">
+					<div className="d-flex content flex-row bd-highlight mb-3">
 						<div className="container-sm p-0 m-0">
 							<Alert
 								className="alert"
@@ -348,7 +435,7 @@ function Audiofile() {
 									</Select>
 								</FormControl>
 							</div>
-							<div className="d-flex h-75 canvas">
+							<div className="d-flex canvas">
 								<Paper
 									className="canvas_paper"
 									style={{
@@ -374,6 +461,9 @@ function Audiofile() {
 									{fileUpload ? (
 										<audio
 											className="audio_preview_audio"
+											id="audio_preview_audio"
+											onLoadedMetadata={onLoadedMetadata}
+											ref={audioRef}
 											style={{
 												width: `${290 * zoomvalue / 100}px`,
 												height: `${35 * zoomvalue / 100}px`,
@@ -387,6 +477,7 @@ function Audiofile() {
 										<React.Fragment>
 											<audio
 												className="audio_preview_audio"
+												id="audio_preview_audio"
 												style={{
 													width: `${290 * zoomvalue / 100}px`,
 													height: `${35 * zoomvalue / 100}px`,
@@ -400,7 +491,7 @@ function Audiofile() {
 								</Paper>
 							</div>
 						</div>
-						<Paper style={{ width: '350px' }} className="h-100">
+						<Paper style={{ width: '350px' }}>
 							<div className="">
 								<Accordion>
 									<AccordionSummary
@@ -478,62 +569,6 @@ function Audiofile() {
 													</IconButton>
 												</div>
 											)}
-										</div>
-										<div className="d-flex">
-											<FormControl variant="standard">
-												<InputLabel htmlFor="input-with-icon-adornment">
-													Landing page URL
-												</InputLabel>
-												<Input
-													required
-													id="input-with-icon-adornment"
-													startAdornment={
-														<InputAdornment position="start">
-															<LinkIcon />
-														</InputAdornment>
-													}
-													endAdornment={
-														<InputAdornment position="end">
-															<IconButton>
-																<HelpOutlineIcon
-																	style={{ cursor: 'pointer' }}
-																	onMouseEnter={(e) =>
-																		setpop1({
-																			status: true,
-																			id: e.currentTarget,
-																			text: (
-																				<div>
-																					The web page to direct people to
-																					when they click your ad. Make sure
-																					the landing page:
-																					<ul>
-																						<li>
-																							Loads without error when you
-																							open it in a browser window.
-																						</li>
-																						<li>
-																							Is accessible from all
-																							geographic locations, even
-																							if your campaign targets a
-																							specific country or region.
-																						</li>
-																					</ul>
-																				</div>
-																			)
-																		})}
-																	onMouseLeave={() =>
-																		setpop1({
-																			status: false,
-																			id: null,
-																			text: null
-																		})}
-																	sx={{ fontSize: 16 }}
-																/>
-															</IconButton>
-														</InputAdornment>
-													}
-												/>
-											</FormControl>
 										</div>
 									</AccordionDetails>
 								</Accordion>
@@ -647,6 +682,17 @@ function Audiofile() {
 												</div>
 											</div>
 										)}
+										{fileUpload1 && (
+											<React.Fragment>
+												<img
+													ref={imageRef}
+													onLoad={onImgLoad}
+													src={fileUpload1}
+													alt=""
+													style={{ display: 'none' }}
+												/>
+											</React.Fragment>
+										)}
 									</AccordionDetails>
 								</Accordion>
 							</div>
@@ -654,7 +700,7 @@ function Audiofile() {
 					</div>
 				</TabPanel>
 				<TabPanel value={value} index={1}>
-					<div className="body_form_audio">
+					<div className="body_form_audio content mb-3">
 						<Paper className={bisc1 ? 'toggle_paper' : 'html_paper_body'}>
 							<div className="toggle_body_head" onClick={() => setbisc1(!bisc1)}>
 								<div>Basic details</div>
@@ -728,8 +774,13 @@ function Audiofile() {
 										</Button>
 										<Button
 											onClick={() => {
+												var selectedid = urlSelectList;
+												var resulturl =
+													urlList && urlList.length
+														? urlList.filter((x) => !selectedid.includes(x.id))
+														: [];
 												seturlSelectList([]);
-												seturlList([]);
+												seturlList(resulturl);
 											}}
 											disabled={!urlSelectList.length ? true : false}
 										>
@@ -767,6 +818,8 @@ function Audiofile() {
 									<Input
 										id="component-helper"
 										aria-describedby="component-helper-text"
+										value={integrationCode}
+										onChange={(e) => setintegrationCode(e.target.value)}
 										endAdornment={
 											<InputAdornment position="end">
 												<IconButton>
@@ -791,7 +844,12 @@ function Audiofile() {
 								<br />
 								<FormControl variant="standard" id="inputwide">
 									<InputLabel htmlFor="component-helper">Notes (Optional)</InputLabel>
-									<Input id="component-helper" aria-describedby="component-helper-text" />
+									<Input
+										id="component-helper"
+										value={notes}
+										onChange={(e) => setnotes(e.target.value)}
+										aria-describedby="component-helper-text"
+									/>
 								</FormControl>
 							</div>
 						</Paper>
@@ -799,10 +857,27 @@ function Audiofile() {
 				</TabPanel>
 			</Box>
 			<Paper className="html_paper_footer">
-				<Button style={{ margin: '0 15px' }} variant="contained">
+				<Button
+					style={{ margin: '0 15px' }}
+					variant="contained"
+					disabled={loading}
+					onClick={() => {
+						if (!loading) {
+							setloading(true);
+							onSubmit();
+						}
+					}}
+				>
 					save
 				</Button>
-				<Button style={{ margin: '0 15px' }}>cancel</Button>
+				<Button
+					style={{ margin: '0 15px' }}
+					onClick={() => {
+						if (!loading) history.push('/creative');
+					}}
+				>
+					cancel
+				</Button>
 			</Paper>
 		</div>
 	);

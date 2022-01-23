@@ -21,9 +21,9 @@ import {
 	TextField,
 	Typography
 } from '@mui/material';
-import React from 'react';
+import React, { useRef } from 'react';
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import '../App.css'
+import '../App.css';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ImageIcon from '@mui/icons-material/Image';
@@ -40,11 +40,14 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
 
-function AudioCanvas() {
+function AudioCanvas({ audioDuration, setaudioDuration, fileUpload, setfileUpload, setfileUpload1, fileUpload1 }) {
 	const { enqueueSnackbar } = useSnackbar();
+	const audioRef = useRef();
+	const imageRef = useRef();
 	const [ zoomvalue, setZoomValue ] = React.useState(100);
-	const [ fileUpload, setfileUpload ] = React.useState(null);
-	const [ fileUpload1, setfileUpload1 ] = React.useState(null);
+	// const [ audioDuration, setaudioDuration ] = React.useState(null);
+	// const [ fileUpload, setfileUpload ] = React.useState(null);
+	// const [ fileUpload1, setfileUpload1 ] = React.useState(null);
 	const [ pop1, setpop1 ] = React.useState({ status: false, id: null, text: null });
 	const onFileChangeImage = (e) => {
 		const filedata = e.target.files[0];
@@ -86,6 +89,20 @@ function AudioCanvas() {
 			}
 		}
 	};
+	const onLoadedMetadata = () => {
+		if (audioRef.current) {
+			console.log(audioRef.current.duration);
+			setaudioDuration(audioRef.current.duration);
+		}
+	};
+	function onImgLoad() {
+		console.log({
+			dimension: {
+				height: imageRef.current.offsetHeight,
+				width: imageRef.current.offsetWidth
+			}
+		});
+	}
 	return (
 		<div className="d-flex flex-row bd-highlight mb-3">
 			<Popover
@@ -164,7 +181,7 @@ function AudioCanvas() {
 						</Select>
 					</FormControl>
 				</div>
-				<div className="d-flex h-75 canvas">
+				<div className="d-flex canvas">
 					<Paper
 						className="canvas_paper"
 						style={{
@@ -186,6 +203,9 @@ function AudioCanvas() {
 						{fileUpload ? (
 							<audio
 								className="audio_preview_audio"
+								id="audio_preview_audio"
+								onLoadedMetadata={onLoadedMetadata}
+								ref={audioRef}
 								style={{
 									width: `${290 * zoomvalue / 100}px`,
 									height: `${35 * zoomvalue / 100}px`,
@@ -199,6 +219,7 @@ function AudioCanvas() {
 							<React.Fragment>
 								<audio
 									className="audio_preview_audio"
+									id="audio_preview_audio"
 									style={{
 										width: `${290 * zoomvalue / 100}px`,
 										height: `${35 * zoomvalue / 100}px`,
@@ -212,7 +233,7 @@ function AudioCanvas() {
 					</Paper>
 				</div>
 			</div>
-			<Paper style={{ width: '350px' }} className="h-100">
+			<Paper style={{ width: '350px' }}>
 				<div className="">
 					<Accordion>
 						<AccordionSummary
@@ -277,58 +298,6 @@ function AudioCanvas() {
 										</IconButton>
 									</div>
 								)}
-							</div>
-							<div className="d-flex">
-								<FormControl variant="standard">
-									<InputLabel htmlFor="input-with-icon-adornment">Landing page URL</InputLabel>
-									<Input
-										required
-										id="input-with-icon-adornment"
-										startAdornment={
-											<InputAdornment position="start">
-												<LinkIcon />
-											</InputAdornment>
-										}
-										endAdornment={
-											<InputAdornment position="end">
-												<IconButton>
-													<HelpOutlineIcon
-														style={{ cursor: 'pointer' }}
-														onMouseEnter={(e) =>
-															setpop1({
-																status: true,
-																id: e.currentTarget,
-																text: (
-																	<div>
-																		The web page to direct people to when they click
-																		your ad. Make sure the landing page:
-																		<ul>
-																			<li>
-																				Loads without error when you open it in
-																				a browser window.
-																			</li>
-																			<li>
-																				Is accessible from all geographic
-																				locations, even if your campaign targets
-																				a specific country or region.
-																			</li>
-																		</ul>
-																	</div>
-																)
-															})}
-														onMouseLeave={() =>
-															setpop1({
-																status: false,
-																id: null,
-																text: null
-															})}
-														sx={{ fontSize: 16 }}
-													/>
-												</IconButton>
-											</InputAdornment>
-										}
-									/>
-								</FormControl>
 							</div>
 						</AccordionDetails>
 					</Accordion>
@@ -439,6 +408,17 @@ function AudioCanvas() {
 									</div>
 								</div>
 							)}
+							{fileUpload1 && (
+								<React.Fragment>
+									<img
+										ref={imageRef}
+										onLoad={onImgLoad}
+										src={fileUpload1}
+										alt=""
+										style={{ display: 'none' }}
+									/>
+								</React.Fragment>
+							)}
 						</AccordionDetails>
 					</Accordion>
 				</div>
@@ -447,13 +427,24 @@ function AudioCanvas() {
 	);
 }
 
-function AudioCreativeDet() {
+function AudioCreativeDet({
+	name,
+	integrationCode,
+	notes,
+	setname,
+	setintegrationCode,
+	setnotes,
+	urlList,
+	seturlList
+}) {
 	const [ bisc1, setbisc1 ] = React.useState(true);
 	const [ bisc5, setbisc5 ] = React.useState(false);
 	const [ bisc6, setbisc6 ] = React.useState(false);
-	const [ name, setname ] = React.useState('');
+	// const [ name, setname ] = React.useState('');
+	// const [ integrationCode, setintegrationCode ] = React.useState('');
+	// const [ notes, setnotes ] = React.useState('');
 	const [ pop1, setpop1 ] = React.useState({ status: false, id: null, text: null });
-	const [ urlList, seturlList ] = React.useState([]);
+	// const [ urlList, seturlList ] = React.useState([]);
 	const [ urlSelectList, seturlSelectList ] = React.useState([]);
 	const addon = () => {
 		var addss = { name: 'impression', url: '', id: uuidv4() };
@@ -572,7 +563,7 @@ function AudioCreativeDet() {
 		);
 	}
 	return (
-		<div className="body_form_audio">
+		<div className="body_form_audio content mb-3">
 			<Popover
 				id="mouse-over-popover"
 				sx={{
@@ -662,8 +653,13 @@ function AudioCreativeDet() {
 							</Button>
 							<Button
 								onClick={() => {
+									var selectedid = urlSelectList;
+									var resulturl =
+										urlList && urlList.length
+											? urlList.filter((x) => !selectedid.includes(x.id))
+											: [];
 									seturlSelectList([]);
-									seturlList([]);
+									seturlList(resulturl);
 								}}
 								disabled={!urlSelectList.length ? true : false}
 							>
@@ -697,6 +693,8 @@ function AudioCreativeDet() {
 						<Input
 							id="component-helper"
 							aria-describedby="component-helper-text"
+							value={integrationCode}
+							onChange={(e) => setintegrationCode(e.target.value)}
 							endAdornment={
 								<InputAdornment position="end">
 									<IconButton>
@@ -720,7 +718,12 @@ function AudioCreativeDet() {
 					<br />
 					<FormControl variant="standard" id="inputwide">
 						<InputLabel htmlFor="component-helper">Notes (Optional)</InputLabel>
-						<Input id="component-helper" aria-describedby="component-helper-text" />
+						<Input
+							id="component-helper"
+							value={notes}
+							onChange={(e) => setnotes(e.target.value)}
+							aria-describedby="component-helper-text"
+						/>
 					</FormControl>
 				</div>
 			</Paper>
