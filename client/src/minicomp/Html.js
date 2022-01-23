@@ -17,14 +17,14 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useSnackbar } from 'notistack';
-import '../App.css'
+import '../App.css';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-function Html() {
-	const [ name, setname ] = React.useState('');
+function Html({ name, setname, fileUpload, setfileUpload }) {
+	// const [ name, setname ] = React.useState('');
 	const { enqueueSnackbar } = useSnackbar();
-	const [ fileUpload, setfileUpload ] = React.useState(null);
+	// const [ fileUpload, setfileUpload ] = React.useState(null);
 	const [ bisc1, setbisc1 ] = React.useState(true);
 	const [ bisc2, setbisc2 ] = React.useState(false);
 	const [ pop1, setpop1 ] = React.useState({ status: false, id: null, text: null });

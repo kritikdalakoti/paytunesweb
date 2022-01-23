@@ -9,7 +9,7 @@ export default function Lineitemform({ props, setShow, setsuccess, data1, seterr
 	
 
 	function editZipdata() {
-		fetch('https://paytunes-new.herokuapp.com/campaign/editlineitem', {
+		fetch('/campaign/editlineitem', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

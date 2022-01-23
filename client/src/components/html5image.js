@@ -8,7 +8,8 @@ import {
 	Popover,
 	Typography,
 	Button,
-	Checkbox
+	Checkbox,
+	CircularProgress
 } from '@mui/material';
 import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
@@ -18,8 +19,12 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useSnackbar } from 'notistack';
-import '../App.css'
+import '../App.css';
+import { green } from '@mui/material/colors';
 // import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
+import { Box } from '@mui/system';
+import Footer from './Footer';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -27,6 +32,11 @@ function Html5image() {
 	const history = useHistory();
 	const { enqueueSnackbar } = useSnackbar();
 	const [ name, setname ] = React.useState('');
+	const [ loading, setloading ] = React.useState(false);
+	const [ success, setsuccess ] = React.useState(false);
+	const [ error, seterror ] = React.useState({ message: '', status: false });
+	const [ integrationCode, setintegrationCode ] = React.useState('');
+	const [ notes, setnotes ] = React.useState('');
 	const [ fileUpload, setfileUpload ] = React.useState(null);
 	const [ bisc1, setbisc1 ] = React.useState(true);
 	const [ bisc2, setbisc2 ] = React.useState(false);
@@ -57,11 +67,55 @@ function Html5image() {
 			}
 		}
 	};
+	function onSubmit() {
+		// if(!(urlList&&urlList.length) || !name|| !fileUpload || !fileUpload1){
+		if (!fileUpload || !name) {
+			setloading(false);
+			return enqueueSnackbar('Enter all the required fields', { variant: 'error' });
+		}
+		var formdata = new FormData();
+		formdata.append('name', name);
+		formdata.append('integration', integrationCode);
+		formdata.append('notes', notes);
+		formdata.append('type', 'Standard');
+		formdata.append('format', 'Image');
+		formdata.append('DisplayFile', fileUpload);
+		setloading(true);
+		console.log(formdata);
+		enqueueSnackbar("Don't cancel or reload the page \n Submission in progress", {
+			variant: 'success'
+		});
+		axios
+			.post('http://localhost:5000/creative/create_creative', formdata, {
+				headers: {
+					Authorization: 'Bearer ' + localStorage.getItem('jwt'),
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+			.then((response) => {
+				setloading(false);
+				console.log(response);
+				enqueueSnackbar('Created Sucessfully!', { variant: 'success' });
+				history.push('/creative');
+				setsuccess(true);
+			})
+			.catch((error) => {
+				setloading(false);
+				enqueueSnackbar(`Something went wrong! try again\n ${error.response.data}`, { variant: 'error' });
+				console.log(error.response.data);
+				seterror({ message: error.response.data.error, status: true });
+				setsuccess(false);
+			});
+	}
 	return (
 		<div>
 			<Paper className="html_paper">
 				<IconButton>
-					<CloseIcon onClick={() => history.push('/creative')} />
+					<CloseIcon
+						onClick={() => {
+							if (!loading) history.push('/creative');
+						}}
+					/>
 				</IconButton>
 				<div className="html_title_text">New HTML5 or image creative</div>
 			</Paper>
@@ -230,6 +284,8 @@ function Html5image() {
 							<InputLabel htmlFor="component-helper">Integration code (Optional)</InputLabel>
 							<Input
 								id="component-helper"
+								value={integrationCode}
+								onChange={(e) => setintegrationCode(e.target.value)}
 								aria-describedby="component-helper-text"
 								endAdornment={
 									<InputAdornment position="end">
@@ -258,17 +314,45 @@ function Html5image() {
 						<br />
 						<FormControl variant="standard" id="inputwide">
 							<InputLabel htmlFor="component-helper">Notes (Optional)</InputLabel>
-							<Input id="component-helper" aria-describedby="component-helper-text" />
+							<Input
+								value={notes}
+								onChange={(e) => setnotes(e.target.value)}
+								id="component-helper"
+								aria-describedby="component-helper-text"
+							/>
 						</FormControl>
 					</div>
 				</Paper>
 			</div>
-			<Paper className="html_paper_footer">
-				<Button style={{ margin: '0 15px' }} variant="contained">
-					save
+			<Footer history={history} loading={loading} success={success} onSubmit={onSubmit} />
+			{/* <Paper className="html_paper_footer">
+				<Box sx={{ m: 1, position: 'relative' }}>
+					<Button variant="contained" sx={buttonSx} disabled={loading} onClick={onSubmit}>
+						save
+					</Button>
+					{loading && (
+						<CircularProgress
+							size={24}
+							sx={{
+								color: green[500],
+								position: 'absolute',
+								top: '50%',
+								left: '50%',
+								marginTop: '-12px',
+								marginLeft: '-12px'
+							}}
+						/>
+					)}
+				</Box>
+				<Button
+					style={{ margin: '0 15px' }}
+					onClick={() => {
+						if (!loading) history.push('/creative');
+					}}
+				>
+					cancel
 				</Button>
-				<Button style={{ margin: '0 15px' }}>cancel</Button>
-			</Paper>
+			</Paper> */}
 		</div>
 	);
 }

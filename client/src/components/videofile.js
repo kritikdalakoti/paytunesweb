@@ -15,8 +15,8 @@ import {
 	TableCell,
 	TextField
 } from '@mui/material';
-import '../App.css'
-import React from 'react';
+import '../App.css';
+import React, { useRef } from 'react';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import CloseIcon from '@mui/icons-material/Close';
 import { useHistory } from 'react-router';
@@ -30,12 +30,15 @@ import MovieCreationIcon from '@mui/icons-material/MovieCreation';
 import WarningIcon from '@mui/icons-material/Warning';
 import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
+import axios from 'axios';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 function Videofile() {
 	const history = useHistory();
+	const videoRef = useRef();
 	const { enqueueSnackbar } = useSnackbar();
+	const [ loading, setloading ] = React.useState(false);
 	const [ name, setname ] = React.useState('');
 	const [ url, seturl ] = React.useState('');
 	const [ urlList, seturlList ] = React.useState([]);
@@ -44,14 +47,26 @@ function Videofile() {
 	const [ bisc2, setbisc2 ] = React.useState(true);
 	const [ bisc3, setbisc3 ] = React.useState(true);
 	const [ bisc4, setbisc4 ] = React.useState(false);
+	const [ error, seterror ] = React.useState({ message: '', status: false });
 	const [ bisc5, setbisc5 ] = React.useState(false);
 	const [ bisc6, setbisc6 ] = React.useState(false);
+	const [ skipable, setskipable ] = React.useState(false);
+	const [ universalId, setuniversalId ] = React.useState('');
 	const [ fileUpload, setfileUpload ] = React.useState(null);
+	const [ integrationCode, setintegrationCode ] = React.useState('');
+	const [ notes, setnotes ] = React.useState('');
 	const [ pop1, setpop1 ] = React.useState({ status: false, id: null, text: null });
+	const [ videoDuration, setvideoDuration ] = React.useState(null);
 	const addon = () => {
 		var addss = { name: 'impression', url: '', id: uuidv4() };
 		seturlList([ ...urlList, addss ]);
 		// console.log(urlList);
+	};
+	const onLoadedMetadata = () => {
+		if (videoRef.current) {
+			console.log(videoRef.current.duration);
+			setvideoDuration(videoRef.current.duration);
+		}
 	};
 	// console.log(urlSelectList && urlList ? (urlSelectList.length === urlList.length ? true : false) : false);
 	const onFileChangeVideo = (e) => {
@@ -98,8 +113,8 @@ function Videofile() {
 						<TableCell style={{ opacity: '0.6' }}>Url</TableCell>
 					</TableRow>
 					{urlList.length ? (
-						urlList.map((row) => (
-							<TableRow style={{ backgroundColor: 'white' }}>
+						urlList.map((row, i) => (
+							<TableRow key={i} style={{ backgroundColor: 'white' }}>
 								<TableCell>
 									<Checkbox
 										color="primary"
@@ -109,8 +124,12 @@ function Videofile() {
 										onChange={(e) => {
 											if (e.target.checked) {
 												console.log(urlSelectList);
-												if (urlSelectList && urlSelectList.length) {
-													seturlSelectList((prev) => prev.push(row.id));
+												if (
+													urlSelectList &&
+													typeof urlSelectList === 'object' &&
+													urlSelectList.length
+												) {
+													seturlSelectList((prev) => prev.concat([ row.id ]));
 												} else {
 													seturlSelectList([ row.id ]);
 												}
@@ -181,6 +200,50 @@ function Videofile() {
 				</TableBody>
 			</TableContainer>
 		);
+	}
+	function onSubmit() {
+		var servingProps = [];
+		// if(!(urlList&&urlList.length) || !name|| !fileUpload || !fileUpload1){
+		if (!fileUpload || !name) {
+			setloading(false);
+			return enqueueSnackbar('Enter all the required fields', { variant: 'error' });
+		}
+		urlList.map((x) => servingProps.push({ name: x.name, url: x.url }));
+		var formdata = new FormData();
+		formdata.append('name', name);
+		formdata.append('integration', integrationCode);
+		formdata.append('notes', notes);
+		formdata.append('type', 'Video');
+		formdata.append('format', 'Video');
+		formdata.append('duration', videoDuration);
+		formdata.append('VideoFile', fileUpload);
+		formdata.append('skipable', skipable);
+		formdata.append('universalAdId', universalId);
+		formdata.append('servingProp', servingProps);
+		setloading(true);
+		console.log(formdata);
+		enqueueSnackbar("Don't cancel or reload the page \n Submission in progress", {
+			variant: 'success'
+		});
+		axios
+			.post('http://localhost:5000/creative/create_creative', formdata, {
+				headers: {
+					Authorization: 'Bearer ' + localStorage.getItem('jwt'),
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+			.then((response) => {
+				setloading(false);
+				console.log(response);
+				enqueueSnackbar('Created Sucessfully!', { variant: 'success' });
+				history.push('/creative');
+			})
+			.catch((error) => {
+				setloading(false);
+				enqueueSnackbar('Something went wrong! try again', { variant: 'error' });
+				console.log(error.response.data);
+				seterror({ message: error.response.data.error, status: true });
+			});
 	}
 	return (
 		<div>
@@ -304,7 +367,7 @@ function Videofile() {
 									</IconButton>
 								</div>
 							)}
-							<FormControl variant="standard" id="inputwide">
+							{/* <FormControl variant="standard" id="inputwide">
 								<InputLabel htmlFor="component-helper">Landing page url</InputLabel>
 								<Input
 									id="component-helper"
@@ -351,7 +414,7 @@ function Videofile() {
 									}
 								/>
 								<div className="limittextindicate">{url ? url.length : 0}/1024</div>
-							</FormControl>
+							</FormControl> */}
 						</div>
 					</Paper>
 					<Paper className={bisc3 ? 'toggle_paper_video' : 'html_paper_body_video'}>
@@ -364,7 +427,7 @@ function Videofile() {
 								<div>Skip button</div>
 							</div>
 							<div className="flexdisplay">
-								<Checkbox {...label} />
+								<Checkbox value={skipable} onChange={(e) => setskipable(e.target.checked)} {...label} />
 								<div>Include skip button</div>
 							</div>
 							<div className="flexdisplay">
@@ -373,6 +436,8 @@ function Videofile() {
 									<Input
 										id="component-helper"
 										aria-describedby="component-helper-text"
+										value={universalId}
+										onChange={(e) => setuniversalId(e.target.value)}
 										endAdornment={
 											<InputAdornment position="end">
 												<IconButton>
@@ -466,8 +531,13 @@ function Videofile() {
 									</Button>
 									<Button
 										onClick={() => {
+											var selectedid = urlSelectList;
+											var resulturl =
+												urlList && urlList.length
+													? urlList.filter((x) => !selectedid.includes(x.id))
+													: [];
 											seturlSelectList([]);
-											seturlList([]);
+											seturlList(resulturl);
 										}}
 										disabled={!urlSelectList.length ? true : false}
 									>
@@ -505,6 +575,8 @@ function Videofile() {
 								<Input
 									id="component-helper"
 									aria-describedby="component-helper-text"
+									value={integrationCode}
+									onChange={(e) => setintegrationCode(e.target.value)}
 									endAdornment={
 										<InputAdornment position="end">
 											<IconButton>
@@ -529,7 +601,12 @@ function Videofile() {
 							<br />
 							<FormControl variant="standard" id="inputwide">
 								<InputLabel htmlFor="component-helper">Notes (Optional)</InputLabel>
-								<Input id="component-helper" aria-describedby="component-helper-text" />
+								<Input
+									value={notes}
+									onChange={(e) => setnotes(e.target.value)}
+									id="component-helper"
+									aria-describedby="component-helper-text"
+								/>
 							</FormControl>
 						</div>
 					</Paper>
@@ -538,7 +615,12 @@ function Videofile() {
 					<Paper className="preview_video">
 						<div style={{ opacity: '0.6' }}>Preview</div>
 						{fileUpload ? (
-							<video className="video_preview_video" controls>
+							<video
+								ref={videoRef}
+								onLoadedMetadata={onLoadedMetadata}
+								className="video_preview_video"
+								controls
+							>
 								<source src={URL.createObjectURL(fileUpload)} />
 							</video>
 						) : (
@@ -551,10 +633,22 @@ function Videofile() {
 				</div>
 			</div>
 			<Paper className="html_paper_footer">
-				<Button style={{ margin: '0 15px' }} variant="contained">
+				<Button
+					style={{ margin: '0 15px' }}
+					variant="contained"
+					disabled={loading}
+					onClick={() => {
+						if (!loading) {
+							setloading(true);
+							onSubmit();
+						}
+					}}
+				>
 					save
 				</Button>
-				<Button style={{ margin: '0 15px' }}>cancel</Button>
+				<Button style={{ margin: '0 15px' }} onClick={() => history.push('/creative')}>
+					cancel
+				</Button>
 			</Paper>
 		</div>
 	);

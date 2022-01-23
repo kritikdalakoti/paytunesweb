@@ -72,7 +72,7 @@ export default function LineItemNew() {
         formdata.append('nonparentdemo', demography.parent.nonparent)
         formdata.append('incomedemo', demography.income)
 
-        let url = `https://paytunes-new.herokuapp.com/campaign/createlineitem`
+        let url = `/campaign/createlineitem`
         let res = await fun.createApi(formdata, url)
         console.log(`/listlineitem/${insertionid}`)
         history.push(`/listlineitem/${insertionid}`)
@@ -200,7 +200,9 @@ export default function LineItemNew() {
             </div>
             <Paper className={styles.dashboard} elevation={3}>
                 <div  >
-                    <button style={{ padding: '20px', cursor: 'pointer', backgroundColor: 'lightgrey', fontSize: '15px', borderWidth: '3px' }}
+                    <button style={{ padding: '20px', cursor: 'pointer', backgroundColor: 'lightgrey', fontSize: '15px', borderWidth: '3px',
+                    marginLeft:'400px'    
+                }}
                         onClick={() => history.push('/creative')}
                     >Upload Creative</button>
                 </div>
@@ -310,7 +312,7 @@ export default function LineItemNew() {
                 :
                 <></>
             }
-            <button type="submit" >Create</button>
+            <button type="submit" style={{marginLeft:'600px'}} >Create</button>
         </form>
 
             
