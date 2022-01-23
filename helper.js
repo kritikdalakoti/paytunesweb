@@ -58,7 +58,7 @@ exports.AudioPresets=[
 ]
 
 exports.VideoPresets=[
-    {presetid:"1634143440739-bn0odt",suffix:"_428 × 640.mp4"},
+    {presetid:"1642948962058-pzvy1k",suffix:"_428 × 640.mp4"},
     {presetid:"1634143532968-dtnssb",suffix:"_854 × 1280.mp4"},
     {presetid:"1634143610894-ru2bnz",suffix:"_1280 × 1920.mp4"},
     {presetid:"1634143765167-ps04e8",suffix:"_426 × 640.webm"},
@@ -72,8 +72,10 @@ exports.VideoPresets=[
     {presetid:"1634145900009-rrxhwy",suffix:"_428 × 640_259.mp4"},
     {presetid:"1634145992437-7j1404",suffix:"_428 × 640_197.mp4"},
     {presetid:"1634146072225-9j8vto",suffix:"_480 × 720.mp4"},
-    {presetid:"1634146184630-x57i88",suffix:"_682 × 1024.mp4"}
+    {presetid:"1634146184630-x57i88",suffix:"_682 × 1024.mp4"},
+    {presetid:"1642948230566-x3oac5",suffix:"_newone12.mp4"},
 ]
+//1642948230566-x3oac5
 
 exports.VideoMediaFiles=[
     {Bitrate:"199k",Codec:"video/mp4"},

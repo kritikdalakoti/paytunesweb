@@ -65,42 +65,42 @@ router.post(
     controller.getCampaignName
 )
 
-// router.post(
-//     '/createsubcampaign',
-//     auth,
-//     upload.fields([
-//         { name: 'AudioFileinp', maxCount: 1 },
-//         { name: 'VideoFileinp', maxCount: 1 },
-//         {
-//             name: 'DisplayFileinp',
-//             maxCount: 1
-//         },
-//         {
-//             name: 'AudioFileBanner',
-//             maxCount: 1
-//         },
-//         {
-//             name: 'VideoFileBanner',
-//             maxCount: 1
-//         },
-//         {
-//             name: 'DisplayFileBanner',
-//             maxCount: 1
-//         },
-//         {
-//             name: 'AudioPincodeFile',
-//             maxCount: 1
-//         },
-//         {
-//             name: 'VideoPincodeFile',
-//             maxCount: 1
-//         },
-//         {
-//             name: 'DisplayPincodeFile',
-//             maxCount: 1
-//         }
-//     ]),
-//     controller.createsubcampaign
-// )
+router.post(
+    '/createsubcampaign',
+    // auth,
+    upload.fields([
+        { name: 'AudioFileinp', maxCount: 1 },
+        { name: 'VideoFileinp', maxCount: 1 },
+        {
+            name: 'DisplayFileinp',
+            maxCount: 1
+        },
+        {
+            name: 'AudioFileBanner',
+            maxCount: 1
+        },
+        {
+            name: 'VideoFileBanner',
+            maxCount: 1
+        },
+        {
+            name: 'DisplayFileBanner',
+            maxCount: 1
+        },
+        {
+            name: 'AudioPincodeFile',
+            maxCount: 1
+        },
+        {
+            name: 'VideoPincodeFile',
+            maxCount: 1
+        },
+        {
+            name: 'DisplayPincodeFile',
+            maxCount: 1
+        }
+    ]),
+    controller.createsubcampaign
+)
 
 module.exports = router;
