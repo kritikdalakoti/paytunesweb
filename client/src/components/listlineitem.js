@@ -79,7 +79,7 @@ export default function ListLineitem() {
     const data=async()=>{
         const formdata = new FormData();
         formdata.append('campid', campid);
-        let res = await fun.createApi(formdata, '/campaign/lineitemslist');
+        let res = await fun.createApi(formdata, 'https://paytunes-new.herokuapp.com/campaign/lineitemslist');
         console.log(res);
         setlineitems(res.data);
     }
@@ -87,7 +87,7 @@ export default function ListLineitem() {
     useEffect(async()=>{
         const formdata=new FormData();
         formdata.append('campid',campid);
-        let res=await fun.createApi(formdata,'/campaign/getcampaignname');
+        let res=await fun.createApi(formdata,'https://paytunes-new.herokuapp.com/campaign/getcampaignname');
         console.log(res);
         setcampaignName(res.data.data);
     })
@@ -95,7 +95,7 @@ export default function ListLineitem() {
     useEffect(async () => {
         const formdata = new FormData();
         formdata.append('campid', campid)
-        let res = await fun.createApi(formdata, '/campaign/lineitemslist');
+        let res = await fun.createApi(formdata, 'https://paytunes-new.herokuapp.com/campaign/lineitemslist');
         console.log(res);
         setlineitems(res.data);
     }, [campid])
@@ -103,7 +103,7 @@ export default function ListLineitem() {
     const duplicaterow=async(row)=>{
         const formdata=new FormData();
         formdata.append('_id',row._id);
-        let res=await fun.createApi(formdata,'/campaign/duplicatelineitem');
+        let res=await fun.createApi(formdata,'https://paytunes-new.herokuapp.com/campaign/duplicatelineitem');
         if(res.data.error){
             return seterror(res.data.error);
         }
@@ -313,7 +313,7 @@ export default function ListLineitem() {
                 )}
 
             </Paper>
-            <button onClick={()=>history.push('/dashboard')} style={{marginLeft:'600px'}} >Back to Dashboard</button>
+            <button onClick={()=>history.push('/dashboard')} >Back to Dashboard</button>
         </div>
     )
 

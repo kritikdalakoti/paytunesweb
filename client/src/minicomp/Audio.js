@@ -52,6 +52,7 @@ function AudioCanvas({
 	uploadstatus1,
 	setuploadstatus1,
 	bannerName,
+	bannerUrl,
 	name,
 	url
 }) {
@@ -205,13 +206,17 @@ function AudioCanvas({
 							padding: `${20 * zoomvalue / 100}px`
 						}}
 					>
-						{fileUpload1 ? (
+						{uploadstatus1 ? fileUpload1 ? (
 							<div className="pao bg-secondary bg-opacity-10 w-100">
 								<img className="poster_image" src={URL.createObjectURL(fileUpload1)} alt="poster" />
 							</div>
 						) : (
 							<div className="pao bg-secondary bg-opacity-10 w-100">
 								<ImageIcon sx={{ fontSize: 40 * zoomvalue / 100 }} className="icon_home" />
+							</div>
+						) : (
+							<div className="pao bg-secondary bg-opacity-10 w-100">
+								<img className="poster_image" src={bannerUrl} alt="poster" />
 							</div>
 						)}
 						{uploadstatus ? fileUpload ? (

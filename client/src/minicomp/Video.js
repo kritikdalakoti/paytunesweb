@@ -39,6 +39,10 @@ function Video({
 	uploadstatus,
 	setuploadstatus,
 	urlList,
+	integrationCode,
+	notes,
+	setintegrationCode,
+	setnotes,
 	seturlList,
 	fileUpload,
 	setfileUpload,
@@ -526,6 +530,8 @@ function Video({
 							<Input
 								id="component-helper"
 								aria-describedby="component-helper-text"
+								value={integrationCode}
+								onChange={(e) => setintegrationCode(e.target.value)}
 								endAdornment={
 									<InputAdornment position="end">
 										<IconButton>
@@ -549,7 +555,12 @@ function Video({
 						<br />
 						<FormControl variant="standard" id="inputwide">
 							<InputLabel htmlFor="component-helper">Notes (Optional)</InputLabel>
-							<Input id="component-helper" aria-describedby="component-helper-text" />
+							<Input
+								id="component-helper"
+								value={notes}
+								onChange={(e) => setnotes(e.target.value)}
+								aria-describedby="component-helper-text"
+							/>
 						</FormControl>
 					</div>
 				</Paper>

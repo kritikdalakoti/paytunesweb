@@ -91,7 +91,7 @@ export default function NewCampaign() {
     formdata.append('incomedemo', demography.income)
     formdata.append('landingurl', landingurl)
     dispatch(mainaction('DATE', { start: dates.start, end: dates.end }))
-    let url = `/campaign/create`  //https://paytunes-new.herokuapp.com
+    let url = `https://paytunes-new.herokuapp.com/campaign/create`  //https://paytunes-new.herokuapp.com
     let h = await fun.createApi(formdata, url)
     history.push(`/lineitemnew/${h.data.data._id}`)
 
@@ -384,9 +384,8 @@ export default function NewCampaign() {
           </div>
 
           {/* <hr className={styles.divider} /> */}
-          
+
         </Paper>
-        <button type="submit" style={{marginLeft:'700px'}} >Next</button>
         {/* <div style={{ marginBottom: '7%' }} >
           <div className={styles.target} >Additional Details</div>
           <div className={styles.shgt1}  >
@@ -457,7 +456,7 @@ export default function NewCampaign() {
 
 
 
-        
+        <button type="submit" >Next</button>
       </form>
 
     </div>

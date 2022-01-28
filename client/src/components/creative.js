@@ -62,14 +62,67 @@ const ITEM_HEIGHT = 48;
 
 const options = [ 'Pause', 'Archive', 'Edit name', 'Duplicate' ];
 
+export const orderSetter = (order, column, data, type) => {
+	var dataSort = data;
+	// console.log(order, column, data, type);
+	dataSort = dataSort.sort(function(a, b) {
+		if (type === 'string') {
+			var aa = a[column] ? String(a[column]) : null;
+			var bb = b[column] ? String(b[column]) : null;
+			if (aa === bb) {
+				return 0;
+			} else if (aa === null) {
+				return 1;
+			} else if (bb === null) {
+				return -1;
+			} else if (order === 'asc') {
+				return aa < bb ? -1 : 1;
+			} else {
+				return aa < bb ? 1 : -1;
+			}
+		} else if (type === 'date') {
+			var ad = new Date(a[column]);
+			var bd = new Date(b[column]);
+			if (ad === bd) {
+				return 0;
+			} else if (ad === null) {
+				return 1;
+			} else if (bd === null) {
+				return -1;
+			} else if (order === 'asc') {
+				return ad - bd;
+			} else {
+				return bd - ad;
+			}
+		} else {
+			var an = a[column] !== (undefined || null) ? (typeof a[column] === 'number' ? a[column] : null) : null;
+			var bn = b[column] !== (undefined || null) ? (typeof b[column] === 'number' ? b[column] : null) : null;
+			if (an === bn) {
+				return 0;
+			} else if (an === null) {
+				return 1;
+			} else if (bn === null) {
+				return -1;
+			} else if (order === 'asc') {
+				return an - bn;
+			} else {
+				return bn - an;
+			}
+		}
+	});
+	return dataSort;
+};
+
 function Creative() {
 	const history = useHistory();
 	const [ arrowState, setarrowState ] = React.useState('up');
 	const [ creatives, setcreatives ] = React.useState([]);
+	const [ searchedcreatives, setsearchedcreatives ] = React.useState([]);
 	const [ anchorEl, setAnchorEl ] = React.useState(null);
 	const [ loading, setloading ] = React.useState(true);
 	const [ listState, setlistState ] = React.useState(true);
 	const [ openColab, setOpenColab ] = React.useState(true);
+	const [ order, setorder ] = React.useState({ order: 'asc', name: 'name', type: 'string' });
 	useEffect(() => {
 		console.log('started');
 		getCreatives();
@@ -85,12 +138,15 @@ function Creative() {
 			.then((response) => {
 				console.log(response);
 				if (response.status === 200) {
-					var cloon = response.data;
-					cloon.sort(function(b, a) {
-						return a.name - b.name;
-					});
+					var cloon = orderSetter('desc', 'name', response.data, 'string');
+					// console.log(cloon);
+					// cloon.sort(function(b, a) {
+					// 	console.log(a.name, b.name);
+					// 	return a.name - b.name;
+					// });
 					console.log(cloon);
 					setcreatives(cloon);
+					setsearchedcreatives(cloon);
 					setloading(false);
 				}
 			})
@@ -188,22 +244,96 @@ function Creative() {
 						<div className="home_head_boot_second">
 							{listState && <p>sort by:</p>}
 							{listState && (
-								<select className="form-select" aria-label="Default select example">
-									<option value="name">Name</option>
-									<option value="id">ID</option>
-									<option value="dimensions">Dimensions</option>
-									<option value="duration">Duration</option>
-									<option selected value="created">
-										Created
+								<select
+									className="form-select"
+									onChange={(e) => {
+										if (e.target.value === 'name') {
+											var searcheddata = orderSetter(
+												order.order,
+												'name',
+												searchedcreatives,
+												'string'
+											);
+											var data = orderSetter(order.order, 'name', creatives, 'string');
+											setorder({ ...order, name: 'name', type: 'string' });
+											setsearchedcreatives(searcheddata);
+											setcreatives(data);
+										} else if (e.target.value === 'id') {
+											searcheddata = orderSetter(order.order, '_id', searchedcreatives, 'string');
+											data = orderSetter(order.order, '_id', creatives, 'string');
+											setorder({ ...order, name: '_id', type: 'string' });
+											setsearchedcreatives(searcheddata);
+											setcreatives(data);
+										} else if (e.target.value === 'duration') {
+											searcheddata = orderSetter(
+												order.order,
+												'duration',
+												searchedcreatives,
+												'string'
+											);
+											data = orderSetter(order.order, 'duration', creatives, 'string');
+											setorder({ ...order, name: 'durartion', type: 'string' });
+											setsearchedcreatives(searcheddata);
+											setcreatives(data);
+										} else if (e.target.value === 'created') {
+											searcheddata = orderSetter(
+												order.order,
+												'createdAt',
+												searchedcreatives,
+												'date'
+											);
+											data = orderSetter(order.order, 'createdAt', creatives, 'date');
+											setorder({ ...order, name: 'createdAt', type: 'date' });
+											setsearchedcreatives(searcheddata);
+											setcreatives(data);
+										}
+									}}
+									aria-label="Default select example"
+								>
+									<option selected value="name">
+										Name
 									</option>
+									<option value="id">ID</option>
+									{/* <option value="dimensions">Dimensions</option> */}
+									<option value="duration">Duration</option>
+									<option value="created">Created</option>
 								</select>
 							)}
 							{listState && (
 								<IconButton>
 									{arrowState === 'up' ? (
-										<ArrowUpwardIcon onClick={() => setarrowState('down')} />
+										<ArrowUpwardIcon
+											onClick={() => {
+												setorder({ ...order, order: 'asc' });
+												var searcheddata = orderSetter(
+													'asc',
+													order.name,
+													searchedcreatives,
+													order.type
+												);
+												var data = orderSetter('asc', order.name, creatives, order.type);
+												setsearchedcreatives(searcheddata);
+												setcreatives(data);
+												setarrowState('down');
+											}}
+										/>
 									) : (
-										<ArrowDownwardIcon onClick={() => setarrowState('up')} />
+										<ArrowDownwardIcon
+											onClick={() => {
+												setorder({ ...order, order: 'desc' });
+												var searcheddata = orderSetter(
+													'desc',
+													order.name,
+													searchedcreatives,
+													order.type
+												);
+												var data = orderSetter('desc', order.name, creatives, order.type);
+												console.log(order);
+												setsearchedcreatives(searcheddata);
+												setcreatives(data);
+												setarrowState('up');
+											}}
+										/>
 									)}
 								</IconButton>
 							)}
@@ -221,11 +351,20 @@ function Creative() {
 					</div>
 					<div className="home_head_filter">
 						<FilterListIcon />
-						<StyledInputElement aria-label="Demo input" placeholder="Add a filter" />
+						<StyledInputElement
+							aria-label="Demo input"
+							onChange={(e) => {
+								var selected = creatives.filter(
+									(x) => x.name.toLowerCase().indexOf(e.target.value.toLowerCase()) > -1
+								);
+								setsearchedcreatives(selected);
+							}}
+							placeholder="Add a filter"
+						/>
 					</div>
 					{listState ? (
 						<div className="home_body_cards">
-							{creatives.map((x, index) => {
+							{searchedcreatives.map((x, index) => {
 								return (
 									<Paper className="home_body_card shadow p-3 mb-5 bg-body rounded">
 										<div className="hoverDisplay_card w-100 h-75">
@@ -299,7 +438,7 @@ function Creative() {
 									</tr>
 								</thead>
 								<tbody>
-									{creatives.map((x) => {
+									{searchedcreatives.map((x) => {
 										return (
 											<tr>
 												<td>

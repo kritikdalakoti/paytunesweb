@@ -9,7 +9,8 @@ import {
 	Typography,
 	Button,
 	Checkbox,
-	CircularProgress
+	CircularProgress,
+	Dialog
 } from '@mui/material';
 import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
@@ -40,6 +41,7 @@ function Html5image() {
 	const [ fileUpload, setfileUpload ] = React.useState(null);
 	const [ bisc1, setbisc1 ] = React.useState(true);
 	const [ bisc2, setbisc2 ] = React.useState(false);
+	const [ open, setopen ] = React.useState(false);
 	const [ pop1, setpop1 ] = React.useState({ status: false, id: null, text: null });
 	// const [ pop2, setpop2 ] = React.useState({ status: false, id: null });
 	// const [ pop3, setpop3 ] = React.useState({ status: false, id: null });
@@ -224,6 +226,14 @@ function Html5image() {
 									<ClearIcon fontSize="small" />
 								</IconButton>
 							</div>
+						)}
+						{fileUpload && (
+							<React.Fragment>
+								<Button onClick={() => setopen(true)}>Preview</Button>
+								<Dialog open={open} onClose={() => setopen(false)}>
+									<img src={URL.createObjectURL(fileUpload)} alt={fileUpload.name} />
+								</Dialog>
+							</React.Fragment>
 						)}
 						<div className="flexdisplay">
 							<Checkbox {...label} />

@@ -8,7 +8,8 @@ import {
 	Popover,
 	Typography,
 	Button,
-	Checkbox
+	Checkbox,
+	Dialog
 } from '@mui/material';
 import React from 'react';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -21,10 +22,24 @@ import '../App.css';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-function Html({ name, setname, fileUpload, setfileUpload }) {
+function Html({
+	name,
+	setname,
+	fileUpload,
+	setfileUpload,
+	integrationCode,
+	setintegrationCode,
+	notes,
+	setnotes,
+	url,
+	filename,
+	uploadstatus,
+	setuploadstatus
+}) {
 	// const [ name, setname ] = React.useState('');
 	const { enqueueSnackbar } = useSnackbar();
 	// const [ fileUpload, setfileUpload ] = React.useState(null);
+	const [ open, setopen ] = React.useState(false);
 	const [ bisc1, setbisc1 ] = React.useState(true);
 	const [ bisc2, setbisc2 ] = React.useState(false);
 	const [ pop1, setpop1 ] = React.useState({ status: false, id: null, text: null });
@@ -129,7 +144,7 @@ function Html({ name, setname, fileUpload, setfileUpload }) {
 							sx={{ fontSize: 16 }}
 						/>
 					</div>
-					{!fileUpload ? (
+					{uploadstatus ? !fileUpload ? (
 						<div className="flexdisplay">
 							<div className="drop-file-input">
 								<div className="drop-file-input__label">
@@ -159,6 +174,30 @@ function Html({ name, setname, fileUpload, setfileUpload }) {
 							<IconButton onClick={() => setfileUpload(null)}>
 								<ClearIcon fontSize="small" />
 							</IconButton>
+						</div>
+					) : (
+						<div className="flexdisplay">
+							<div>{filename}</div>
+							<IconButton onClick={() => setfileUpload(null)}>
+								<ClearIcon fontSize="small" />
+							</IconButton>
+						</div>
+					)}
+					{uploadstatus ? (
+						fileUpload && (
+							<div className="">
+								<Button onClick={() => setopen(true)}>Preview</Button>
+								<Dialog open={open} onClose={() => setopen(false)}>
+									<img src={URL.createObjectURL(fileUpload)} alt={fileUpload.name} />
+								</Dialog>
+							</div>
+						)
+					) : (
+						<div>
+							<Button onClick={() => setopen(true)}>Preview</Button>
+							<Dialog open={open} onClose={() => setopen(false)}>
+								<img src={url} alt={filename} />
+							</Dialog>
 						</div>
 					)}
 					<div className="flexdisplay">
@@ -220,6 +259,8 @@ function Html({ name, setname, fileUpload, setfileUpload }) {
 						<Input
 							id="component-helper"
 							aria-describedby="component-helper-text"
+							value={integrationCode}
+							onChange={(e) => setintegrationCode(e.target.value)}
 							endAdornment={
 								<InputAdornment position="end">
 									<IconButton>
@@ -247,7 +288,12 @@ function Html({ name, setname, fileUpload, setfileUpload }) {
 					<br />
 					<FormControl variant="standard" id="inputwide">
 						<InputLabel htmlFor="component-helper">Notes (Optional)</InputLabel>
-						<Input id="component-helper" aria-describedby="component-helper-text" />
+						<Input
+							id="component-helper"
+							value={notes}
+							onChange={(e) => setnotes(e.target.value)}
+							aria-describedby="component-helper-text"
+						/>
 					</FormControl>
 				</div>
 			</Paper>

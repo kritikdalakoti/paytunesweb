@@ -109,7 +109,7 @@ function DetailedPage() {
 	const [ urlList, seturlList ] = React.useState([]);
 	const [ expandmanage, setexpandmanage ] = React.useState([]);
 	const [ pop1, setpop1 ] = React.useState({ status: false, id: null, text: null });
-	console.log(loading);
+	// console.log(loading);
 	useEffect(
 		() => {
 			console.log('started');
@@ -340,7 +340,7 @@ function DetailedPage() {
 				});
 		}
 	}
-	console.log(datafinal);
+	// console.log(datafinal);
 	const history = useHistory();
 	return (
 		<div>
@@ -353,7 +353,11 @@ function DetailedPage() {
 					{datafinal != null ? (
 						<Paper className="html_paper" id="html_paper">
 							<IconButton>
-								<CloseIcon onClick={() => history.push('/creative')} />
+								<CloseIcon
+									onClick={() => {
+										if (!loading) history.push('/creative');
+									}}
+								/>
 							</IconButton>
 							<div className="html_title_text">{datafinal.name}</div>
 						</Paper>
@@ -420,6 +424,8 @@ function DetailedPage() {
 										bannerName={
 											datafinal.banner.length ? datafinal.banner[0].Name : 'image title not found'
 										}
+										bannerUrl={`https://ptmfiles.blob.core.windows.net/image/${datafinal.banner[0]
+											.Name}`}
 									/>
 								</div>
 								<Paper className="html_paper_footer_1">
@@ -431,7 +437,14 @@ function DetailedPage() {
 									>
 										save
 									</Button>
-									<Button style={{ margin: '0 15px' }}>cancel</Button>
+									<Button
+										style={{ margin: '0 15px' }}
+										onClick={() => {
+											if (!loading) history.push('/creative');
+										}}
+									>
+										cancel
+									</Button>
 								</Paper>
 							</TabPanel>
 							<TabPanel value={valuetab} index={1}>
@@ -457,7 +470,14 @@ function DetailedPage() {
 									>
 										save
 									</Button>
-									<Button style={{ margin: '0 15px' }}>cancel</Button>
+									<Button
+										style={{ margin: '0 15px' }}
+										onClick={() => {
+											if (!loading) history.push('/creative');
+										}}
+									>
+										cancel
+									</Button>
 								</Paper>
 							</TabPanel>
 							<TabPanel value={valuetab} index={2}>
@@ -742,7 +762,14 @@ function DetailedPage() {
 									>
 										save
 									</Button>
-									<Button style={{ margin: '0 15px' }}>cancel</Button>
+									<Button
+										style={{ margin: '0 15px' }}
+										onClick={() => {
+											if (!loading) history.push('/creative');
+										}}
+									>
+										cancel
+									</Button>
 								</Paper>
 							</TabPanel>
 							<TabPanel value={valuetab} index={3}>
@@ -812,8 +839,18 @@ function DetailedPage() {
 											setname={setname}
 											fileUpload={fileUpload}
 											setfileUpload={setfileUpload}
+											uploadstatus={uploadstatus}
+											setuploadstatus={setuploadstatus}
+											integrationCode={integrationCode}
+											setintegrationCode={setintegrationCode}
+											notes={notes}
+											setnotes={setnotes}
+											url={`https://ptmfiles.blob.core.windows.net/image/${datafinal.imagefile[0]
+												.Name}`}
+											filename={datafinal.imagefile[0].Name}
 										/>
 									)}
+									{console.log(notes)}
 									{datafinal &&
 									datafinal.format === 'Video' && (
 										<Video
@@ -829,6 +866,10 @@ function DetailedPage() {
 											universalId={universalId}
 											setuniversalId={setuniversalId}
 											fileUpload={fileUpload}
+											integrationCode={integrationCode}
+											setintegrationCode={setintegrationCode}
+											notes={notes}
+											setnotes={setnotes}
 											urlList={urlList}
 											videoDuration={videoDuration}
 											setvideoDuration={setvideoDuration}
@@ -846,7 +887,14 @@ function DetailedPage() {
 									>
 										save
 									</Button>
-									<Button style={{ margin: '0 15px' }}>cancel</Button>
+									<Button
+										style={{ margin: '0 15px' }}
+										onClick={() => {
+											if (!loading) history.push('/creative');
+										}}
+									>
+										cancel
+									</Button>
 								</Paper>
 							</TabPanel>
 							<TabPanel value={valuetab} index={1}>
@@ -1131,7 +1179,14 @@ function DetailedPage() {
 									>
 										save
 									</Button>
-									<Button style={{ margin: '0 15px' }}>cancel</Button>
+									<Button
+										style={{ margin: '0 15px' }}
+										onClick={() => {
+											if (!loading) history.push('/creative');
+										}}
+									>
+										cancel
+									</Button>
 								</Paper>
 							</TabPanel>
 							<TabPanel value={valuetab} index={2}>
