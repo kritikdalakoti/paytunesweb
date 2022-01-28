@@ -37,6 +37,16 @@ exports.uploadAws = async function(data) {
 	}
 };
 
+exports.getAws = async function(name) {
+	try {
+		let s3Bucket = new AWS.S3({ params: { Bucket: 'paytunesmusicads' } });
+		let file = await s3Bucket.getSignedUrl({ Key: name }).promise();
+		return { message: 'Successful!', file };
+	} catch (err) {
+		return { error: err };
+	}
+};
+
 exports.uploadtranscodedfile = async function({ key, container, type }) {
 	try {
 		console.log(typeof key, container);

@@ -373,6 +373,21 @@
   z-index: 2;
 }
 
+.html_paper_footer_1{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: fit-content;
+  /* width: 100vw; */
+  padding: 20px 30px;
+  display: flex;
+  /* position: sticky !important; */
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  z-index: 2;
+}
+
 .body_form{
   margin-top: 5px;
   padding-top: 20px;
@@ -421,7 +436,7 @@
 }
 
 .pageheight_c{
-  height: 70vh;
+  max-height: 75vh;
   overflow: auto;
 }
 
@@ -544,7 +559,7 @@ border-bottom: 1px solid gray;
 } */
 
 .canvas{
-  max-height: 75%;
+  /* max-height: 75%; */
   padding: 20px;
   overflow: auto;
 }

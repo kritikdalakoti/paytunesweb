@@ -40,7 +40,21 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { v4 as uuidv4 } from 'uuid';
 import { useSnackbar } from 'notistack';
 
-function AudioCanvas({ audioDuration, setaudioDuration, fileUpload, setfileUpload, setfileUpload1, fileUpload1 }) {
+function AudioCanvas({
+	audioDuration,
+	setaudioDuration,
+	fileUpload,
+	setfileUpload,
+	setfileUpload1,
+	fileUpload1,
+	uploadstatus,
+	setuploadstatus,
+	uploadstatus1,
+	setuploadstatus1,
+	bannerName,
+	name,
+	url
+}) {
 	const { enqueueSnackbar } = useSnackbar();
 	const audioRef = useRef();
 	const imageRef = useRef();
@@ -200,7 +214,7 @@ function AudioCanvas({ audioDuration, setaudioDuration, fileUpload, setfileUploa
 								<ImageIcon sx={{ fontSize: 40 * zoomvalue / 100 }} className="icon_home" />
 							</div>
 						)}
-						{fileUpload ? (
+						{uploadstatus ? fileUpload ? (
 							<audio
 								className="audio_preview_audio"
 								id="audio_preview_audio"
@@ -229,6 +243,21 @@ function AudioCanvas({ audioDuration, setaudioDuration, fileUpload, setfileUploa
 									src={null}
 								/>
 							</React.Fragment>
+						) : (
+							<audio
+								className="audio_preview_audio"
+								id="audio_preview_audio"
+								onLoadedMetadata={onLoadedMetadata}
+								ref={audioRef}
+								style={{
+									width: `${290 * zoomvalue / 100}px`,
+									height: `${35 * zoomvalue / 100}px`,
+									margin: `${15 * zoomvalue / 100}px ${0 * zoomvalue / 100}px`
+								}}
+								controls
+							>
+								<source src={url} />
+							</audio>
 						)}
 					</Paper>
 				</div>
@@ -269,7 +298,7 @@ function AudioCanvas({ audioDuration, setaudioDuration, fileUpload, setfileUploa
 							</div>
 							<div className="d-flex">
 								<GraphicEqIcon className="opacity-50 m-1" />
-								{!fileUpload ? (
+								{uploadstatus ? !fileUpload ? (
 									<div className="flexdisplay">
 										<div className="drop-file-input">
 											<div className="drop-file-input__label">
@@ -292,6 +321,20 @@ function AudioCanvas({ audioDuration, setaudioDuration, fileUpload, setfileUploa
 													variant: 'success'
 												});
 												setfileUpload(null);
+											}}
+										>
+											<ClearIcon fontSize="small" />
+										</IconButton>
+									</div>
+								) : (
+									<div className="flexdisplay">
+										<div>{name}</div>
+										<IconButton
+											onClick={() => {
+												enqueueSnackbar('Audio File removed Successfully!', {
+													variant: 'success'
+												});
+												setuploadstatus(true);
 											}}
 										>
 											<ClearIcon fontSize="small" />
@@ -350,7 +393,7 @@ function AudioCanvas({ audioDuration, setaudioDuration, fileUpload, setfileUploa
 							</div>
 							<div className="d-flex">
 								<ImageIcon className="opacity-50" fontSize="large" />
-								{!fileUpload1 ? (
+								{uploadstatus1 ? !fileUpload1 ? (
 									<div className="flexdisplay">
 										<div className="drop-file-input">
 											<div className="drop-file-input__label">
@@ -383,6 +426,20 @@ function AudioCanvas({ audioDuration, setaudioDuration, fileUpload, setfileUploa
 													variant: 'success'
 												});
 												setfileUpload1(null);
+											}}
+										>
+											<ClearIcon fontSize="small" />
+										</IconButton>
+									</div>
+								) : (
+									<div className="flexdisplay">
+										<div>{bannerName}</div>
+										<IconButton
+											onClick={() => {
+												enqueueSnackbar('Image removed Successfully!', {
+													variant: 'success'
+												});
+												setuploadstatus1(true);
 											}}
 										>
 											<ClearIcon fontSize="small" />

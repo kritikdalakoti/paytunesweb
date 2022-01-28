@@ -12,7 +12,7 @@ function Footer({ history, loading, success, onSubmit }) {
 		})
 	};
 	return (
-		<Paper className="html_paper_footer">
+		<Paper className="html_paper_footer_1">
 			<Box sx={{ m: 1, position: 'relative' }}>
 				<Button variant="contained" sx={buttonSx} disabled={loading} onClick={onSubmit}>
 					save

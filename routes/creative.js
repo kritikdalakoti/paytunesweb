@@ -18,6 +18,7 @@ const upload = multer({ storage });
 
 router.get('/get_creatives', auth, controller.getCreatives);
 router.get('/get_a_creatives/:id', auth, controller.getaCreative);
+router.put('/get_file', auth, controller.getfileaws);
 
 router.post(
 	'/create_creative',

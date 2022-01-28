@@ -85,7 +85,12 @@ function Creative() {
 			.then((response) => {
 				console.log(response);
 				if (response.status === 200) {
-					setcreatives(response.data);
+					var cloon = response.data;
+					cloon.sort(function(b, a) {
+						return a.name - b.name;
+					});
+					console.log(cloon);
+					setcreatives(cloon);
 					setloading(false);
 				}
 			})
@@ -310,7 +315,7 @@ function Creative() {
 												<td>{x.dimensions}</td>
 												<td>{x.duration}</td>
 												<td>{x.source}</td>
-												<td>{x.created}</td>
+												<td>{x.createdAt && x.createdAt.substr(0, 10)}</td>
 												<td>{x.tagwrapping}</td>
 											</tr>
 										);

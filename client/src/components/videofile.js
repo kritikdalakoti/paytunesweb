@@ -632,7 +632,7 @@ function Videofile() {
 					</Paper>
 				</div>
 			</div>
-			<Paper className="html_paper_footer">
+			<Paper className="html_paper_footer_1">
 				<Button
 					style={{ margin: '0 15px' }}
 					variant="contained"

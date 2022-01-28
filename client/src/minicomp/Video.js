@@ -34,6 +34,10 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 function Video({
 	name,
 	setname,
+	url,
+	filename,
+	uploadstatus,
+	setuploadstatus,
 	urlList,
 	seturlList,
 	fileUpload,
@@ -222,100 +226,105 @@ function Video({
 			>
 				<Typography sx={{ p: 1, fontSize: 13, width: '350px', margin: '5px 10px' }}>{pop1.text}</Typography>
 			</Popover>
-			<div className="body_form video_for">
-				<div className="">
-					<Paper className={bisc1 ? 'toggle_paper_video_1' : 'html_paper_body_video'}>
-						<div className="toggle_body_head" onClick={() => setbisc1(!bisc1)}>
-							<div>Basic details</div>
-							{!bisc1 ? <ExpandMore /> : <ExpandLess />}
-						</div>
-						<div style={{ alignItems: 'center' }} className="html_body_p">
-							{/* <TextField id="standard-basic" label="Standard" variant="standard" /> */}
-							<FormControl variant="standard" id="inputwide">
-								<InputLabel htmlFor="component-helper">Name</InputLabel>
-								<Input
-									id="component-helper"
-									value={name}
-									onChange={(e) => {
-										if (e.target.value.length < 513) {
-											setname(e.target.value);
-										}
-									}}
-									aria-describedby="component-helper-text"
-									endAdornment={
-										<InputAdornment position="end">
-											<IconButton>
-												<HelpOutlineIcon
-													style={{ cursor: 'pointer' }}
-													onMouseEnter={(e) =>
-														setpop1({
-															status: true,
-															id: e.currentTarget,
-															text: 'The name of the creative in Display & Video 360.'
-														})}
-													onMouseLeave={() =>
-														setpop1({ status: false, id: null, text: null })}
-													sx={{ fontSize: 16 }}
-												/>
-											</IconButton>
-										</InputAdornment>
+			<div className="">
+				<Paper className={bisc1 ? 'toggle_paper_video_1' : 'html_paper_body_video'}>
+					<div className="toggle_body_head" onClick={() => setbisc1(!bisc1)}>
+						<div>Basic details</div>
+						{!bisc1 ? <ExpandMore /> : <ExpandLess />}
+					</div>
+					<div style={{ alignItems: 'center' }} className="html_body_p">
+						{/* <TextField id="standard-basic" label="Standard" variant="standard" /> */}
+						<FormControl variant="standard" id="inputwide">
+							<InputLabel htmlFor="component-helper">Name</InputLabel>
+							<Input
+								id="component-helper"
+								value={name}
+								onChange={(e) => {
+									if (e.target.value.length < 513) {
+										setname(e.target.value);
 									}
-								/>
-								<div className="limittextindicate">{name ? name.length : 0}/512</div>
-							</FormControl>
+								}}
+								aria-describedby="component-helper-text"
+								endAdornment={
+									<InputAdornment position="end">
+										<IconButton>
+											<HelpOutlineIcon
+												style={{ cursor: 'pointer' }}
+												onMouseEnter={(e) =>
+													setpop1({
+														status: true,
+														id: e.currentTarget,
+														text: 'The name of the creative in Display & Video 360.'
+													})}
+												onMouseLeave={() => setpop1({ status: false, id: null, text: null })}
+												sx={{ fontSize: 16 }}
+											/>
+										</IconButton>
+									</InputAdornment>
+								}
+							/>
+							<div className="limittextindicate">{name ? name.length : 0}/512</div>
+						</FormControl>
+					</div>
+				</Paper>
+				<Paper className={bisc2 ? 'toggle_paper_video' : 'html_paper_body_video'}>
+					<div className="toggle_body_head" onClick={() => setbisc2(!bisc2)}>
+						<div>Assets</div>
+						{!bisc2 ? <ExpandMore /> : <ExpandLess />}
+					</div>
+					<div style={{ alignItems: 'center' }} className="html_body_p">
+						<div style={{ opacity: '0.6' }} className="flexdisplay">
+							<div>Source file</div>
+							<HelpOutlineIcon
+								style={{ cursor: 'pointer' }}
+								onMouseEnter={(e) =>
+									setpop1({
+										status: true,
+										id: e.currentTarget,
+										text: (
+											<div>
+												Source files can be up to 1 GB and in one of the following formats:{' '}
+												.avi, .mov, .mp4, .m4v, .mpeg, .mpg, .oga, .ogg, .ogv, .webm, .wmv.
+												Always upload a source file with the highest possible specifications you
+												have available so that Display & Video 360 can transcode the asset into
+												as many serving files as possible.
+											</div>
+										)
+									})}
+								onMouseLeave={() => setpop1({ status: false, id: null, text: null })}
+								sx={{ fontSize: 16 }}
+							/>
 						</div>
-					</Paper>
-					<Paper className={bisc2 ? 'toggle_paper_video' : 'html_paper_body_video'}>
-						<div className="toggle_body_head" onClick={() => setbisc2(!bisc2)}>
-							<div>Assets</div>
-							{!bisc2 ? <ExpandMore /> : <ExpandLess />}
-						</div>
-						<div style={{ alignItems: 'center' }} className="html_body_p">
-							<div style={{ opacity: '0.6' }} className="flexdisplay">
-								<div>Source file</div>
-								<HelpOutlineIcon
-									style={{ cursor: 'pointer' }}
-									onMouseEnter={(e) =>
-										setpop1({
-											status: true,
-											id: e.currentTarget,
-											text: (
-												<div>
-													Source files can be up to 1 GB and in one of the following formats:{' '}
-													.avi, .mov, .mp4, .m4v, .mpeg, .mpg, .oga, .ogg, .ogv, .webm, .wmv.
-													Always upload a source file with the highest possible specifications
-													you have available so that Display & Video 360 can transcode the
-													asset into as many serving files as possible.
-												</div>
-											)
-										})}
-									onMouseLeave={() => setpop1({ status: false, id: null, text: null })}
-									sx={{ fontSize: 16 }}
-								/>
+						{uploadstatus ? !fileUpload ? (
+							<div className="flexdisplay">
+								<div className="drop-file-input">
+									<div className="drop-file-input__label">
+										<p>Drop file here</p>
+									</div>
+									<input type="file" accept="video/*" value="" onChange={onFileChangeVideo} />
+								</div>
+								<p> or </p>
+								<div className="uploadButton">
+									<Button>Upload</Button>
+									<input type="file" accept="video/*" id="upload" onChange={onFileChangeVideo} />
+								</div>
 							</div>
-							{!fileUpload ? (
-								<div className="flexdisplay">
-									<div className="drop-file-input">
-										<div className="drop-file-input__label">
-											<p>Drop file here</p>
-										</div>
-										<input type="file" accept="video/*" value="" onChange={onFileChangeVideo} />
-									</div>
-									<p> or </p>
-									<div className="uploadButton">
-										<Button>Upload</Button>
-										<input type="file" accept="video/*" id="upload" onChange={onFileChangeVideo} />
-									</div>
-								</div>
-							) : (
-								<div className="flexdisplay">
-									<div>{fileUpload.name}</div>
-									<IconButton onClick={() => setfileUpload(null)}>
-										<ClearIcon fontSize="small" />
-									</IconButton>
-								</div>
-							)}
-							{/* <FormControl variant="standard" id="inputwide">
+						) : (
+							<div className="flexdisplay">
+								<div>{fileUpload.name}</div>
+								<IconButton onClick={() => setfileUpload(null)}>
+									<ClearIcon fontSize="small" />
+								</IconButton>
+							</div>
+						) : (
+							<div className="flexdisplay">
+								<div>{filename}</div>
+								<IconButton onClick={() => setuploadstatus(true)}>
+									<ClearIcon fontSize="small" />
+								</IconButton>
+							</div>
+						)}
+						{/* <FormControl variant="standard" id="inputwide">
 								<InputLabel htmlFor="component-helper">Landing page url</InputLabel>
 								<Input
 									id="component-helper"
@@ -363,166 +372,29 @@ function Video({
 								/>
 								<div className="limittextindicate">{url ? url.length : 0}/1024</div>
 							</FormControl> */}
+					</div>
+				</Paper>
+				<Paper className={bisc3 ? 'toggle_paper_video' : 'html_paper_body_video'}>
+					<div className="toggle_body_head" onClick={() => setbisc3(!bisc3)}>
+						<div>Video options</div>
+						{!bisc3 ? <ExpandMore /> : <ExpandLess />}
+					</div>
+					<div style={{ alignItems: 'center' }} className="html_body_p">
+						<div style={{ opacity: '0.6' }} className="flexdisplay">
+							<div>Skip button</div>
 						</div>
-					</Paper>
-					<Paper className={bisc3 ? 'toggle_paper_video' : 'html_paper_body_video'}>
-						<div className="toggle_body_head" onClick={() => setbisc3(!bisc3)}>
-							<div>Video options</div>
-							{!bisc3 ? <ExpandMore /> : <ExpandLess />}
+						<div className="flexdisplay">
+							<Checkbox value={skipable} onChange={(e) => setskipable(e.target.checked)} {...label} />
+							<div>Include skip button</div>
 						</div>
-						<div style={{ alignItems: 'center' }} className="html_body_p">
-							<div style={{ opacity: '0.6' }} className="flexdisplay">
-								<div>Skip button</div>
-							</div>
-							<div className="flexdisplay">
-								<Checkbox value={skipable} onChange={(e) => setskipable(e.target.checked)} {...label} />
-								<div>Include skip button</div>
-							</div>
-							<div className="flexdisplay">
-								<FormControl variant="standard" id="inputwide">
-									<InputLabel htmlFor="component-helper">Universal Ad Id (optional)</InputLabel>
-									<Input
-										id="component-helper"
-										aria-describedby="component-helper-text"
-										value={universalId}
-										onChange={(e) => setuniversalId(e.target.value)}
-										endAdornment={
-											<InputAdornment position="end">
-												<IconButton>
-													<HelpOutlineIcon
-														style={{ cursor: 'pointer' }}
-														onMouseEnter={(e) =>
-															setpop1({
-																status: true,
-																id: e.currentTarget,
-																text:
-																	'Include a registered industry-wide identifier for your video creative that will be included in VAST tags. If you’ve registered IDs with Ad-ID or Clearcast, enter them here. You can also use a Campaign Manager 360-generated ID or a registered tag from another provider.'
-															})}
-														onMouseLeave={() =>
-															setpop1({ status: false, id: null, text: null })}
-														sx={{ fontSize: 16 }}
-													/>
-												</IconButton>
-											</InputAdornment>
-										}
-									/>
-								</FormControl>
-								<FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-									<InputLabel id="demo-simple-select-standard-label"> </InputLabel>
-									<Select
-										labelId="demo-simple-select-standard-label"
-										id="demo-simple-select-standard"
-										label="Age"
-										defaultValue={40}
-									>
-										<MenuItem value={10}>Other</MenuItem>
-										<MenuItem value={20}>Ad-ID</MenuItem>
-										<MenuItem value={30}>clearcast.co.uk</MenuItem>
-										<MenuItem value={40}>Display & Video 360</MenuItem>
-									</Select>
-								</FormControl>
-							</div>
-							<div style={{ opacity: '0.6' }} className="flexdisplay">
-								<div>OBA compliance</div>
-							</div>
-							<div className="flexdisplay">
-								<Checkbox {...label} />
-								<div>Use custom OBA icon</div>
-							</div>
-						</div>
-					</Paper>
-					<Paper className={bisc4 ? 'toggle_paper_video' : 'html_paper_body_video'}>
-						<div className="toggle_body_head" onClick={() => setbisc4(!bisc4)}>
-							<div>Companion creatives</div>
-							{!bisc4 ? <ExpandMore /> : <ExpandLess />}
-						</div>
-						<div style={{ alignItems: 'center' }} className="html_body_sp">
-							<div className="brown_back_video">
-								<Button>ASSIGN COMPANIONS</Button>
-								<div className="brown_inside">
-									<div>Cookie ICON</div>
-									<div style={{ opacity: '0.6' }}>
-										<div>No companion creatives assigned</div>
-									</div>
-									<Button>ASSIGN COMPANIONS</Button>
-								</div>
-							</div>
-						</div>
-					</Paper>
-					<Paper className={bisc5 ? 'toggle_paper_video' : 'html_paper_body_video'}>
-						<div className="toggle_body_head" onClick={() => setbisc5(!bisc5)}>
-							<div>Serving properties</div>
-							{!bisc5 ? <ExpandMore /> : <ExpandLess />}
-						</div>
-						<div style={{ alignItems: 'center' }} className="html_body_sp">
-							{/* <TextField id="standard-basic" label="Standard" variant="standard" /> */}
-							<div style={{ opacity: '0.6' }} className="flexdisplay">
-								<div>Third-party URLs</div>
-								<HelpOutlineIcon
-									style={{ cursor: 'pointer' }}
-									onMouseEnter={(e) =>
-										setpop1({
-											status: true,
-											id: e.currentTarget,
-											text: (
-												<div>Allow third parties to track interactions with your creative.</div>
-											)
-										})}
-									onMouseLeave={() => setpop1({ status: false, id: null, text: null })}
-									sx={{ fontSize: 16 }}
-								/>
-							</div>
-							<div className="brown_back_video borderGray">
-								<div className="flexdisplay">
-									<Button variant="outlined" onClick={() => addon()}>
-										add url
-									</Button>
-									<Button
-										onClick={() => {
-											var selectedid = urlSelectList;
-											var resulturl =
-												urlList && urlList.length
-													? urlList.filter((x) => !selectedid.includes(x.id))
-													: [];
-											seturlSelectList([]);
-											seturlList(resulturl);
-										}}
-										disabled={!urlSelectList.length ? true : false}
-									>
-										delete
-									</Button>
-								</div>
-								<div
-									className="flexdisplay"
-									style={{ padding: '10px', justifyContent: 'space-evenly' }}
-								>
-									<WarningIcon sx={{ fontSize: 30, color: 'orange', marginRight: '15px' }} />
-									<div className="text_bet">
-										You are responsible for ensuring that your collection and use of user
-										information complies with your legal agreements and applicable laws and
-										policies, including the{' '}
-										<a href="https://www.google.com/about/company/user-consent-policy/">
-											{' '}
-											EU User Consent Policy.{' '}
-										</a>
-									</div>
-								</div>
-								{urlTable()}
-							</div>
-						</div>
-					</Paper>
-					<Paper className={bisc6 ? 'toggle_paper_video' : 'html_paper_body_video'}>
-						<div className="toggle_body_head" onClick={() => setbisc6(!bisc6)}>
-							<div>Additional Details</div>
-							{!bisc6 ? <ExpandMore /> : <ExpandLess />}
-						</div>
-						<div style={{ alignItems: 'center' }} className="html_body_p">
-							{/* <TextField id="standard-basic" label="Standard" variant="standard" /> */}
+						<div className="flexdisplay">
 							<FormControl variant="standard" id="inputwide">
-								<InputLabel htmlFor="component-helper">Integration code (Optional)</InputLabel>
+								<InputLabel htmlFor="component-helper">Universal Ad Id (optional)</InputLabel>
 								<Input
 									id="component-helper"
 									aria-describedby="component-helper-text"
+									value={universalId}
+									onChange={(e) => setuniversalId(e.target.value)}
 									endAdornment={
 										<InputAdornment position="end">
 											<IconButton>
@@ -533,7 +405,7 @@ function Video({
 															status: true,
 															id: e.currentTarget,
 															text:
-																'Enter an optional integration code for use with an external reporting system.'
+																'Include a registered industry-wide identifier for your video creative that will be included in VAST tags. If you’ve registered IDs with Ad-ID or Clearcast, enter them here. You can also use a Campaign Manager 360-generated ID or a registered tag from another provider.'
 														})}
 													onMouseLeave={() =>
 														setpop1({ status: false, id: null, text: null })}
@@ -544,42 +416,171 @@ function Video({
 									}
 								/>
 							</FormControl>
-							<br />
-							<FormControl variant="standard" id="inputwide">
-								<InputLabel htmlFor="component-helper">Notes (Optional)</InputLabel>
-								<Input id="component-helper" aria-describedby="component-helper-text" />
+							<FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+								<InputLabel id="demo-simple-select-standard-label"> </InputLabel>
+								<Select
+									labelId="demo-simple-select-standard-label"
+									id="demo-simple-select-standard"
+									label="Age"
+									defaultValue={40}
+								>
+									<MenuItem value={10}>Other</MenuItem>
+									<MenuItem value={20}>Ad-ID</MenuItem>
+									<MenuItem value={30}>clearcast.co.uk</MenuItem>
+									<MenuItem value={40}>Display & Video 360</MenuItem>
+								</Select>
 							</FormControl>
 						</div>
-					</Paper>
-				</div>
-				<div>
-					<Paper className="preview_video">
-						<div style={{ opacity: '0.6' }}>Preview</div>
-						{fileUpload ? (
-							<video
-								ref={videoRef}
-								onLoadedMetadata={onLoadedMetadata}
-								className="video_preview_video"
-								controls
-							>
-								<source src={URL.createObjectURL(fileUpload)} />
-							</video>
-						) : (
-							<div className="video_preview">
-								<MovieCreationIcon sx={{ fontSize: 55 }} />
-								<div>Add an asset to preview</div>
+						<div style={{ opacity: '0.6' }} className="flexdisplay">
+							<div>OBA compliance</div>
+						</div>
+						<div className="flexdisplay">
+							<Checkbox {...label} />
+							<div>Use custom OBA icon</div>
+						</div>
+					</div>
+				</Paper>
+				<Paper className={bisc4 ? 'toggle_paper_video' : 'html_paper_body_video'}>
+					<div className="toggle_body_head" onClick={() => setbisc4(!bisc4)}>
+						<div>Companion creatives</div>
+						{!bisc4 ? <ExpandMore /> : <ExpandLess />}
+					</div>
+					<div style={{ alignItems: 'center' }} className="html_body_sp">
+						<div className="brown_back_video">
+							<Button>ASSIGN COMPANIONS</Button>
+							<div className="brown_inside">
+								<div>Cookie ICON</div>
+								<div style={{ opacity: '0.6' }}>
+									<div>No companion creatives assigned</div>
+								</div>
+								<Button>ASSIGN COMPANIONS</Button>
 							</div>
-						)}
-					</Paper>
-				</div>
+						</div>
+					</div>
+				</Paper>
+				<Paper className={bisc5 ? 'toggle_paper_video' : 'html_paper_body_video'}>
+					<div className="toggle_body_head" onClick={() => setbisc5(!bisc5)}>
+						<div>Serving properties</div>
+						{!bisc5 ? <ExpandMore /> : <ExpandLess />}
+					</div>
+					<div style={{ alignItems: 'center' }} className="html_body_sp">
+						{/* <TextField id="standard-basic" label="Standard" variant="standard" /> */}
+						<div style={{ opacity: '0.6' }} className="flexdisplay">
+							<div>Third-party URLs</div>
+							<HelpOutlineIcon
+								style={{ cursor: 'pointer' }}
+								onMouseEnter={(e) =>
+									setpop1({
+										status: true,
+										id: e.currentTarget,
+										text: <div>Allow third parties to track interactions with your creative.</div>
+									})}
+								onMouseLeave={() => setpop1({ status: false, id: null, text: null })}
+								sx={{ fontSize: 16 }}
+							/>
+						</div>
+						<div className="brown_back_video borderGray">
+							<div className="flexdisplay">
+								<Button variant="outlined" onClick={() => addon()}>
+									add url
+								</Button>
+								<Button
+									onClick={() => {
+										var selectedid = urlSelectList;
+										var resulturl =
+											urlList && urlList.length
+												? urlList.filter((x) => !selectedid.includes(x.id))
+												: [];
+										seturlSelectList([]);
+										seturlList(resulturl);
+									}}
+									disabled={!urlSelectList.length ? true : false}
+								>
+									delete
+								</Button>
+							</div>
+							<div className="flexdisplay" style={{ padding: '10px', justifyContent: 'space-evenly' }}>
+								<WarningIcon sx={{ fontSize: 30, color: 'orange', marginRight: '15px' }} />
+								<div className="text_bet">
+									You are responsible for ensuring that your collection and use of user information
+									complies with your legal agreements and applicable laws and policies, including the{' '}
+									<a href="https://www.google.com/about/company/user-consent-policy/">
+										{' '}
+										EU User Consent Policy.{' '}
+									</a>
+								</div>
+							</div>
+							{urlTable()}
+						</div>
+					</div>
+				</Paper>
+				<Paper className={bisc6 ? 'toggle_paper_video' : 'html_paper_body_video'}>
+					<div className="toggle_body_head" onClick={() => setbisc6(!bisc6)}>
+						<div>Additional Details</div>
+						{!bisc6 ? <ExpandMore /> : <ExpandLess />}
+					</div>
+					<div style={{ alignItems: 'center' }} className="html_body_p">
+						{/* <TextField id="standard-basic" label="Standard" variant="standard" /> */}
+						<FormControl variant="standard" id="inputwide">
+							<InputLabel htmlFor="component-helper">Integration code (Optional)</InputLabel>
+							<Input
+								id="component-helper"
+								aria-describedby="component-helper-text"
+								endAdornment={
+									<InputAdornment position="end">
+										<IconButton>
+											<HelpOutlineIcon
+												style={{ cursor: 'pointer' }}
+												onMouseEnter={(e) =>
+													setpop1({
+														status: true,
+														id: e.currentTarget,
+														text:
+															'Enter an optional integration code for use with an external reporting system.'
+													})}
+												onMouseLeave={() => setpop1({ status: false, id: null, text: null })}
+												sx={{ fontSize: 16 }}
+											/>
+										</IconButton>
+									</InputAdornment>
+								}
+							/>
+						</FormControl>
+						<br />
+						<FormControl variant="standard" id="inputwide">
+							<InputLabel htmlFor="component-helper">Notes (Optional)</InputLabel>
+							<Input id="component-helper" aria-describedby="component-helper-text" />
+						</FormControl>
+					</div>
+				</Paper>
 			</div>
 			<div>
 				<Paper className="preview_video">
 					<div style={{ opacity: '0.6' }}>Preview</div>
-					<div className="video_preview">
-						<MovieCreationIcon sx={{ fontSize: 55 }} />
-						<div>Add an asset to preview</div>
-					</div>
+					{uploadstatus ? fileUpload ? (
+						<video
+							ref={videoRef}
+							onLoadedMetadata={onLoadedMetadata}
+							className="video_preview_video"
+							controls
+						>
+							<source src={URL.createObjectURL(fileUpload)} />
+						</video>
+					) : (
+						<div className="video_preview">
+							<MovieCreationIcon sx={{ fontSize: 55 }} />
+							<div>Add an asset to preview</div>
+						</div>
+					) : (
+						<video
+							ref={videoRef}
+							onLoadedMetadata={onLoadedMetadata}
+							className="video_preview_video"
+							controls
+						>
+							<source src={url} />
+						</video>
+					)}
 				</Paper>
 			</div>
 		</div>

@@ -30,6 +30,11 @@ import '../App.css';
 import axios from 'axios';
 import { CircularProgress } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
+// import * as AWSd from '@aws-sdk/client-s3';
+// import AWS from 'aws-sdk';
+// import confo from '../config.json';
+// import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+// import { S3 } from '@aws-sdk/client-s3'
 function a11yProps(index) {
 	return {
 		id: `simple-tab-${index}`,
@@ -80,14 +85,19 @@ const StyledInputElement = styled('input')`
     transition: width 200ms ease-out;
   }
 `;
+// AWS.config.update(confo);
 
 function DetailedPage() {
+	// let s3Bucket = new AWS.S3({ params: { Bucket: 'paytunesmusicads' } });
+	// const S3clint = new S3Client({ region: confo.region, credentials: confo });
 	const { num } = useParams();
 	const { enqueueSnackbar } = useSnackbar();
 	const [ datafinal, setdatafinal ] = useState(null);
 	const [ valuetab, setValuetab ] = React.useState(0);
 	const [ loading, setloading ] = React.useState(true);
 	const [ name, setname ] = React.useState('');
+	const [ uploadstatus, setuploadstatus ] = React.useState(false);
+	const [ uploadstatus1, setuploadstatus1 ] = React.useState(false);
 	const [ audioDuration, setaudioDuration ] = React.useState(null);
 	const [ integrationCode, setintegrationCode ] = React.useState('');
 	const [ fileUpload, setfileUpload ] = React.useState(null);
@@ -115,18 +125,43 @@ function DetailedPage() {
 					Authorization: 'Bearer ' + localStorage.getItem('jwt')
 				}
 			})
-			.then((response) => {
+			.then(async (response) => {
 				console.log(response);
 				if (response.status === 200) {
 					setdatafinal(response.data);
 					setname(response.data.name);
 					setaudioDuration(response.data.duration);
 					setintegrationCode(response.data.integration);
+					setuniversalId(response.data.universalAdId);
+					setskipable(response.data.skipable);
 					setnotes(response.data.notes);
 					// setfileUpload(response.data.audiofile[0]);
 					setaudioDuration(response.data.duration);
 					if (typeof response.data.servingProp === 'object') seturlList(response.data.servingProp);
 					setloading(false);
+					// axios
+					// 	.put(
+					// 		`http://localhost:5000/creative/get_file`,
+					// 		{ name: response.data.audiofile[0].Name },
+					// 		{
+					// 			headers: {
+					// 				Authorization: 'Bearer ' + localStorage.getItem('jwt'),
+					// 				'Content-Type': 'application/json'
+					// 			}
+					// 		}
+					// 	)
+					// 	.then((result) => {
+					// 		console.log(result);
+					// 	})
+					// 	.catch((err) => console.log(err));
+					// let file = await s3Bucket.listObjectsV2().promise();
+					// console.log(file);
+					// const command = new GetObjectCommand({
+					// 	Bucket: 'paytunesmusicads',
+					// 	Key: response.data.audiofile[0].Name
+					// });
+					// let data = await S3clint.send(command);
+					// console.log(data);
 				}
 			})
 			.catch((err) => {
@@ -248,41 +283,38 @@ function DetailedPage() {
 		// if(!(urlList&&urlList.length) || !name|| !fileUpload || !fileUpload1){
 		if (datafinal) {
 			// if()
-			if (datafinal.format === 'Audio' && (!fileUpload || !fileUpload1)) {
-				setValuetab(0);
-				setloading(false);
-				return enqueueSnackbar('Enter all the required fields', { variant: 'error' });
-			} else if (!name) {
+			if (!name) {
 				setValuetab(1);
-				setloading(false);
-				return enqueueSnackbar('Enter all the required fields', { variant: 'error' });
-			} else if (datafinal.format === 'Video' && datafinal.format === 'Image' && !fileUpload) {
-				setValuetab(0);
 				setloading(false);
 				return enqueueSnackbar('Enter all the required fields', { variant: 'error' });
 			}
 			urlList.map((x) => servingProps.push({ name: x.name, url: x.url }));
 			var formdata = new FormData();
+			formdata.append('id', num);
 			formdata.append('name', name);
 			formdata.append('integration', integrationCode);
 			formdata.append('notes', notes);
 			formdata.append('type', datafinal.type);
 			formdata.append('format', datafinal.format);
-			if (datafinal.format === 'Audio') {
+			if (datafinal.format === 'Audio' && uploadstatus) {
 				formdata.append('duration', audioDuration);
 				formdata.append('AudioFile', fileUpload);
+			}
+			if (datafinal.format === 'Audio' && uploadstatus1) {
 				formdata.append('Banner', fileUpload1);
 			}
-			if (datafinal.format === 'Video') {
+			if (datafinal.format === 'Video' && uploadstatus) {
 				formdata.append('VideoFile', fileUpload);
 				formdata.append('duration', videoDuration);
+			}
+			if (datafinal.format === 'Video') {
 				formdata.append('universalAdId', universalId);
 				formdata.append('skipable', skipable);
 			}
-			if (datafinal.format === 'Image') {
+			if (datafinal.format === 'Image' && uploadstatus) {
 				formdata.append('ImageFile', fileUpload);
 			}
-			formdata.append('servingProp', servingProps);
+			formdata.append('servingProp', JSON.stringify(servingProps));
 			setloading(true);
 			console.log(formdata);
 			enqueueSnackbar("Don't cancel or reload the page \n Submission in progress", {
@@ -378,9 +410,19 @@ function DetailedPage() {
 										setfileUpload={setfileUpload}
 										fileUpload1={fileUpload1}
 										setfileUpload1={setfileUpload1}
+										uploadstatus={uploadstatus}
+										setuploadstatus={setuploadstatus}
+										uploadstatus1={uploadstatus1}
+										setuploadstatus1={setuploadstatus1}
+										url={`https://paytunesmusicads.s3.ap-south-1.amazonaws.com/${datafinal
+											.audiofile[0].Name}`}
+										name={datafinal.audiofile[0].Name}
+										bannerName={
+											datafinal.banner.length ? datafinal.banner[0].Name : 'image title not found'
+										}
 									/>
 								</div>
-								<Paper className="html_paper_footer">
+								<Paper className="html_paper_footer_1">
 									<Button
 										style={{ margin: '0 15px' }}
 										variant="contained"
@@ -406,7 +448,7 @@ function DetailedPage() {
 										seturlList={seturlList}
 									/>
 								</div>
-								<Paper className="html_paper_footer">
+								<Paper className="html_paper_footer_1">
 									<Button
 										style={{ margin: '0 15px' }}
 										variant="contained"
@@ -691,7 +733,7 @@ function DetailedPage() {
 										<Button className="final_butt">resubmit for approval</Button>
 									</div>
 								</div>
-								<Paper className="html_paper_footer">
+								<Paper className="html_paper_footer_1">
 									<Button
 										style={{ margin: '0 15px' }}
 										variant="contained"
@@ -777,6 +819,11 @@ function DetailedPage() {
 										<Video
 											name={name}
 											setname={setname}
+											uploadstatus={uploadstatus}
+											setuploadstatus={setuploadstatus}
+											url={`https://paytunesmusicads.s3.ap-south-1.amazonaws.com/${datafinal
+												.videofile[0].Name}`}
+											filename={datafinal.videofile[0].Name}
 											skipable={skipable}
 											setskipable={setskipable}
 											universalId={universalId}
@@ -790,7 +837,7 @@ function DetailedPage() {
 										/>
 									)}
 								</div>
-								<Paper className="html_paper_footer">
+								<Paper className="html_paper_footer_1">
 									<Button
 										style={{ margin: '0 15px' }}
 										variant="contained"
@@ -1075,7 +1122,7 @@ function DetailedPage() {
 										<Button className="final_butt">resubmit for approval</Button>
 									</div>
 								</div>
-								<Paper className="html_paper_footer">
+								<Paper className="html_paper_footer_1">
 									<Button
 										style={{ margin: '0 15px' }}
 										variant="contained"

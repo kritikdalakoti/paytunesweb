@@ -5,7 +5,7 @@ const creative = require('../models/creative');
 const path = require('path');
 // const xlsx = require('xlsx');
 const fs = require('fs');
-const { uploadAws, uploadMedia, uploadtranscodedfile, uploadAzure } = require('../aws_upload/uploadsfunction');
+const { uploadAws, getAws, uploadMedia, uploadtranscodedfile, uploadAzure } = require('../aws_upload/uploadsfunction');
 // const { AudioMediaFiles } = require('../constants');
 const { readdata, deletefiles, AudioMediaFiles, VideoMediaFiles } = require('../helper');
 
@@ -23,11 +23,22 @@ exports.getaCreative = async (req, res) => {
 	const { id } = req.params;
 	creative
 		.findById(id)
-		.then((result) => {
+		.then(async (result) => {
+			// var data = result;
+			// let file = await getAws(result.audiofile[0].Name);
+			// console.log(file);
+			// data.file = file;
 			// console.log(result);
 			res.json(result);
 		})
 		.catch((err) => console.log(err));
+};
+
+exports.getfileaws = async (req, res) => {
+	const { name } = req.body;
+	let file = await getAws(name);
+	console.log(file);
+	res.json(file);
 };
 
 exports.createCreative = async (req, res) => {
@@ -52,6 +63,7 @@ exports.createCreative = async (req, res) => {
 		if (!name || !type || !format) {
 			return res.status(400).json({ error: 'Enter the all required fields' });
 		}
+		const SProps = JSON.parse(servingProp);
 		var imagename = '';
 		var bannername = '';
 		if (req.files.AudioFile) {
@@ -201,7 +213,7 @@ exports.createCreative = async (req, res) => {
 			created: '',
 			integration,
 			notes,
-			servingProp
+			servingProp: SProps
 		});
 		await saver.save();
 		let directory = path.join(__dirname, '../public/uploads/');
@@ -237,6 +249,8 @@ exports.editCreative = async (req, res) => {
 			skipable,
 			servingProp
 		} = req.body;
+		// console.log(JSON.parse(servingProp));
+		const SProps = JSON.parse(servingProp);
 		let found = await creative.findById(id).catch((err) => console.log(err));
 		if (!found) {
 			return res.status(400).json({ error: 'No such creative is found' });
@@ -408,10 +422,9 @@ exports.editCreative = async (req, res) => {
 		if (req.files.DisplayFile) found.imagefile = [ { Name: imagename } ];
 		if (req.files.videofile) found.videofile = VideoMediaFiles;
 		if (req.files.Banner) found.banner = [ { Name: bannername } ];
-		if (created) found.created = created;
 		if (integration) found.integration = integration;
 		if (notes) found.notes = notes;
-		if (servingProp) found.servingProp = servingProp;
+		if (servingProp) found.servingProp = SProps;
 		await found.save();
 		let directory = path.join(__dirname, '../public/uploads/');
 		let result3 = deletefiles(directory);
