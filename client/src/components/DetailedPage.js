@@ -336,7 +336,7 @@ function DetailedPage() {
 				.catch((error) => {
 					setloading(false);
 					enqueueSnackbar('Something went wrong! try again', { variant: 'error' });
-					console.log(error.response.data);
+					console.log(error);
 				});
 		}
 	}

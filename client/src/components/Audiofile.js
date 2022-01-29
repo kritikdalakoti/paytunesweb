@@ -334,8 +334,8 @@ function Audiofile() {
 			.catch((error) => {
 				setloading(false);
 				enqueueSnackbar('Something went wrong! try again', { variant: 'error' });
-				console.log(error.response.data);
-				seterror({ message: error.response.data.error, status: true });
+				console.log(error);
+				seterror({ message: error, status: true });
 			});
 	}
 	return (

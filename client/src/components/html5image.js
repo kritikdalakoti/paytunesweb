@@ -103,9 +103,9 @@ function Html5image() {
 			})
 			.catch((error) => {
 				setloading(false);
-				enqueueSnackbar(`Something went wrong! try again\n ${error.response.data}`, { variant: 'error' });
-				console.log(error.response.data);
-				seterror({ message: error.response.data.error, status: true });
+				enqueueSnackbar(`Something went wrong! try again\n ${error}`, { variant: 'error' });
+				console.log(error);
+				seterror({ message: error, status: true });
 				setsuccess(false);
 			});
 	}
