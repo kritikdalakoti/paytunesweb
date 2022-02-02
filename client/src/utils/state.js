@@ -21988,7 +21988,7 @@ const grandcity_data =/* 1 */
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
-const time = ['0-1', '1-2', '2-3', '3-4', '4-5', '5-6', '6-7', '7-8', '8-9', '9-10', '10-11', '11-12', '12-13', '13-14', '14-15', '15-16', '16-17', '17-18', '18-19', '19-20', '20-21', '21-22', '22-23', '23-00']
+const timedata = ['0-1', '1-2', '2-3', '3-4', '4-5', '5-6', '6-7', '7-8', '8-9', '9-10', '10-11', '11-12', '12-13', '13-14', '14-15', '15-16', '16-17', '17-18', '18-19', '19-20', '20-21', '21-22', '22-23', '23-00']
 
 const fields = (type) => {
     let res = [];
@@ -22080,4 +22080,24 @@ const fields = (type) => {
 
 // ]
 
-export { data, region, ages, language, Category_List, MakeModel, grandcity_data, days, time, fields, phonecost }
+const Publishers=[
+    "fdg",
+    "dsg"
+]
+function todayDate(date2){
+    let date = date2?date2: new Date();
+      const year = date.getFullYear();
+      let month;
+      if (date.getMonth() + 1 >= 10) {
+          month = `${date.getMonth() + 1}`;
+      } else {
+          month = `0${date.getMonth() + 1}`;
+      }
+      let date1 = date.getDate();
+      if (date1 < 10) {
+          date1 = `0${date1}`;
+      }
+      return `${year}-${month}-${date1}`;
+  }
+
+export { data, region, ages, language, Category_List, MakeModel, grandcity_data, days, timedata, fields, phonecost,Publishers,todayDate }

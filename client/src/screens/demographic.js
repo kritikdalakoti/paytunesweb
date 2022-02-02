@@ -11,7 +11,7 @@ export default function Demographic({ state }) {
     const dispatch = useDispatch()
     const [gender, setgender] = useState({ male: false, female: false })
     const [age, setage] = useState([18, 65])
-    const [parent, setparent] = useState({ parent: false, nonparent: false })
+    // const [parent, setparent] = useState({ parent: false, nonparent: false })
     const [income, setincome] = useState([])
     const [checks, setchecks] = useState({ age: false, income: false })
     function valuetext(value) {
@@ -27,13 +27,12 @@ export default function Demographic({ state }) {
     }
 
     const handleFinal = () => {
-        dispatch(mainaction('DEMO', { gender, age, parent, income, checks }))
+        dispatch(mainaction('DEMO', { gender, age, income, checks }));
         setOpen(false)
     }
     useEffect(() => {
         setgender(demography.gender)
         setage(demography.age)
-        setparent(demography.parent)
         setincome(demography.income)
         setchecks(demography.checks)
     }, [demography])
@@ -146,7 +145,7 @@ export default function Demographic({ state }) {
                                 getAriaLabel={() => 'Income'}
                                 orientation="vertical"
                                 getAriaValueText={valuetext}
-                                defaultValue={[5000,50000]}
+                                defaultValue={[5,50]}
                                 marks={phonecost}
                                 onChange={handlechange2}
                                 value={income}

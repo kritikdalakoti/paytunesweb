@@ -11,12 +11,14 @@ import EditIcon from '@material-ui/icons/Edit'
 import Demographic from './demographic'
 import Language from './language'
 import Geography from './geography'
+import Time from './timetargetting';
+import Publisher from './publishertargetting';
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux'
 import mainaction from '../redux/actions/main'
 import '../../src/app1.css'
 import { Alert } from '@material-ui/lab'
-import { diskStorage } from 'multer';
+import {todayDate} from '../utils/state';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,21 +48,23 @@ export default function NewCampaign() {
   const [campaignName, setcampaignname] = useState('');
   const [popupstatus, setpopupstatus] = useState(false);
   const [status, setstatus] = useState({ error: "", success: "" });
-  const [active, setActive] = useState('Active')
+  const [active, setActive] = useState('Active');
   const [popup, setpopup] = useState(false);
   const [warning, setwarning] = useState("");
   const [landingurl, setlandingurl] = useState("")
   const [creativecheck, setcreativecheck] = useState({ Audio: false, Video: false, Display: false })
   const [dates, setdates] = useState({ start: '', end: '' })
   const [freq, setfreq] = useState({ freq: 0, freqtime: 'Lifetime of this Campaign' })
-  const [show, setshow] = useState({ demo: false, lang: false, geo: false })
-  const [open, setOpen] = React.useState({ demo: false, lang: false, geo: false });
+  const [show, setshow] = useState({ demo: false, lang: false, geo: false, time: false, publisher: false })
+  const [open, setOpen] = React.useState({ demo: false, lang: false, geo: false, time: false, publisher: false });
   const [show1, setshow1] = useState(false)
   const [open1, setOpen1] = React.useState(false);
   const geography = useSelector((state) => state.main.geography)
   const languages = useSelector((state) => state.main.language)
   const demography = useSelector((state) => state.main.demographic)
-  console.log(geography)
+  const selectedtime = useSelector((state) => state.main.timetargetting);
+  const selectedpublishers = useSelector((state) => state.main.publisher);
+  console.log(useSelector(state=>state.main))
 
   const submitCampaign = async () => {
     const formdata = new FormData()
@@ -86,20 +90,30 @@ export default function NewCampaign() {
     formdata.append('maledemo', demography.gender.male)
     formdata.append('femaledemo', demography.gender.female)
     formdata.append('agedemo', demography.age)
-    formdata.append('parentdemo', demography.parent.parent)
-    formdata.append('nonparentdemo', demography.parent.nonparent)
     formdata.append('incomedemo', demography.income)
     formdata.append('landingurl', landingurl)
     dispatch(mainaction('DATE', { start: dates.start, end: dates.end }))
-    let url = `https://paytunes-new.herokuapp.com/campaign/create`  //https://paytunes-new.herokuapp.com
+    dispatch(mainaction('FREQ',{ frequency: freq.freq, exposure: freq.freqtime }));
+
+    let url = `/campaign/create`  //https://paytunes-new.herokuapp.com
     let h = await fun.createApi(formdata, url)
     history.push(`/lineitemnew/${h.data.data._id}`)
 
   }
 
   const handleOpen = (type) => {
-    type === "demo" ? setOpen({ demo: true, lang: false, geo: false }) : (type === "lang" ? setOpen({ demo: false, lang: true, geo: false }) : setOpen({ demo: false, lang: false, geo: true }));
-    type == "demo" ? setshow({ demo: true, lang: false, geo: false }) : type == "lang" ? setshow({ demo: false, lang: true, geo: false }) : setshow({ demo: false, lang: false, geo: true });
+    if (type === "demo") {
+      setOpen({ lang:false,geo:false, demo: true , time:false,publisher:false });
+    } else if (type === "lang") {
+      setOpen({ geo:false, demo: false, time:false,publisher:false, lang: true });
+    } else if (type === "geo") {
+      setOpen({ demo: false, time:false,publisher:false, lang: false, geo: true });
+    } else if (type === "time") {
+      setOpen({ demo: false,publisher:false, lang: false, geo: false, time: true });
+    } else if (type === "publisher") {
+      setOpen({ demo: false, lang: false, geo: false, time: false, publisher: true });
+    }
+    type == "demo" ? setshow({ demo: true, lang: false, geo: false ,time:false,publisher:false}) : type == "lang" ? setshow({ demo: false, lang: true, geo: false,time:false,publisher:false }) : type === "geo" ? setshow({ demo: false, lang: false, geo: true ,time:false,publisher:false}) : type === "time" ? setshow({ demo: false, lang: false, geo: false ,publisher:false, time: true }) : setshow({ demo: false, lang: false, geo: false ,time:false, publisher: true });
   };
   const handleOpen1 = () => {
     setOpen1(true);
@@ -131,12 +145,14 @@ export default function NewCampaign() {
   // }
   const handleChange5 = (e) => {
     setfreq({ freq: freq.freq, freqtime: e.target.value })
+    // dispatch(mainaction('FREQ', { frequency: freq.freq, exposure: e.target.value }));
   }
 
   const checkdate = () => {
     console.log(dates.start, dates.end);
     console.log(new Date(dates.start) - new Date())
-    if (new Date(dates.start).getDate() < new Date().getDate()) {
+    console.log( new Date().getDate() )
+    if (dates.start < todayDate()) {
       console.log('hello')
       return { status: false, message: "Start Date should be greater than today's date!" }
     }
@@ -307,8 +323,12 @@ export default function NewCampaign() {
               <div className={styles.rowdis} style={{ marginTop: '10%' }} >
                 <input type="radio" name="freq" id="freq" />
                 <label for="freq" > Limit Frequency to </label>
-                <label style={{ marginRight: '1%' }} > <input type="number" className={styles.inpkpi} style={{ fontSize: '8pt' }} onChange={(e) => setfreq({ freq: e.target.value, freqtime: freq.freqtime })} value={freq.freq} /> </label>
-                <label  > exposures per </label>
+                <label style={{ marginRight: '1%' }} > <input type="number" className={styles.inpkpi} style={{ fontSize: '10pt', fontWeight: 'bold' }} onChange={(e) => {
+                  setfreq({ freq: e.target.value, freqtime: freq.freqtime })
+                  // dispatch(mainaction('FREQ', { frequency: e.target.value, exposure: freq.freqtime }))
+                }}
+                  value={freq.freq} /> </label>
+                <label style={{ marginLeft: '3px' }} > exposures per </label>
                 <label  >
                   <Select
                     labelId="demo-simple-select-label"
@@ -346,8 +366,11 @@ export default function NewCampaign() {
             <div className={styles.campname1} >
               <span className={styles.svdf} > Demographics </span>
             </div>
-            <div style={{ paddingTop: '1%' }} >
-              <span style={{ color: '#9e9e9e' }} >All genders, ages, parental statuses and household incomes</span>
+            <div style={{ paddingTop: '1%',display:'flex',flexDirection:'column',width:'41%' }} >
+              <span style={{ color: '#9e9e9e' }} >Gender: {demography.gender.male?'male':"None" }, {demography.gender.female?'female':"None"} </span>
+              <span style={{ color: '#9e9e9e' }} >Age: {demography.age[0] }, {demography.age[1]} </span>
+              <span style={{ color: '#9e9e9e' }} >Phone Cost: {demography.income[0] }k, {demography.income[1]}k </span>
+
             </div>
             <div style={{ marginLeft: '16%' }} >
               <EditIcon style={{ cursor: 'pointer', color: 'grey' }} onClick={() => handleOpen('demo')} fontSize="large" />
@@ -363,7 +386,7 @@ export default function NewCampaign() {
               <span style={{ color: '#9e9e9e' }} >All locations</span>
             </div>
             <div style={{ marginLeft: '49%' }} >
-              <EditIcon style={{ cursor: 'pointer', color: 'grey' }} onClick={() => handleOpen('Geo')} fontSize="large" />
+              <EditIcon style={{ cursor: 'pointer', color: 'grey' }} onClick={() => handleOpen('geo')} fontSize="large" />
             </div>
 
           </div>
@@ -383,7 +406,32 @@ export default function NewCampaign() {
 
           </div>
 
-          {/* <hr className={styles.divider} /> */}
+          <hr className={styles.divider} />
+          <div className={styles.rowdis} >
+            <div className={styles.campgeog} >
+              <span className={styles.svdf} > Time Targetting </span>
+            </div>
+            <div style={{ paddingTop: '1%', marginLeft: '3%' }} >
+              <span style={{ color: '#9e9e9e' }} >All time</span>
+            </div>
+            <div style={{ marginLeft: '52%' }} >
+              <EditIcon style={{ cursor: 'pointer', color: 'grey' }} onClick={() => handleOpen('time')} fontSize="large" />
+            </div>
+
+          </div>
+          <hr className={styles.divider} />
+          <div className={styles.rowdis} >
+            <div className={styles.campgeog} >
+              <span className={styles.svdf} > Publisher </span>
+            </div>
+            <div style={{ paddingTop: '1%', marginLeft: '3%' }} >
+              <span style={{ color: '#9e9e9e' }} >All Publisher</span>
+            </div>
+            <div style={{ marginLeft: '48%' }} >
+              <EditIcon style={{ cursor: 'pointer', color: 'grey' }} onClick={() => handleOpen('publisher')} fontSize="large" />
+            </div>
+
+          </div>
 
         </Paper>
         {/* <div style={{ marginBottom: '7%' }} >
@@ -410,7 +458,7 @@ export default function NewCampaign() {
           
         </Paper> */}
 
-        {show.demo || show.lang || show.geo ?
+        {show.demo || show.lang || show.geo || show.time || show.publisher ?
           <div  >
             <Modal
               open={open}
@@ -419,7 +467,10 @@ export default function NewCampaign() {
               aria-describedby="simple-modal-description"
             >
               {show.demo ? <Demographic state={{ demography, setOpen }} /> :
-                show.lang ? <Language state={{ languages, setOpen }} /> : <Geography state={{ geography, setOpen }} />
+                show.lang ? <Language state={{ languages, setOpen }} /> :
+                  show.geo ? <Geography state={{ geography, setOpen }} /> :
+                   show.time? <Time state={{ selectedtime, setOpen }} />:
+                   <Publisher state={{selectedpublishers,setOpen }} />
               }
 
             </Modal>
@@ -456,7 +507,7 @@ export default function NewCampaign() {
 
 
 
-        <button type="submit" >Next</button>
+        <button type="submit" style={{marginLeft:'40%'}} >Next</button>
       </form>
 
     </div>

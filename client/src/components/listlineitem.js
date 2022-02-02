@@ -19,54 +19,58 @@ import ArrowUpwardRoundedIcon from '@material-ui/icons/ArrowUpwardRounded';
 import ArrowDownwardRoundedIcon from '@material-ui/icons/ArrowDownwardRounded';
 
 const useStyles = makeStyles((theme) => ({
-	root: {
-		width: '100%',
-		'& > * + *': {
-			marginTop: theme.spacing(2)
-		},
-		table: {
-			// minWidth: '55%',
-			width: '98%'
-		}
-	},
-	paper: {
-		// position: 'absolute',
-		width: '50%',
-        margin:'auto',
-        marginTop:'10%',
-		backgroundColor: theme.palette.background.paper,
-		border: '2px solid #000',
-		boxShadow: theme.shadows[5],
-		padding: '2% 2% 2% 6%',
-	}
+    root: {
+        width: '100%',
+        '& > * + *': {
+            marginTop: theme.spacing(2)
+        },
+        table: {
+            // minWidth: '55%',
+            width: '98%'
+        }
+    },
+    paper: {
+        // position: 'absolute',
+        width: '50%',
+        margin: 'auto',
+        marginTop: '10%',
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: '2% 2% 2% 6%',
+    }
 }));
 
 export default function ListLineitem() {
 
 
-    const history=useHistory();
+    const history = useHistory();
     let { campid } = useParams();
-    const classes=useStyles();
-    const [campaignName,setcampaignName]=useState('');
+    const classes = useStyles();
+    const [campaignName, setcampaignName] = useState('');
     const [lineitems, setlineitems] = useState([]);
     const [sa, setsa] = React.useState('lineitemname');
     const [order, setorder] = React.useState('desc');
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [tempdata,settempdata]=useState({});
+    const [tempdata, settempdata] = useState({});
     const [page, setPage] = useState(0);
-    const [show,setShow]=useState(false);
+    const [active, setActive] = useState('Active');
+    const [show, setShow] = useState(false);
     const [open, setOpen] = React.useState(false);
     const [error, seterror] = useState('');
-	const [success, setsuccess] = useState('');
-	const handleOpen = (data) => {
-		setOpen(true);
-		setShow(true)
-		settempdata(data);
-	};
+    const [success, setsuccess] = useState('');
+    const handleOpen = (data) => {
+        setOpen(true);
+        setShow(true)
+        settempdata(data);
+    };
+    const handleChange2 = (e) => {
+        setActive(e.target.value);
+      }
 
-	const handleClose = () => {
-		setOpen(false);
-	};
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -76,18 +80,18 @@ export default function ListLineitem() {
         setPage(0);
     };
 
-    const data=async()=>{
+    const data = async () => {
         const formdata = new FormData();
         formdata.append('campid', campid);
-        let res = await fun.createApi(formdata, 'https://paytunes-new.herokuapp.com/campaign/lineitemslist');
+        let res = await fun.createApi(formdata, '/campaign/lineitemslist');
         console.log(res);
         setlineitems(res.data);
     }
 
-    useEffect(async()=>{
-        const formdata=new FormData();
-        formdata.append('campid',campid);
-        let res=await fun.createApi(formdata,'https://paytunes-new.herokuapp.com/campaign/getcampaignname');
+    useEffect(async () => {
+        const formdata = new FormData();
+        formdata.append('campid', campid);
+        let res = await fun.createApi(formdata, '/campaign/getcampaignname');
         console.log(res);
         setcampaignName(res.data.data);
     })
@@ -95,20 +99,24 @@ export default function ListLineitem() {
     useEffect(async () => {
         const formdata = new FormData();
         formdata.append('campid', campid)
-        let res = await fun.createApi(formdata, 'https://paytunes-new.herokuapp.com/campaign/lineitemslist');
+        let res = await fun.createApi(formdata, '/campaign/lineitemslist');
         console.log(res);
         setlineitems(res.data);
     }, [campid])
 
-    const duplicaterow=async(row)=>{
-        const formdata=new FormData();
-        formdata.append('_id',row._id);
-        let res=await fun.createApi(formdata,'https://paytunes-new.herokuapp.com/campaign/duplicatelineitem');
-        if(res.data.error){
+    const duplicaterow = async (row) => {
+        const formdata = new FormData();
+        formdata.append('_id', row._id);
+        let res = await fun.createApi(formdata, '/campaign/duplicatelineitem');
+        if (res.data.error) {
             return seterror(res.data.error);
         }
         setsuccess(res.data.data);
         data();
+    }
+
+    const createlineitem=async()=>{
+        history.push(`/lineitemnew/${campid}`)
     }
 
     const arrowRetuner = (mode) => {
@@ -184,33 +192,33 @@ export default function ListLineitem() {
     return (
         <div>
             <div className={classes.root}>
-				{success ? (
-					<Alert
-						onClose={() => {
-							setsuccess('');
-						}}
-						style={{ margin: '1%' }}
-						severity="success"
-					>
-						{success}
-					</Alert>
-				) : (
-					<React.Fragment />
-				)}
-				{error ? (
-					<Alert
-						onClose={() => {
-							seterror('');
-						}}
-						style={{ margin: '1%' }}
-						severity="error"
-					>
-						{error}
-					</Alert>
-				) : (
-					''
-				)}
-			</div>
+                {success ? (
+                    <Alert
+                        onClose={() => {
+                            setsuccess('');
+                        }}
+                        style={{ margin: '1%' }}
+                        severity="success"
+                    >
+                        {success}
+                    </Alert>
+                ) : (
+                    <React.Fragment />
+                )}
+                {error ? (
+                    <Alert
+                        onClose={() => {
+                            seterror('');
+                        }}
+                        style={{ margin: '1%' }}
+                        severity="error"
+                    >
+                        {error}
+                    </Alert>
+                ) : (
+                    ''
+                )}
+            </div>
             <Paper className={styles.dashboard} elevation={3}>
                 <div className={styles.rowdis} >
                     <div className={styles.campname} >
@@ -222,9 +230,24 @@ export default function ListLineitem() {
                             value={campaignName}
                         />
                     </div>
-
+                    <div className={styles.dot} >
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={active}
+                            label={active}
+                            style={{ width: '100%' }}
+                            onChange={handleChange2}
+                        >
+                            <MenuItem value='Active'>Active</MenuItem>
+                            <MenuItem value='Paused'>Paused</MenuItem>
+                        </Select>
+                    </div>
                 </div>
             </Paper>
+            <div className={styles.shgt2}  >
+                <button className="button" onClick={createlineitem} >Create line item</button>
+            </div>
             <div className={styles.shgt2} >
                 <div style={{ marginLeft: '5px', marginTop: '5px' }} >Line Items Under this Campaign.</div>
             </div>
@@ -261,12 +284,12 @@ export default function ListLineitem() {
                                     <TableCell>{row.lineitemstatus ? row.lineitemstatus : ''}</TableCell>
                                     <TableCell>{row.dealid ? row.dealid : ''}</TableCell>
                                     <TableCell>
-                                        <button className="btn" onClick={()=>handleOpen(row)} >
+                                        <button className="btn" onClick={() => handleOpen(row)} >
                                             Edit{' '}
                                         </button>
                                     </TableCell>
                                     <TableCell>
-                                        <button className="btn" onClick={()=>duplicaterow(row)} >
+                                        <button className="btn" onClick={() => duplicaterow(row)} >
                                             Duplicate{' '}
                                         </button>
                                     </TableCell>
@@ -313,7 +336,7 @@ export default function ListLineitem() {
                 )}
 
             </Paper>
-            <button onClick={()=>history.push('/dashboard')} >Back to Dashboard</button>
+            <button onClick={() => history.push('/dashboard')} >Back to Dashboard</button>
         </div>
     )
 

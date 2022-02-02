@@ -1,6 +1,6 @@
 import { Grid, makeStyles, Select, MenuItem } from '@material-ui/core'
 import React, { useState, useContext } from 'react'
-import { data, region, ages, language, Category_List, MakeModel, grandcity_data, days, time } from '../utils/state';
+import { data, region, ages, language, Category_List, MakeModel, grandcity_data, days, timedata } from '../utils/state';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import { BudgetContext } from '../App'
 
@@ -442,7 +442,7 @@ export function Tab4({ state }) {
                                                 }}
                                                 value={typ === "Audio" ? audiotime : typ === "Video" ? videotime : displaytime}
                                             >
-                                                {time.map(reg =>
+                                                {timedata.map(reg =>
                                                     <MenuItem value={`${reg}`}>{reg}</MenuItem>
                                                 )}
                                             </Select>
